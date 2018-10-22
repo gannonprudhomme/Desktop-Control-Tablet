@@ -1,0 +1,49 @@
+.grid-container {
+  display: grid;
+  grid-template-rows: 10% 80% 10%;
+  height: 100%;
+}
+
+#top-row {
+  display: flex;
+  justify-content: space-between;
+  height: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+#pc-controls {
+  background: #0affe2;
+}
+#time {
+  background: #0affe2;
+}
+#timer {
+  background: #0affe2;
+}
+
+#middle-row {
+  display: flex;
+  justify-content: space-around;
+  height: 100%;
+  width: 100%;
+}
+
+#volume-mixer {
+  display: flex;
+  justify-content: space-between;
+
+}
+
+#master-slider { height: 500px; }
+#spotify-slider { }
+#todoist { }
+
+#bottom-row {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+}
+
+#quick-focus-icons { }
+#spotify-playback { }

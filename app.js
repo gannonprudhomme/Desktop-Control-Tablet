@@ -42,6 +42,10 @@ app.use(function(req, res, next) {
 
 // app.use(express.static(__dirname + '/public/'))
 
+app.get('/tablet', (req, res) => {
+  res.sendFile(path.join(__dirname + '/public/tablet/index.html'))
+})
+
 app.get('/mobile', (req, res) => {
   res.sendFile(path.join(__dirname + '/public/mobile/control.html'))
 })
