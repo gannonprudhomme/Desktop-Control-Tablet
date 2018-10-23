@@ -1,6 +1,29 @@
+html {
+  overflow-y: hidden;
+}
+
+body {
+  background-image: url('/public/assets/background.png')
+
+}
+
+div {
+  color: white;
+}
+
+.button {
+    background-color: #00C8C8;
+    border: 2px solid #027B7B;
+    color: white;
+    padding: 15px 25px;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+}
+
 .grid-container {
   display: grid;
-  grid-template-rows: 10% 80% 10%;
+  grid-template-rows: 10% 70% 20%;
   height: 100%;
 }
 
@@ -10,16 +33,17 @@
   height: 100%;
   padding-left: 10px;
   padding-right: 10px;
+  border: 0.2px solid #010101;
 }
 
 #pc-controls {
-  background: #0affe2;
+  background: #00C8C8;
 }
 #time {
-  background: #0affe2;
+  background: #00C8C8;
 }
 #timer {
-  background: #0affe2;
+  background: #00C8C8;
 }
 
 #middle-row {
@@ -27,6 +51,7 @@
   justify-content: space-around;
   height: 100%;
   width: 100%;
+  border: 0.2px solid #010101;
 }
 
 #volume-mixer {
@@ -43,6 +68,8 @@
   display: flex;
   justify-content: center;
   height: 100%;
+  border: 0.2px solid #010101;
+  padding-bottom: -10px;
 }
 
 #quick-focus-icons { }

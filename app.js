@@ -3,8 +3,7 @@ const multer = require('multer') // for parsing multipart/form-data
 const bodyParser = require('body-parser') // for parsing basic request data?
 const path = require('path')
 var fs = require('fs')
-// var mongodb = require('mongodb')
-// var mongoose = require('mongoose')
+var queryString = require('querystring')
 
 const app = express()
 const port = 3000
@@ -14,24 +13,15 @@ var upload = multer()
 var volumes = {};
 var volumeData = JSON.parse(fs.readFileSync(path.join(__dirname + '/public/volumeData.json'), 'utf-8'))
 
+// Spotify properties
+//var spotify = require('./spotify.js')(app)
+
+
+
 // Set properties
 app.use(express.static(__dirname))
 app.use(bodyParser.json()); // For parsing application/json
 app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
-
-/*
-mongoose.connect('mongodb://192.168.1.78/database', {useNewUrlParser: true})
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'))
-db.once('open', function() {
-  // Connected
-})
-
-var Schema = mongoose.Schema
-var sliderModel = new Schema({
-  programName: String,
-  volume: Number
-}) */
 
 app.use(function(req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', 'http://192.168.1.78:3000');
@@ -40,10 +30,62 @@ app.use(function(req, res, next) {
   next();
 })
 
+var authenticated = false;
+
 // app.use(express.static(__dirname + '/public/'))
 
+// Redirect to spotify authentication?
 app.get('/tablet', (req, res) => {
-  res.sendFile(path.join(__dirname + '/public/tablet/index.html'))
+  if(!authenticated) {
+    console.log('authenticated')
+
+    var state = generateRandomString(8);
+
+    //res.cookie(stateKey, state);
+    var scope = 'user-read-private user-read-playback-state user-modify-playback-state user-read-currently-playing'
+    res.redirect('https://accounts.spotify.com/authorize?' +
+      queryString.stringify({
+        response_type:'code',
+        client_id: client_id,
+        scope: scope,
+        redirect_uri: redirect_uri,
+        state: state
+      })
+    )
+
+    authenticated = true;
+  } else {
+    console.log('done authenticating?')
+    res.sendFile(path.join(__dirname + '/public/tablet/index.html'))
+
+    // After authenticating, get the access and refresh tokens
+    // have a function that takes req as a parameter(or req.query)
+    var code = req.query.code || null;
+    var state = req.query.state || null;
+
+    access_code = code;
+    var authOptions = {
+      url: 'https://accounts.spotify.com/api/token',
+      form: {
+        code: code,
+        redirect_uri: redirect_uri,
+        grant_type: 'authorization_code'
+      },
+      headers: {
+        'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+      },
+      json: true
+    }
+
+    request.post(authOptions, function(error, response, body) {
+      if(!error && response.statusCode === 200) {
+        access_token = body.access_token;
+        refresh_token = body.refresh_token;
+      } else {
+        console.log(error)
+      }
+    })
+  }
 })
 
 app.get('/mobile', (req, res) => {
@@ -52,8 +94,6 @@ app.get('/mobile', (req, res) => {
 
 // Handle REST calls
 app.get('/', (req, res) => {
-
-
 })
 
 app.post('/volume', (req, res) => {
@@ -105,29 +145,121 @@ function saveVolumeData() {
   })
 }
 
-// Save the JSON when we close
 
-/*
-serverUp = true;
-process.stdin.resume(); // So the program will not close immediately
-function exitHandler(options, err) {
-    saveVolumeData();
-    if(!serverUp){return;}
-    serverUp = false;
-    console.log("debug");
-    process.exit();   // Don't think you'll need this line any more
+// SPOTIFY STUFF
+var request = require('request')
+var cookieParser = require('cookie-parser')
+
+  // Anything with module preceding it will be accessible 'outside'
+  // Anything without it will be seen as private
+  //var module = {}
+
+var client_id = 'a6b183eb82c84480aa98deec6cba9b92'
+var client_secret = '156fa2b93faa41afb74bebf84b148ac3'
+var redirect_uri = 'http://192.168.1.78:3000/tablet'
+
+
+var access_token;
+var refresh_token; // Used to request a new access token after a certain amount of time
+var access_code;
+var stateKey = 'spotify_auth_state'
+
+  // Retrieve formatted track data from Spotify and send in response to tablet
+app.get('/spotify-api/current-track', (req, res) => { })
+
+  // Tell spotify to skip to the next song
+app.post('/spotify-api/next-song', (req, res) => {})
+
+  // Tell Spotify to pause playback
+app.put('/spotify-api/pause', (req, res) => {
+  console.log('pause received')
+  var options = {
+    url: 'https://api.spotify.com/v1/me/player/pause',
+    headers: {
+      "Authorization": "Bearer " + access_token
+    }
+  }
+
+  request.put(options, function(error, response, body) {
+    if(!error && response.statusCode === 204) {
+      console.log(body)
+    } else {
+      console.log(error)
+      console.log(body)
+    }
+  })
+})
+
+  // Tell Spotify to resume playback
+app.put('/spotify-api/play', (req, res) => {
+  console.log('play received')
+  var options = {
+    url: 'https://api.spotify.com/v1/me/player/play',
+    headers: {
+      "Authorization": "Bearer " + access_token
+    }
+  }
+
+  request.put(options, function(error, response, body) {
+    if(response.statusCode === 204) {
+
+    } else {
+      console.log(error)
+      console.log(body)
+
+      refreshToken()
+    }
+  })
+})
+
+function getRedirectString() {
+  var state = generateRandomString(16);
+
+  //res.cookie(stateKey, state);
+  var scope = 'user-read-private user-read-playback-state user-modify-playback-state user-read-currently-playing'
+  return queryString.stringify({
+    response_type:'code',
+    client_id: client_id,
+    scope: scope,
+    redirect_uri: redirect_uri,
+    state: state
+  })
+  }
+
+function refreshToken() {
+  var options  = {
+    url: 'https://accounts.spotify.com/api/token',
+    headers: {
+      'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))      },
+    form: {
+      grant_type: 'refresh_token',
+      refresh_token: refresh_token
+    }
+  }
+
+  request.post(options, function(error, response, body) {
+    if(!error) {
+      access_token = response.access_token
+      console.log(error)
+      console.log(body)
+    } else {
+      console.log(error)
+      console.log(body)
+    }
+  })
 }
 
-//do something when app is closing
-process.on('exit', exitHandler.bind(null,{cleanup:true}));
+  /**
+   * Generates a random string containing numbers and letters
+   * @param  {number} length The length of the string
+   * @return {string} The generated string
+   */
+  var generateRandomString = function(length) {
+    var text = '';
+    var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-//catches ctrl+c event
-process.on('SIGINT', exitHandler.bind(null, {exit:true}));
-
-// catches "kill pid" (for example: nodemon restart)
-process.on('SIGUSR1', exitHandler.bind(null, {exit:true}));
-process.on('SIGUSR2', exitHandler.bind(null, {exit:true}));
-
-//catches uncaught exceptions
-process.on('uncaughtException', exitHandler.bind(null, {exit:true}));
-*/
+    for (var i = 0; i < length; i++) {
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
+  };
