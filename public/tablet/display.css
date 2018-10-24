@@ -3,55 +3,60 @@ html {
 }
 
 body {
-  background-image: url('/public/assets/background.png')
-
+  /* background-image: url('/public/assets/background.png') */
+  background-color: #05080B
 }
 
 div {
   color: white;
 }
 
-.button {
-    background-color: #00C8C8;
-    border: 2px solid #027B7B;
-    color: white;
-    padding: 15px 25px;
-    text-align: center;
-    font-size: 16px;
-    cursor: pointer;
-}
-
 .grid-container {
   display: grid;
-  grid-template-rows: 10% 70% 20%;
+  grid-template-rows: 10% 60% 30%;
   height: 100%;
 }
 
 #top-row {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   height: 100%;
   padding-left: 10px;
   padding-right: 10px;
-  border: 0.2px solid #010101;
 }
 
 #pc-controls {
-  background: #00C8C8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
+
+#power-button {
+  width: 32px;
+  height: 32px;
+}
+
 #time {
-  background: #00C8C8;
+  border: 1px solid #00C8C8 !important;
+  border-radius: 15px;
+  padding: 7px 7px 7px 7px;
+  color: #00C8C8;
+  font-size: 30px;
 }
 #timer {
   background: #00C8C8;
 }
 
+/* MIDDLE ROW */
 #middle-row {
   display: flex;
   justify-content: space-around;
   height: 100%;
   width: 100%;
-  border: 0.2px solid #010101;
+  border: 1px solid #00C8C8 !important;
+  /* border: 0.2px solid #010101; */
 }
 
 #volume-mixer {
@@ -60,17 +65,122 @@ div {
 
 }
 
-#master-slider { height: 500px; }
-#spotify-slider { }
-#todoist { }
-
+/* BOTTOM ROW */
 #bottom-row {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: 32% 36% 32%;
+  grid-template-rows: 100%;
   height: 100%;
-  border: 0.2px solid #010101;
-  padding-bottom: -10px;
+  /* flex-direction: row-reverse; */
+  /* justify-content: center; */
+  /* border: 0.2px solid #010101; */
 }
 
 #quick-focus-icons { }
-#spotify-playback { }
+#spotify-playback {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+#track {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  margin-left: 10px;
+  width: 100%;
+}
+
+#album-cover {
+  width: 95px;
+  height: 95px;
+  padding-top: 10px;
+}
+
+#track-info {
+  display: flex;
+  flex-direction: column;
+}
+
+#current-track {
+  /* set font style */
+  font-size: 16px;
+  margin-bottom: 7px;
+}
+
+#current-artist {
+  /* Set font style */
+  font-size: 13px;
+  margin-bottom: 7px;
+}
+
+#playback-container {
+  border: 1px solid #00C8C8 !important;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-content: center !important;
+  width: 250px !important;
+  margin-top: 10px;
+}
+
+#play-pause {
+  width: 48px;
+  height: 48px;
+  margin: 7px auto;
+}
+
+#previous-song {
+  width: 32px;
+  height: 32px;
+  transform: rotate(180deg);
+  margin-top: 13px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0px;
+  /* margin: 16px auto; */
+
+}
+
+#next-song {
+  width: 32px;
+  height: 32px;
+  margin-top: 13px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0px;
+  /* margin: 16px auto; */
+
+}
+
+#quick-controls {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  width: 100%;
+  height: 100%;
+
+  /* display: flex; */
+  /* jusitfy-content: center; */
+}
+
+#control-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border: 1px solid #00C8C8 !important;
+  border-radius: 20px;
+  height: 44%;
+  width: 85%;
+}
+
+#mute-microphone {
+  width: 40px;
+  height: 40px;
+}
+
+#deafen-output {
+  width: 40px;
+  height: 40px;
+}

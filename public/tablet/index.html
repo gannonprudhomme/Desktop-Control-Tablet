@@ -10,11 +10,12 @@
   <div class="grid-container">
     <div id="top-row">
       <div id="pc-controls">
-        <h4> SLEEP </h4>
+        <img id="power-button" src="/public/assets/power-button.png">
       </div>
 
       <div id="time">
-        <h3> TIME </h3>
+        0:00 PM
+        <!-- Fill time with current time in JS file -->
       </div>
 
       <div id="timer">
@@ -25,12 +26,11 @@
     <div id="middle-row">
       <div id="volume-mixer">
         <div id="master-slider">
-          <h4> Master </h4>
 
         </div>
 
         <div id="spotify-slider">
-          <h4> Spotify </h4>
+
         </div>
       </div>
 
@@ -40,14 +40,31 @@
     </div>
 
     <div id="bottom-row">
-      <div id="quick-focus-icons">
-        <!-- <h4> Quick Focus Icons </h4> -->
+      <div id="track">
+        <img id="album-cover" src='https://i.scdn.co/image/a06f250e3d2fee9dd0d1f959d06e49034c388edd'>
+
+        <div id="track-info">
+          <label id="current-track">CURRENT TRACK</label>
+          <label id="current-artist">CURRENT ARTIST</label>
+        </div>
       </div>
 
+
       <div id="spotify-playback">
-        <!-- <h4> Spotify Playback </h4> -->
-        <button class="button" id="play"> Play </button>
-        <button class="button" id="pause"> Pause </button>
+        <div id="playback-container">
+          <!-- <h4> Spotify Playback </h4> -->
+          <img id="previous-song" src="/public/assets/next-song.png">
+          <img id="play-pause" src="/public/assets/play.png">
+          <img id="next-song" src="/public/assets/next-song.png">
+        </div>
+      </div>
+
+      <div id="quick-controls">
+        <div id="control-container">
+          <img id="mute-microphone" src="/public/assets/microphone.png">
+          <img id="deafen-output" src="/public/assets/volume.png">
+        </div>
+
       </div>
     </div>
   </div>

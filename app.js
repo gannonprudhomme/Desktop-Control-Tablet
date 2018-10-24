@@ -16,7 +16,12 @@ var volumeData = JSON.parse(fs.readFileSync(path.join(__dirname + '/public/volum
 // Spotify properties
 //var spotify = require('./spotify.js')(app)
 
+// discord
+var discord = require('./discord.js')
+var desktop = require('./desktop_control.js')
 
+app.use(discord)
+app.use(desktop)
 
 // Set properties
 app.use(express.static(__dirname))
@@ -37,8 +42,6 @@ var authenticated = false;
 // Redirect to spotify authentication?
 app.get('/tablet', (req, res) => {
   if(!authenticated) {
-    console.log('authenticated')
-
     var state = generateRandomString(8);
 
     //res.cookie(stateKey, state);
@@ -55,7 +58,6 @@ app.get('/tablet', (req, res) => {
 
     authenticated = true;
   } else {
-    console.log('done authenticating?')
     res.sendFile(path.join(__dirname + '/public/tablet/index.html'))
 
     // After authenticating, get the access and refresh tokens
@@ -145,6 +147,9 @@ function saveVolumeData() {
   })
 }
 
+function maximizeWindow(programName) {
+
+}
 
 // SPOTIFY STUFF
 var request = require('request')
@@ -168,11 +173,41 @@ var stateKey = 'spotify_auth_state'
 app.get('/spotify-api/current-track', (req, res) => { })
 
   // Tell spotify to skip to the next song
-app.post('/spotify-api/next-song', (req, res) => {})
+app.post('/spotify-api/next-song', (req, res) => {
+  var options = {
+    url: 'https://api.spotify.com/v1/me/player/next',
+    headers: {'Authorization': 'Bearer ' + access_token }
+  }
 
-  // Tell Spotify to pause playback
+  request.post(options, function(error, response, body) {
+    if(response.statusCode === 204) {
+
+    } else {
+      console.log('next-song error')
+      console.log(error)
+      console.log(body)
+    }
+  })
+})
+
+app.post('/spotify-api/previous-song', (req, res) => {
+  var options = {
+    url: 'https://api.spotify.com/v1/me/player/previous',
+    headers: {'Authorization': 'Bearer ' + access_token }
+  }
+
+  request.post(options, function(error, response, body) {
+    if(response.statusCode === 204) {
+
+    } else {
+      console.log('previous-song error')
+      console.log(error)
+      console.log(body)
+    }
+  })
+})
+
 app.put('/spotify-api/pause', (req, res) => {
-  console.log('pause received')
   var options = {
     url: 'https://api.spotify.com/v1/me/player/pause',
     headers: {
@@ -182,17 +217,20 @@ app.put('/spotify-api/pause', (req, res) => {
 
   request.put(options, function(error, response, body) {
     if(!error && response.statusCode === 204) {
-      console.log(body)
+
     } else {
+      console.log('pause error')
       console.log(error)
       console.log(body)
+
+      // Have an error status code check here
+      refreshToken()
     }
   })
 })
 
   // Tell Spotify to resume playback
 app.put('/spotify-api/play', (req, res) => {
-  console.log('play received')
   var options = {
     url: 'https://api.spotify.com/v1/me/player/play',
     headers: {
@@ -204,13 +242,50 @@ app.put('/spotify-api/play', (req, res) => {
     if(response.statusCode === 204) {
 
     } else {
+      console.log('play error')
       console.log(error)
       console.log(body)
 
+      // Have an error status code check here
       refreshToken()
     }
   })
 })
+
+// Retrieve and send back playback info: including currently playing track info and if a song is actively playing
+app.get('/spotify-api/playback-info', (req, res) => {
+  var options = {
+    url: 'https://api.spotify.com/v1/me/player/currently-playing',
+    headers: {'Authorization': 'Bearer ' + access_token},
+    json: true
+  }
+
+  request.get(options, function(error, response, body) {
+    if(!error && response.statusCode === 200) {
+      var sendToClient = {}
+      sendToClient.is_playing = body.is_playing;
+      sendToClient.track = body.item.name;
+      sendToClient.artist = body.item.album.artists[0].name;
+      sendToClient.album_name = body.item.album.name
+      sendToClient.album_image = body.item.album.images[1].url
+
+      res.send(sendToClient)
+    } else {
+      if(body && body.error && body.error.status === 401) {
+        //res.send('refresh-page')
+      }
+
+      console.log('playback-info error')
+      console.log(body)
+    }
+  })
+})
+
+function redirectToAuth(res) {
+  res.redirect('http://192.168.1.78:3000/tablet')
+
+  authenticated = false
+}
 
 function getRedirectString() {
   var state = generateRandomString(16);
