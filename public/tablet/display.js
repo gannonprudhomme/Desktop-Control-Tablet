@@ -3,11 +3,12 @@ var playing = false // Retrieve the current state of playback from Spotify on la
 var current_track = {} // Dictionary/JSON object for the currently played song. Contains track name, album name, artist, and album image link
 var lastPlaybackPress = 0;
 
+var mixerHidden = false
+var currentView = 'volume-mixer' // ENUM here, volume-mixer, or pc-stats, or pomdo
+
 $(document).ready(function() {
   // Load the playback info from spotify, including track info
   getPlaybackInfo()
-
-
 })
 
 // Check for playback changes every 2 seconds
@@ -48,8 +49,28 @@ $('#next-song').click(function() {
   sendPlaybackCommand('next')
 })
 
-$('#mute-microphone').click(function() {
+$('#volume-mixer-toggle').click(function() {
+  console.log('mute')
+
+  if(mixerHidden) {
+    mixerHidden = false
+    $('#volume-mixer').show()
+    $('#pc-stats').hide()
+    $('#timer-control').hide()
+  } else {
+    mixerHidden = true
+    $('#volume-mixer').hide()
+  }
+
   getDiscord();
+})
+
+$('#pc-stats-toggle').click(function() {
+  if(!(currentView === 'pc-stats')) {
+    $('#pc-stats').show()
+    $('#volume-mixer').hide()
+    $('#timer-control').hide()
+  }
 })
 
 $('#deafen-output').click(function() {
@@ -63,13 +84,13 @@ function sendPlayback(type, option) {
     instance = axios.create({
       baseURL: 'http://192.168.1.78:3000/spotify-api/pause',
       timeout: 3000,
-      headers: {'X-Custom-Header': 'foobar'}
+      headers: {'timeSent': (new Date()).getTime() }
     })
   } else if(type === 'play') {
     var instance = axios.create({
       baseURL: 'http://192.168.1.78:3000/spotify-api/play',
       timeout: 3000,
-      headers: {'X-Custom-Header': 'foobar'}
+      headers: {'timeSent': (new Date()).getTime() }
     })
   }
 
@@ -87,6 +108,7 @@ function sendPlaybackCommand(type) {
     instance = axios.create({
       baseURL: 'http://192.168.1.78:3000/spotify-api/next-song',
       timeout: 3000
+
     })
   } else if(type === 'previous') {
     instance = axios.create({
@@ -105,9 +127,11 @@ function sendPlaybackCommand(type) {
 }
 
 function getPlaybackInfo() {
+
   var instance = axios.create({
     baseURL: 'http://192.168.1.78:3000/spotify-api/playback-info',
-    timeout: 3000
+    timeout: 3000 //,
+    // params: { timeSent: (new Date()).getTime() }
   })
 
   instance.get('', {}).then(function(response) {

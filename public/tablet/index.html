@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <link href="/public/tablet/display.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
   <title> Desktop Companion Tablet </title>
 </head>
 
@@ -11,10 +12,12 @@
     <div id="top-row">
       <div id="pc-controls">
         <img id="power-button" src="/public/assets/power-button.png">
+        <img id="mute-microphone" src="/public/assets/microphone.png">
+        <img id="deafen-output" src="/public/assets/volume.png">
       </div>
 
       <div id="time">
-        0:00 PM
+        <div> 0:00 PM </div>
         <!-- Fill time with current time in JS file -->
       </div>
 
@@ -24,18 +27,38 @@
     </div>
 
     <div id="middle-row">
-      <div id="volume-mixer">
-        <div id="master-slider">
+      <div id="volume-mixer" class="middle-view">
 
-        </div>
 
-        <div id="spotify-slider">
+        <img class="slider-icon" src="/public/assets/spotify.png"> <!-- In place of master-volume icon -->
+        <label class="slider-label" id="spotify-label">00% </label>
+        <div class="ui-slider-range ui-corner-all" id="spotify-slider"></div>
 
+
+        <img class="slider-icon" src="/public/assets/discord.png">
+        <label class="slider-label" id="discord-label">00% </label>
+        <div class="ui-slider-range ui-corner-all" id="discord-slider"></div>
+
+
+        <img class="slider-icon" src="/public/assets/rocketleague.png">
+        <label class="slider-label" id="rocketleague-label">00% </label>
+        <div class="ui-slider-range ui-corner-all" id="rocketleague-slider"></div>
+
+        <img class="slider-icon" src="/public/assets/chrome.png"> <!-- In place of chrome icon-->
+        <label class="slider-label" id="chrome-label">00% </label>
+        <div class="ui-slider-range ui-corner-all" id="chrome-slider"></div>
+      </div>
+
+      <div id="pc-stats" class="middle-view">
+        <div>
+          Stat Here
         </div>
       </div>
 
-      <div id="todoist">
-
+      <div id="timer-control" class="middle-view">
+        <div>
+          Timer Stuff here
+        </div>
       </div>
     </div>
 
@@ -59,10 +82,10 @@
         </div>
       </div>
 
-      <div id="quick-controls">
+      <div id="view-swapper">
         <div id="control-container">
-          <img id="mute-microphone" src="/public/assets/microphone.png">
-          <img id="deafen-output" src="/public/assets/volume.png">
+          <img id="volume-mixer-toggle" class="toggle-button" src="/public/assets/levels-adjustment.png">
+          <img id="pc-stats-toggle" class="toggle-button" src="/public/assets/volume.png">
         </div>
 
       </div>
@@ -72,5 +95,8 @@
   <!-- Should probs be consitent in the HTTP request libraries i use (request vs axios)-->
   <script src="/public/lib/axios.js" type="text/javascript"></script>
   <script src="/public/lib/jquery.js" type="text/javascript"></script>
+  <script src="/public/lib/jquery-ui.min.js" type="text/javascript"></script>
+  <script src="/public/lib/jquery-ui-touch-punch.min.js" type="text/javascript"></script>
   <script src="/public/tablet/display.js" type="text/javascript"></script>
+  <script src="/public/tablet/volume-sliders.js" type="text/javascript"></script>
 </body>

@@ -1,7 +1,7 @@
-const express = require('express')
-const multer = require('multer') // for parsing multipart/form-data
-const bodyParser = require('body-parser') // for parsing basic request data?
-const path = require('path')
+var express = require('express')
+var multer = require('multer') // for parsing multipart/form-data
+var bodyParser = require('body-parser') // for parsing basic request data?
+var path = require('path')
 var fs = require('fs')
 var queryString = require('querystring')
 
@@ -208,6 +208,10 @@ app.post('/spotify-api/previous-song', (req, res) => {
 })
 
 app.put('/spotify-api/pause', (req, res) => {
+  var now = (new Date()).getTime()
+  var diff = now - req.headers.timesent;
+  console.log('Pause delay: ' + diff)
+
   var options = {
     url: 'https://api.spotify.com/v1/me/player/pause',
     headers: {
@@ -217,7 +221,7 @@ app.put('/spotify-api/pause', (req, res) => {
 
   request.put(options, function(error, response, body) {
     if(!error && response.statusCode === 204) {
-
+      console.log('Spotify delay: ' + ((new Date()).getTime() - now))
     } else {
       console.log('pause error')
       console.log(error)
@@ -231,6 +235,10 @@ app.put('/spotify-api/pause', (req, res) => {
 
   // Tell Spotify to resume playback
 app.put('/spotify-api/play', (req, res) => {
+  var now = (new Date()).getTime()
+  var diff = now - req.headers.timesent;
+  console.log('Play delay: ' + diff)
+
   var options = {
     url: 'https://api.spotify.com/v1/me/player/play',
     headers: {
@@ -240,7 +248,7 @@ app.put('/spotify-api/play', (req, res) => {
 
   request.put(options, function(error, response, body) {
     if(response.statusCode === 204) {
-
+      console.log('Spotify delay: ' + ((new Date()).getTime() - now))
     } else {
       console.log('play error')
       console.log(error)
@@ -260,23 +268,45 @@ app.get('/spotify-api/playback-info', (req, res) => {
     json: true
   }
 
+  var timeReceived = (new Date()).getTime()
+  var diff = req.query.timesent;
+  // console.log('Playback delay ' + timeReceived)
+
   request.get(options, function(error, response, body) {
     if(!error && response.statusCode === 200) {
       var sendToClient = {}
-      sendToClient.is_playing = body.is_playing;
-      sendToClient.track = body.item.name;
-      sendToClient.artist = body.item.album.artists[0].name;
+      sendToClient.is_playing = body.is_playing
+      sendToClient.track = body.item.name
+      sendToClient.artist = body.item.album.artists[0].name
       sendToClient.album_name = body.item.album.name
       sendToClient.album_image = body.item.album.images[1].url
+      sendToClient.timeSent = (new Date()).getTime()
+
+      var diff = (sendToClient.timeSent - timeReceived) / 1000;
+      //console.log('Play: Spotify retrieval ' + diff)
 
       res.send(sendToClient)
-    } else {
-      if(body && body.error && body.error.status === 401) {
-        //res.send('refresh-page')
-      }
+    } else if(response.statusCode === 204) {
+      // Nothing is playing, do nothing
+      console.log('204')
 
-      console.log('playback-info error')
-      console.log(body)
+    } else {
+      process.stdout.write("Playback info error: ")
+
+      if(body && body.error && body.error.status === 401) {
+        console.log(body.error.message)
+
+        if(body.error.message === 'Invalid access token') {
+          authenticated = false
+
+          requestAccessToken()
+          // Redirect the client to back to /tablet to force reauthentication
+          // Alternatively, tell the client to refresh the page (or do it for them)
+        } else if(body.error.message === 'The access token expired') {
+          // Refresh the access token
+          refreshToken()
+        }
+      }
     }
   })
 })
@@ -301,7 +331,10 @@ function getRedirectString() {
   })
   }
 
+// Request a refresh token
 function refreshToken() {
+  console.log('Refreshing access token')
+
   var options  = {
     url: 'https://accounts.spotify.com/api/token',
     headers: {
@@ -314,9 +347,44 @@ function refreshToken() {
 
   request.post(options, function(error, response, body) {
     if(!error) {
+      console.log('Refresh was a success!')
       access_token = response.access_token
       console.log(error)
       console.log(body)
+    } else {
+      console.log(error)
+      console.log(body)
+    }
+  })
+}
+
+function requestAccessToken() {
+  console.log("Requesting new Access Token!")
+
+  // After authenticating, get the access and refresh tokens
+  // have a function that takes req as a parameter(or req.query)
+
+  code = access_code;
+  console.log('Code: ' + access_code)
+  var authOptions = {
+    url: 'https://accounts.spotify.com/api/token',
+    form: {
+      code: code,
+      redirect_uri: redirect_uri,
+      grant_type: 'authorization_code'
+    },
+    headers: {
+      'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+    },
+    json: true
+  }
+
+  request.post(authOptions, function(error, response, body) {
+    if(!error && response.statusCode === 200) {
+      access_token = body.access_token;
+      refresh_token = body.refresh_token;
+
+      console.log('Request was successful!')
     } else {
       console.log(error)
       console.log(body)

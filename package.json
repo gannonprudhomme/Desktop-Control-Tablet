@@ -17,6 +17,7 @@
     "mongoose": "^5.3.4",
     "multer": "^1.4.1",
     "querystring": "^0.2.0",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "timesync": "^1.0.3"
   }
 }

@@ -1,13 +1,19 @@
 var express = require('express')
 var {exec} = require('child_process')
+var path = require('path')
+var fs = require('fs')
 
 var router = express.Router()
+
+var volumes = {};
+var volumeData = JSON.parse(fs.readFileSync(path.join(__dirname + '/public/volumeData.json'), 'utf-8'))
 
 router.put('/desktop/sleep', (req, res) => {
   console.log('attempting to sleep')
   exec('nircmd standby')
 })
 
+/*
 // ******** VOLUME ********
 // This should probs be a PUT call instead
 router.post('/volume', (req, res) => {
@@ -39,5 +45,5 @@ function saveVolumeData() {
       console.log(error)
   })
 }
-
+*/
 module.exports = router;
