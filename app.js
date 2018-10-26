@@ -14,11 +14,11 @@ var volumes = {};
 var volumeData = JSON.parse(fs.readFileSync(path.join(__dirname + '/public/volumeData.json'), 'utf-8'))
 
 // Spotify properties
-//var spotify = require('./spotify.js')(app)
+var spotify = require('./routes/spotify.js')
 
 // discord
-var discord = require('./discord.js')
-var desktop = require('./desktop_control.js')
+var discord = require('./routes/discord.js')
+var desktop = require('./routes/desktop_control.js')
 
 app.use(discord)
 app.use(desktop)
@@ -210,7 +210,7 @@ app.post('/spotify-api/previous-song', (req, res) => {
 app.put('/spotify-api/pause', (req, res) => {
   var now = (new Date()).getTime()
   var diff = now - req.headers.timesent;
-  console.log('Pause delay: ' + diff)
+  console.log('Pause delay: ' + diff + 'ms')
 
   var options = {
     url: 'https://api.spotify.com/v1/me/player/pause',
@@ -221,14 +221,14 @@ app.put('/spotify-api/pause', (req, res) => {
 
   request.put(options, function(error, response, body) {
     if(!error && response.statusCode === 204) {
-      console.log('Spotify delay: ' + ((new Date()).getTime() - now))
+      console.log('Spotify delay: ' + ((new Date()).getTime() - now) + 'ms')
     } else {
       console.log('pause error')
       console.log(error)
       console.log(body)
 
       // Have an error status code check here
-      refreshToken()
+      // refreshToken()
     }
   })
 })
@@ -237,7 +237,7 @@ app.put('/spotify-api/pause', (req, res) => {
 app.put('/spotify-api/play', (req, res) => {
   var now = (new Date()).getTime()
   var diff = now - req.headers.timesent;
-  console.log('Play delay: ' + diff)
+  console.log('Play delay: ' + diff + 'ms')
 
   var options = {
     url: 'https://api.spotify.com/v1/me/player/play',
@@ -248,14 +248,14 @@ app.put('/spotify-api/play', (req, res) => {
 
   request.put(options, function(error, response, body) {
     if(response.statusCode === 204) {
-      console.log('Spotify delay: ' + ((new Date()).getTime() - now))
+      console.log('Spotify delay: ' + ((new Date()).getTime() - now) + 'ms')
     } else {
       console.log('play error')
       console.log(error)
       console.log(body)
 
       // Have an error status code check here
-      refreshToken()
+      // refreshToken()
     }
   })
 })
@@ -286,7 +286,7 @@ app.get('/spotify-api/playback-info', (req, res) => {
       //console.log('Play: Spotify retrieval ' + diff)
 
       res.send(sendToClient)
-    } else if(response.statusCode === 204) {
+    } else if(response && response.statusCode === 204) {
       // Nothing is playing, do nothing
       console.log('204')
 
@@ -299,7 +299,7 @@ app.get('/spotify-api/playback-info', (req, res) => {
         if(body.error.message === 'Invalid access token') {
           authenticated = false
 
-          requestAccessToken()
+          // requestAccessToken()
           // Redirect the client to back to /tablet to force reauthentication
           // Alternatively, tell the client to refresh the page (or do it for them)
         } else if(body.error.message === 'The access token expired') {
@@ -342,15 +342,14 @@ function refreshToken() {
     form: {
       grant_type: 'refresh_token',
       refresh_token: refresh_token
-    }
+    },
+    json: true
   }
 
   request.post(options, function(error, response, body) {
     if(!error) {
-      console.log('Refresh was a success!')
-      access_token = response.access_token
-      console.log(error)
-      console.log(body)
+      access_token = body.access_token
+      console.log('Refreshed access token successfully!')
     } else {
       console.log(error)
       console.log(body)
@@ -358,6 +357,7 @@ function refreshToken() {
   })
 }
 
+/*
 function requestAccessToken() {
   console.log("Requesting new Access Token!")
 
@@ -365,7 +365,7 @@ function requestAccessToken() {
   // have a function that takes req as a parameter(or req.query)
 
   code = access_code;
-  console.log('Code: ' + access_code)
+  // console.log('Code: ' + access_code)
   var authOptions = {
     url: 'https://accounts.spotify.com/api/token',
     form: {
@@ -391,6 +391,7 @@ function requestAccessToken() {
     }
   })
 }
+*/
 
   /**
    * Generates a random string containing numbers and letters

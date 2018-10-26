@@ -9,6 +9,9 @@ var currentView = 'volume-mixer' // ENUM here, volume-mixer, or pc-stats, or pom
 $(document).ready(function() {
   // Load the playback info from spotify, including track info
   getPlaybackInfo()
+
+  $('#pc-stats').hide()
+  $('#timer-control').hide()
 })
 
 // Check for playback changes every 2 seconds
