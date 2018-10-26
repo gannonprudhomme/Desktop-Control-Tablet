@@ -1,0 +1,4 @@
+#pc-stats {
+  display: grid;
+  grid-template-rows: 85% 15;
+}

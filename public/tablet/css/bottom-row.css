@@ -1,0 +1,104 @@
+#bottom-row {
+  display: grid;
+  grid-template-columns: 32% 36% 32%;
+  grid-template-rows: 100%;
+  height: 100%;
+}
+
+#spotify-playback {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+#track {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  width: 100%;
+}
+
+#album-cover {
+  width: 70px;
+  height: 70px;
+  padding-top: 10px;
+}
+
+#track-info {
+  display: flex;
+  flex-direction: column;
+  margin-left: 5px;
+}
+
+#current-track {
+  /* set font style */
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+#current-artist {
+  /* Set font style */
+  font-size: 13px;
+}
+
+#playback-container {
+  border: 1px solid #00C8C8 !important;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-content: center !important;
+  width: 250px !important;
+  margin-top: 10px;
+}
+
+#play-pause {
+  width: 48px;
+  height: 48px;
+  margin: 7px auto;
+}
+
+#previous-song {
+  width: 32px;
+  height: 32px;
+  transform: rotate(180deg);
+  margin-top: 13px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0px;
+  /* margin: 16px auto; */
+
+}
+
+#next-song {
+  width: 32px;
+  height: 32px;
+  margin-top: 13px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0px;
+}
+
+#view-swapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  width: 100%;
+  height: 100%;
+}
+
+#control-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border: 1px solid #00C8C8 !important;
+  border-radius: 20px;
+  height: 75%;
+  width: 85%;
+}
+
+
+.toggle-button {
+  width: 32px;
+  height: 32px;
+}

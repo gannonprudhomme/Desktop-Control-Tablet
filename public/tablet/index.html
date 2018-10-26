@@ -2,7 +2,11 @@
 
 <head>
   <meta charset="utf-8">
-  <link href="/public/tablet/display.css" rel="stylesheet" type="text/css">
+  <link href="/public/tablet/css/main.css" rel="stylesheet" type="text/css">
+  <link href="/public/tablet/css/top-row.css" rel="stylesheet" type="text/css">
+  <link href="/public/tablet/css/volume-sliders.css" rel="stylesheet" type="text/css">
+  <link href="/public/tablet/css/pc-stats.css" rel="stylesheet" type="text/css">
+  <link href="/public/tablet/css/bottom-row.css" rel="stylesheet" type="text/css">
   <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
   <title> Desktop Companion Tablet </title>
 </head>
@@ -22,14 +26,15 @@
       </div>
 
       <div id="timer">
-        <h4> TIMER </h4>
+        <div id="countdown-number"></div>
+        <svg>
+          <circle r="23" cx="25" cy="25"></circle>
+        </svg>
       </div>
     </div>
 
     <div id="middle-row">
       <div id="volume-mixer" class="middle-view">
-
-
         <img class="slider-icon" src="/public/assets/spotify.png"> <!-- In place of master-volume icon -->
         <label class="slider-label" id="spotify-label">00% </label>
         <div class="ui-slider-range ui-corner-all" id="spotify-slider"></div>
@@ -52,6 +57,10 @@
       <div id="pc-stats" class="middle-view">
         <div>
           Stat Here
+        </div>
+
+        <div id="quick-launch-icons">
+
         </div>
       </div>
 
@@ -87,8 +96,8 @@
         <div id="control-container">
           <img id="volume-mixer-toggle" class="toggle-button" src="/public/assets/levels-adjustment.png">
           <img id="pc-stats-toggle" class="toggle-button" src="/public/assets/volume.png">
+          <img id="timer-control-toggle" class="toggle-button" src="/public/assets/volume.png">
         </div>
-
       </div>
     </div>
   </div>
@@ -98,6 +107,7 @@
   <script src="/public/lib/jquery.js" type="text/javascript"></script>
   <script src="/public/lib/jquery-ui.min.js" type="text/javascript"></script>
   <script src="/public/lib/jquery-ui-touch-punch.min.js" type="text/javascript"></script>
-  <script src="/public/tablet/display.js" type="text/javascript"></script>
-  <script src="/public/tablet/volume-sliders.js" type="text/javascript"></script>
+  <script src="/public/tablet/scripts/display.js" type="text/javascript"></script>
+  <script src="/public/tablet/scripts/volume-sliders.js" type="text/javascript"></script>
+  <script src="/public/tablet/scripts/timer.js" type="text/javascript"></script>
 </body>

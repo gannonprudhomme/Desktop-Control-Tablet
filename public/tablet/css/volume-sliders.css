@@ -1,0 +1,84 @@
+#volume-mixer {
+  display: grid;
+  grid-template-columns: 5% 6% 89%;
+  grid-template-rows: 25% 25% 25% 25%;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding-left: 10px;
+}
+
+.slider-icon  {
+  width: 40px;
+  height: 40px;
+  position: relative;
+}
+
+.slider-label {
+  padding-left: 10px;
+}
+
+#master-volume-label {
+  color: #333333 !important;
+}
+
+#spotify-label {
+  color: #1DB954 !important;
+}
+
+#discord-label {
+  color: #5A70AD !important;
+}
+
+#rocketleague-label {
+  color: #007ACF !important;
+}
+
+#chrome-label {
+  color: #bd3535 !important;
+}
+
+#master-volume-slider .ui-slider-handle {
+  border: 3px solid #333333 !important;
+  background: #333333 !important;
+}
+
+#spotify-slider .ui-slider-handle {
+  border: 3px solid #1DB954 !important;
+  background: #1DB954 !important;
+}
+
+#discord-slider .ui-slider-handle {
+  border: 3px solid #5A70AD !important;
+  background: #5A70AD !important;
+}
+
+#rocketleague-slider .ui-slider-handle {
+  border: 3px solid #007ACF !important;
+  background: #007ACF !important;
+}
+
+#chrome-slider .ui-slider-handle {
+  border: 3px solid #bd3535 !important;
+  background: #bd3535 !important;
+}
+
+.ui-slider-handle {
+  /* box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d !important; */
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 32px !important;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -7px;
+  margin-left: -10px;
+}
+
+.ui-slider-horizontal {
+  width: 90% !important;
+  height: 10px !important;
+  cursor: pointer;
+  box-shadow: 1px 1px 1px #0000, 0px 0px 1px #0000;
+  border: 0.2px solid #010101;
+  background: #999999 !important;
+}

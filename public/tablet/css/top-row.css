@@ -1,0 +1,80 @@
+#top-row {
+  display: grid;
+  grid-template-columns: 25% 25% 25%;
+  grid-template-rows: 100%;
+  justify-content: space-between;
+  align-items: center;
+
+  height: 100%;
+}
+
+#pc-controls {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 100%;
+}
+
+#power-button {
+  width: 32px;
+  height: 32px;
+}
+
+#mute-microphone {
+  width: 32px;
+  height: 32px;
+}
+
+#deafen-output {
+  width: 32px;
+  height: 32px;
+}
+
+#time {
+  display: flex;
+  justify-content: center;
+  border: 1px solid #00C8C8 !important;
+  border-radius: 15px;
+  padding: 7px 7px 7px 7px;
+  color: #00C8C8;
+  font-size: 30px;
+}
+
+#timer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  height: 100%;
+}
+
+#countdown-number {
+  position: absolute;
+  visibility: hidden;
+}
+
+svg {
+  width: 50px;
+  height: 50px;
+  transform: rotateY(-180deg) rotateZ(-90deg);
+  visibility: hidden;
+}
+
+svg circle {
+  stroke-dasharray: 143px;
+  stroke-dashoffset: 0px;
+  stroke-linecap: round;
+  stroke-width: 2px;
+  stroke: #00C8C8;
+  fill: none;
+  animation: countdown 60s linear infinite forwards;
+}
+
+@keyframes countdown {
+  from {
+    stroke-dashoffset: 0px;
+  }
+  to {
+    stroke-dashoffset: 143px;
+  }
+}
