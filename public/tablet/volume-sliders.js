@@ -92,7 +92,7 @@ function setSliders() {
 function sendVolumeData(programName, volume) {
   var instance = axios.create({
     baseURL: 'http://192.168.1.78:3000/volume',
-    timeout: 3000,
+    timeout: 3000
   })
 
   instance.post('', {

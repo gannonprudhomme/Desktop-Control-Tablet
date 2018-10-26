@@ -218,6 +218,4 @@ function updateClock() {
   setTimeout(updateClock, 1000);
 }
 
-
-
 updateClock(); // initial call
