@@ -52,6 +52,11 @@
   margin-top: 10px;
 }
 
+.image-button:active {
+  transform: scale(0.8);
+  filter: grayscale(0.8);
+}
+
 #play-pause {
   width: 48px;
   height: 48px;
@@ -68,6 +73,11 @@
   margin-bottom: 0px;
   /* margin: 16px auto; */
 
+}
+
+/*Only this image needs an extra */
+#previous-song:active {
+  transform: rotate(180deg) scale(0.85);
 }
 
 #next-song {

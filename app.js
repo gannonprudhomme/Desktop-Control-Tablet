@@ -8,22 +8,22 @@ var request = require('request')
 
 const app = express()
 const port = 3000
-var upload = multer()
 
-// Have a local instance of the volume and (eventually) only saving it on change
-var volumes = {};
-var volumeData = JSON.parse(fs.readFileSync(path.join(__dirname + '/public/volumeData.json'), 'utf-8'))
+// Socket.io stuff
+var http = require('http')
+var server = http.createServer(app)
+var io = require('socket.io').listen(server)
 
-// Spotify properties
+// Routes
 var spotify = require('./routes/spotify.js')
-
-// discord
 var discord = require('./routes/discord.js')
 var desktop = require('./routes/desktop_control.js')
+var sockets = require('./sockets.js')(io)
 
 app.use(discord)
-app.use(desktop.router)
+//app.use(desktop.router)
 app.use(spotify.router)
+app.use(sockets)
 
 // Set properties
 app.use(express.static(__dirname))
@@ -96,7 +96,7 @@ app.get('/mobile', (req, res) => {
 })
 
 // Listen to this port, and handle any errors accordingly
-app.listen(port, (err) => {
+server.listen(port, (err) => {
   if(err) {
     return console.log("something bad happened", err)
   }
@@ -105,7 +105,6 @@ app.listen(port, (err) => {
 
   desktop.loadVolumeData()
 })
-
 
 function maximizeWindow(programName) {
 

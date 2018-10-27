@@ -36,7 +36,6 @@ router.get('/volume/data', (req, res) => {
   console.log("Sent volume data")
 })
 
-// Volume stuff
 var {exec} = require('child_process')
 function changeVolume(programName, volume) {
   exec('nircmd true setappvolume ' + programName + ' ' + volume)

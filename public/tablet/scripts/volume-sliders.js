@@ -1,5 +1,7 @@
 var volumes = {"master-volume":0, "spotify.exe": 0, "discord.exe": 0, "rocketleague.exe": 0, "chrome.exe": 0}
 
+var socket = io()
+
 $(document).ready(function() {
   getVolumeData()
 })
@@ -89,7 +91,33 @@ function setSliders() {
   $('#chrome-label').text(Math.floor(volumes["chrome.exe"] * 100) + "%")
 }
 
-function sendVolumeData(programName, volume) {
+function sendVolumeData(program, volume) {
+  var obj = {
+    program: program,
+    volume: volume,
+    time: (new Date()).getTime()
+  }
+
+  console.log('sending volume')
+  socket.emit('set_volume', obj)
+}
+
+function getVolumeData() {
+  socket.emit('volume_data', '', function(data) {
+    console.log(data)
+
+    volumes["spotify.exe"] = data["spotify.exe"]
+    volumes["discord.exe"] = data["discord.exe"]
+    volumes["rocketleague.exe"] = data["rocketleague.exe"]
+    volumes["chrome.exe"] = data["chrome.exe"]
+
+    setSliders()
+
+    console.log(volumes)
+  })
+}
+
+/*function sendVolumeData(programName, volume) {
   var instance = axios.create({
     baseURL: 'http://192.168.1.78:3000/volume',
     timeout: 3000
@@ -128,4 +156,4 @@ function getVolumeData() {
   }).catch(function(error) {
     console.log(error)
   })
-}
+}*/

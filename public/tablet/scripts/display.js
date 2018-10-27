@@ -1,7 +1,7 @@
 var muted = false; // Retrieve if the user is currently muted or not
 var playing = false // Retrieve the current state of playback from Spotify on launch
 var current_track = {} // Dictionary/JSON object for the currently played song. Contains track name, album name, artist, and album image link
-var lastPlaybackPress = 0;
+var lastPlaybackPress = 0
 
 var mixerHidden = false
 var currentView = 'volume-mixer' // ENUM here, volume-mixer, or pc-stats, or pomdo
@@ -78,6 +78,11 @@ $('#pc-stats-toggle').click(function() {
 
 $('#deafen-output').click(function() {
   getDiscord();
+})
+
+$('#mute-microphone').click(function() {
+  var socket = io()
+  socket.emit('chat message', 'hello')
 })
 
 function sendPlayback(type, option) {

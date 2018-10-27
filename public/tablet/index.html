@@ -85,28 +85,31 @@
       <div id="spotify-playback">
         <div id="playback-container">
           <!-- <h4> Spotify Playback </h4> -->
-          <img id="previous-song" src="/public/assets/next-song.png">
-          <img id="play-pause" src="/public/assets/play.png">
-          <img id="next-song" src="/public/assets/next-song.png">
+          <img class="image-button" id="previous-song" src="/public/assets/next-song.png">
+          <img class="image-button" id="play-pause" src="/public/assets/play.png">
+          <img class="image-button" id="next-song" src="/public/assets/next-song.png">
         </div>
       </div>
 
       <!--Need to highlight which view is active!-->
       <div id="view-swapper">
         <div id="control-container">
-          <img id="volume-mixer-toggle" class="toggle-button" src="/public/assets/levels-adjustment.png">
-          <img id="pc-stats-toggle" class="toggle-button" src="/public/assets/volume.png">
-          <img id="timer-control-toggle" class="toggle-button" src="/public/assets/volume.png">
+          <img id="volume-mixer-toggle" class="image-button toggle-button" src="/public/assets/levels-adjustment.png">
+          <img id="pc-stats-toggle" class="image-button toggle-button" src="/public/assets/volume.png">
+          <img id="timer-control-toggle" class="image-button toggle-button" src="/public/assets/volume.png">
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Should probs be consitent in the HTTP request libraries i use (request vs axios)-->
+  <!-- Libraries -->
   <script src="/public/lib/axios.js" type="text/javascript"></script>
   <script src="/public/lib/jquery.js" type="text/javascript"></script>
   <script src="/public/lib/jquery-ui.min.js" type="text/javascript"></script>
   <script src="/public/lib/jquery-ui-touch-punch.min.js" type="text/javascript"></script>
+  <script src="./socket.io/socket.io.js"></script>
+
+  <!-- Webpage JS files-->
   <script src="/public/tablet/scripts/display.js" type="text/javascript"></script>
   <script src="/public/tablet/scripts/volume-sliders.js" type="text/javascript"></script>
   <script src="/public/tablet/scripts/timer.js" type="text/javascript"></script>

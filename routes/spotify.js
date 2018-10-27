@@ -1,20 +1,20 @@
+var express = require('express')
 var request = require('request')
 var cookieParser = require('cookie-parser')
+var request = require('request')
 
-var express = require('express')
+// Create a router
 var router = express.Router()
 
-// SPOTIFY STUFF
-var request = require('request')
-var cookieParser = require('cookie-parser')
+// Spotify constants
+const client_id = 'a6b183eb82c84480aa98deec6cba9b92'
+const client_secret = '156fa2b93faa41afb74bebf84b148ac3'
+const redirect_uri = 'http://192.168.1.78:3000/tablet'
 
-var client_id = 'a6b183eb82c84480aa98deec6cba9b92'
-var client_secret = '156fa2b93faa41afb74bebf84b148ac3'
-var redirect_uri = 'http://192.168.1.78:3000/tablet'
-
+// Spotify values returned from authentication
 var access_token;
 var refresh_token; // Used to request a new access token after a certain amount of time
-var access_code;
+// var access_code;
 var stateKey = 'spotify_auth_state'
 
   // Retrieve formatted track data from Spotify and send in response to tablet
@@ -210,6 +210,7 @@ function setTokens(access, refresh) {
   refresh_token = refresh;
 }
 
+// Set exports
 module.exports.setTokens = setTokens;
 module.exports.client_id = client_id;
 module.exports.client_secret = client_secret;
