@@ -15,7 +15,6 @@ var returnRouter = function(io) {
 
     var {exec} = require('child_process')
     socket.on('set_volume', function(data) {
-      // console.log('received volume ' + data)
       var now = (new Date()).getTime()
       console.log('Slider delay: ' + (now - data.time) + 'ms')
 
@@ -24,9 +23,6 @@ var returnRouter = function(io) {
     })
 
     socket.on('volume_data', function(data, fn) {
-      console.log(data)
-      console.log(fn)
-
       fn(volumeData)
     })
   })
@@ -53,4 +49,5 @@ function loadVolumeData() {
   }
 }
 
-module.exports = returnRouter;
+module.exports.router = returnRouter
+module.exports.loadVolumeData = loadVolumeData

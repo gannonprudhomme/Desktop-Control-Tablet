@@ -17,13 +17,11 @@ var io = require('socket.io').listen(server)
 // Routes
 var spotify = require('./routes/spotify.js')
 var discord = require('./routes/discord.js')
-var desktop = require('./routes/desktop_control.js')
-var sockets = require('./sockets.js')(io)
+var desktop = require('./routes/desktop.js')
 
 app.use(discord)
-//app.use(desktop.router)
-app.use(spotify.router)
-app.use(sockets)
+app.use(desktop.router(io))
+app.use(spotify.router(io))
 
 // Set properties
 app.use(express.static(__dirname))

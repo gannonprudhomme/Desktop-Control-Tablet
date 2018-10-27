@@ -104,7 +104,7 @@ function sendVolumeData(program, volume) {
 
 function getVolumeData() {
   socket.emit('volume_data', '', function(data) {
-    console.log(data)
+    // console.log(data)
 
     volumes["spotify.exe"] = data["spotify.exe"]
     volumes["discord.exe"] = data["discord.exe"]
@@ -113,7 +113,7 @@ function getVolumeData() {
 
     setSliders()
 
-    console.log(volumes)
+    // console.log(volumes)
   })
 }
 
