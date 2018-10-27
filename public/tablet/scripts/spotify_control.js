@@ -1,6 +1,7 @@
 var playing = false // Retrieve the current state of playback from Spotify on launch
 var current_track = {} // Dictionary/JSON object for the currently played song. Contains track name, album name, artist, and album image link
-// var lastPlaybackPress = 0 // Time since the last playback press
+var lastPlaybackPress = 0 // Time since the last playback press
+var lastTrackRequest = 0 // Time since we last requested for a track,
 
 // var socket = io('/spotify')
 // io.connect('/spotify')
@@ -9,12 +10,11 @@ var socket = io()
 $(document).ready(function() {
   getPlaybackInfo()
 })
-
 // Check for playback changes every 2 seconds
 window.setInterval(function() {
   getPlaybackInfo()
 
-}, 1000)
+}, 500)
 
 $('#power-button').click(function() {
   desktopPut('sleep')
@@ -23,29 +23,30 @@ $('#power-button').click(function() {
 $("#play-pause").click(function() {
   lastPlaybackPress = (new Date()).getTime();
 
+  // If it's playing when we press the button, pause it
   if(playing) {
     playing = false;
 
     // Swap to the play image
     $('#play-pause').attr('src', '/public/assets/play.png')
 
-    sendPlayback('play')
+    sendPlayback('pause')
   } else {
     playing = true
 
     // Swap to the pause image
     $('#play-pause').attr('src', '/public/assets/pause.png')
 
-    sendPlayback('pause')
+    sendPlayback('play')
   }
 })
 
 $('#previous-song').click(function() {
-  sendPlaybackCommand('previous')
+  sendPlayback('previous')
 })
 
 $('#next-song').click(function() {
-  sendPlaybackCommand('next')
+  sendPlayback('next')
 })
 
 // Send a Spotify playback update to the server
@@ -62,6 +63,7 @@ function sendPlayback(type) {
 
       break
     case 'next':
+      console.log('next')
       socket.emit('next', now)
 
       break
@@ -76,9 +78,8 @@ function getPlaybackInfo() {
   var now = (new Date()).getTime()
 
   socket.emit('get_track', now, function(data) {
-    console.log(data)
+    // console.log(data)
 
-    playing = data.is_playing
     current_track = {}
     current_track.name = data.track
     current_track.artist = data.artist
@@ -90,6 +91,18 @@ function getPlaybackInfo() {
     $('#current-artist').text(current_track.artist)
 
     $('#album-cover').attr('src', current_track.album_image)
+
+    // If it's been more than a second since the last time we manually paused Playback
+    // Then the playback change wasn't from the client, thus update the playback icon
+    if((new Date()).getTime() - lastPlaybackPress > 1000) {
+      playing = data.is_playing
+
+      if(playing) {
+        $('#play-pause').attr('src', '/public/assets/pause.png')
+      } else {
+        $('#play-pause').attr('src', '/public/assets/play.png')
+      }
+    }
   })
 }
 

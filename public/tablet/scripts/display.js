@@ -1,6 +1,8 @@
 var muted = false; // Retrieve if the user is currently muted or not
-var mixerHidden = false
 var currentView = 'volume-mixer' // ENUM here, volume-mixer, or pc-stats, or pomdo
+var audioDevice = 'DAC'
+
+var socket = io()
 
 $(document).ready(function() {
 
@@ -12,31 +14,33 @@ $('#power-button').click(function() {
   desktopPut('sleep')
 })
 
-
 $('#volume-mixer-toggle').click(function() {
   console.log('mute')
 
-  if(mixerHidden) {
-    mixerHidden = false
-    $('#volume-mixer').show()
-    $('#pc-stats').hide()
-    $('#timer-control').hide()
-  } else {
-    mixerHidden = true
-    $('#volume-mixer').hide()
-  }
+  currentView = 'volume-mixer'
+  $('#volume-mixer').show()
+  $('#pc-stats').hide()
+  $('#timer-control').hide()
 })
 
 $('#pc-stats-toggle').click(function() {
-  if(!(currentView === 'pc-stats')) {
-    $('#pc-stats').show()
-    $('#volume-mixer').hide()
-    $('#timer-control').hide()
-  }
+  // if(!(currentView === 'pc-stats')) {}
+
+  currentView = 'pc-stats'
+  $('#pc-stats').show()
+  $('#volume-mixer').hide()
+  $('#timer-control').hide()
 })
 
 $('#deafen-output').click(function() {
-  getDiscord();
+  if(audioDevice == 'DAC') { // Then tell to swap to soundbar
+    audioDevice = 'Sound Bar'
+
+  } else {
+    audioDevice = 'DAC'
+  }
+
+  socket.emit('audio_device', audioDevice)
 })
 
 $('#mute-microphone').click(function() {

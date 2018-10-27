@@ -16,8 +16,6 @@ var refresh_token; // Used to request a new access token after a certain amount 
 var stateKey = 'spotify_auth_state'
 
 var socketHandler = function(socket) {
-
-
   // var spotify = io.of('/spotify')
   socket.on('get_track', function(data, ret) {
     var options = {
@@ -38,8 +36,8 @@ var socketHandler = function(socket) {
           sendToClient.album_image = body.item.album.images[1].url
           sendToClient.timeSent = (new Date()).getTime()
 
-          var diff = (sendToClient.timeSent - timeReceived) / 1000;
-          //console.log('Play: Spotify retrieval ' + diff)
+          var diff = (sendToClient.timeSent - timeReceived);
+          // console.log('Play: Spotify retrieval ' + diff + 'ms')
 
           ret(sendToClient)
         } else if(response && response.statusCode === 204) {
@@ -70,29 +68,33 @@ var socketHandler = function(socket) {
   })
 
   socket.on('play', function(data) {
-    var now = (new Date()).getTime()
-    console.log('Play delay: ' + (now - data))
+    var delay = (new Date()).getTime() - data
+    console.log('Play delay: ' + delay)
+    commands.saveDelay(delay)
 
     commands.sendKeypress('ctrl+alt+up')
   })
 
   socket.on('pause', function(data) {
-    var now = (new Date()).getTime()
-    console.log('Pause delay: ' + (now - data))
+    var delay = (new Date()).getTime() - data
+    console.log('Pause delay: ' + delay)
+    commands.saveDelay(delay)
 
     commands.sendKeypress('ctrl+alt+up')
   })
 
   socket.on('next', function(data) {
-    var now = (new Date()).getTime()
-    console.log('Next delay: ' + (now - data))
+    var delay = (new Date()).getTime() - data
+    console.log('Next delay: ' + delay)
+    commands.saveDelay(delay)
 
     commands.sendKeypress('ctrl+alt+right')
   })
 
   socket.on('previous', function(data) {
-    var now = (new Date()).getTime()
-    console.log('Next delay: ' + (now - data))
+    var delay = (new Date()).getTime() - data
+    console.log('Prev delay: ' + delay)
+    commands.saveDelay(delay)
 
     commands.sendKeypress('ctrl+alt+left')
   })

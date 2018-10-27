@@ -2,10 +2,12 @@ var express = require('express')
 var router = express.Router()
 var fs = require('fs')
 var bodyParser = require('body-parser') // for parsing basic request data?
+var commands = require('./commands.js')
 
 var volumes = {};
 var volumeData = JSON.parse(fs.readFileSync('./public/volumeData.json', 'utf-8'))
 
+// Handle socket messages
 var socketHandler = function(socket) {
   // var desktop = io.of('/desktop')
   socket.on('disconnect', function() {
@@ -16,13 +18,18 @@ var socketHandler = function(socket) {
   socket.on('set_volume', function(data) {
     var now = (new Date()).getTime()
     console.log('Volume: ' + data.program + ': ' + (data.volume * 100) + ', Delay: ' + (now - data.time) + 'ms')
-
+    commands.saveDelay(now - data.time)
 
     exec('nircmd true setappvolume ' + data.program + ' ' + data.volume)
   })
 
   socket.on('volume_data', function(data, fn) {
     fn(volumeData)
+  })
+
+  socket.on('audio_device', function(data) {
+    console.log('audio device ' + data)
+    commands.changeAudioOutput(data)
   })
 
   // return router
