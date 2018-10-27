@@ -15,89 +15,89 @@ var refresh_token; // Used to request a new access token after a certain amount 
 // var access_code;
 var stateKey = 'spotify_auth_state'
 
-var returnRouter = function(io) {
-  var spotify = io.of('/spotify')
-  spotify.on('connection', function(socket) {
-    socket.on('get_track', function(data, ret) {
-      var options = {
-        url: 'https://api.spotify.com/v1/me/player/currently-playing',
-        headers: {'Authorization': 'Bearer ' + access_token},
-        json: true
-      }
+var socketHandler = function(socket) {
 
-      var timeReceived = (new Date()).getTime()
 
-      request.get(options, function(error, response, body) {
-        if(!error && response.statusCode === 200) {
-            var sendToClient = {}
-            sendToClient.is_playing = body.is_playing
-            sendToClient.track = body.item.name
-            sendToClient.artist = body.item.album.artists[0].name
-            sendToClient.album_name = body.item.album.name
-            sendToClient.album_image = body.item.album.images[1].url
-            sendToClient.timeSent = (new Date()).getTime()
+  // var spotify = io.of('/spotify')
+  socket.on('get_track', function(data, ret) {
+    var options = {
+      url: 'https://api.spotify.com/v1/me/player/currently-playing',
+      headers: {'Authorization': 'Bearer ' + access_token},
+      json: true
+    }
 
-            var diff = (sendToClient.timeSent - timeReceived) / 1000;
-            //console.log('Play: Spotify retrieval ' + diff)
+    var timeReceived = (new Date()).getTime()
 
-            ret(sendToClient)
-          } else if(response && response.statusCode === 204) {
-            // Nothing is playing, do nothing
-            console.log('204')
+    request.get(options, function(error, response, body) {
+      if(!error && response.statusCode === 200) {
+          var sendToClient = {}
+          sendToClient.is_playing = body.is_playing
+          sendToClient.track = body.item.name
+          sendToClient.artist = body.item.album.artists[0].name
+          sendToClient.album_name = body.item.album.name
+          sendToClient.album_image = body.item.album.images[1].url
+          sendToClient.timeSent = (new Date()).getTime()
 
-          } else {
-            process.stdout.write("Playback info error: ")
-            console.log(body)
-            console.log(error)
+          var diff = (sendToClient.timeSent - timeReceived) / 1000;
+          //console.log('Play: Spotify retrieval ' + diff)
 
-            if(body && body.error && body.error.status === 401) {
-              console.log(body.error.message)
+          ret(sendToClient)
+        } else if(response && response.statusCode === 204) {
+          // Nothing is playing, do nothing
+          console.log('204')
 
-              if(body.error.message === 'Invalid access token') {
-                authenticated = false
+        } else {
+          process.stdout.write("Playback info error: ")
+          console.log(body)
+          console.log(error)
 
-                // requestAccessToken()
-                // Redirect the client to back to /tablet to force reauthentication
-                // Alternatively, tell the client to refresh the page (or do it for them)
-              } else if(body.error.message === 'The access token expired') {
-                // Refresh the access token
-                refreshToken()
-              }
+          if(body && body.error && body.error.status === 401) {
+            console.log(body.error.message)
+
+            if(body.error.message === 'Invalid access token') {
+              authenticated = false
+
+              // requestAccessToken()
+              // Redirect the client to back to /tablet to force reauthentication
+              // Alternatively, tell the client to refresh the page (or do it for them)
+            } else if(body.error.message === 'The access token expired') {
+              // Refresh the access token
+              refreshToken()
             }
           }
-      })
-    })
-
-    socket.on('play', function(data) {
-      var now = (new Date()).getTime()
-      console.log('Play delay: ' + (now - data))
-
-      commands.sendKeypress('ctrl+alt+up')
-    })
-
-    socket.on('pause', function(data) {
-      var now = (new Date()).getTime()
-      console.log('Pause delay: ' + (now - data))
-
-      commands.sendKeypress('ctrl+alt+up')
-    })
-
-    socket.on('next', function(data) {
-      var now = (new Date()).getTime()
-      console.log('Next delay: ' + (now - data))
-
-      commands.sendKeypress('ctrl+alt+right')
-    })
-
-    socket.on('previous', function(data) {
-      var now = (new Date()).getTime()
-      console.log('Next delay: ' + (now - data))
-
-      commands.sendKeypress('ctrl+alt+left')
+        }
     })
   })
 
-  return router
+  socket.on('play', function(data) {
+    var now = (new Date()).getTime()
+    console.log('Play delay: ' + (now - data))
+
+    commands.sendKeypress('ctrl+alt+up')
+  })
+
+  socket.on('pause', function(data) {
+    var now = (new Date()).getTime()
+    console.log('Pause delay: ' + (now - data))
+
+    commands.sendKeypress('ctrl+alt+up')
+  })
+
+  socket.on('next', function(data) {
+    var now = (new Date()).getTime()
+    console.log('Next delay: ' + (now - data))
+
+    commands.sendKeypress('ctrl+alt+right')
+  })
+
+  socket.on('previous', function(data) {
+    var now = (new Date()).getTime()
+    console.log('Next delay: ' + (now - data))
+
+    commands.sendKeypress('ctrl+alt+left')
+  })
+
+  // return router
 }
 
 // Request an access token using the provided refresh token
@@ -132,7 +132,7 @@ function setTokens(access, refresh) {
   refresh_token = refresh;
 }
 
-module.exports.router = returnRouter
+module.exports.socketHandler = socketHandler
 module.exports.setTokens = setTokens
 // Send out spotify constants
 module.exports.client_id = client_id

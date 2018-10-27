@@ -6,28 +6,26 @@ var bodyParser = require('body-parser') // for parsing basic request data?
 var volumes = {};
 var volumeData = JSON.parse(fs.readFileSync('./public/volumeData.json', 'utf-8'))
 
-var returnRouter = function(io) {
-  io.on('connection', function(socket) {
-    console.log('user connected')
-    socket.on('disconnect', function() {
-      console.log('user disconnected')
-    })
-
-    var {exec} = require('child_process')
-    socket.on('set_volume', function(data) {
-      var now = (new Date()).getTime()
-      console.log('Slider delay: ' + (now - data.time) + 'ms')
-
-
-      exec('nircmd true setappvolume ' + data.program + ' ' + data.volume)
-    })
-
-    socket.on('volume_data', function(data, fn) {
-      fn(volumeData)
-    })
+var socketHandler = function(socket) {
+  // var desktop = io.of('/desktop')
+  socket.on('disconnect', function() {
+    // console.log('user disconnected desktop')
   })
 
-  return router
+  var {exec} = require('child_process')
+  socket.on('set_volume', function(data) {
+    var now = (new Date()).getTime()
+    console.log('Volume: ' + data.program + ': ' + (data.volume * 100) + ', Delay: ' + (now - data.time) + 'ms')
+
+
+    exec('nircmd true setappvolume ' + data.program + ' ' + data.volume)
+  })
+
+  socket.on('volume_data', function(data, fn) {
+    fn(volumeData)
+  })
+
+  // return router
 }
 
 function saveVolumeData() {
@@ -49,5 +47,5 @@ function loadVolumeData() {
   }
 }
 
-module.exports.router = returnRouter
+module.exports.socketHandler = socketHandler;
 module.exports.loadVolumeData = loadVolumeData

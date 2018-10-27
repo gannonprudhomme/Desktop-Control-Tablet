@@ -2,6 +2,10 @@ var playing = false // Retrieve the current state of playback from Spotify on la
 var current_track = {} // Dictionary/JSON object for the currently played song. Contains track name, album name, artist, and album image link
 // var lastPlaybackPress = 0 // Time since the last playback press
 
+// var socket = io('/spotify')
+// io.connect('/spotify')
+var socket = io()
+
 $(document).ready(function() {
   getPlaybackInfo()
 })
@@ -25,14 +29,14 @@ $("#play-pause").click(function() {
     // Swap to the play image
     $('#play-pause').attr('src', '/public/assets/play.png')
 
-    sendPlayback('pause')
+    sendPlayback('play')
   } else {
     playing = true
 
     // Swap to the pause image
     $('#play-pause').attr('src', '/public/assets/pause.png')
 
-    sendPlayback('play')
+    sendPlayback('pause')
   }
 })
 
@@ -46,7 +50,6 @@ $('#next-song').click(function() {
 
 // Send a Spotify playback update to the server
 function sendPlayback(type) {
-  socket = io('/spotify')
   var now = (new Date()).getTime()
 
   switch(type) {
@@ -71,7 +74,6 @@ function sendPlayback(type) {
 
 function getPlaybackInfo() {
   var now = (new Date()).getTime()
-  var socket = io('/spotify')
 
   socket.emit('get_track', now, function(data) {
     console.log(data)

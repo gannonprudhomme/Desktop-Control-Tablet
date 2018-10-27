@@ -1,5 +1,6 @@
 var volumes = {"master-volume":0, "spotify.exe": 0, "discord.exe": 0, "rocketleague.exe": 0, "chrome.exe": 0}
 
+// var socket = io('/desktop')
 var socket = io()
 
 $(document).ready(function() {
