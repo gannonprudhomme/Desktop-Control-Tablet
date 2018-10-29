@@ -1,4 +1,114 @@
+/* Dials from: https://codepen.io/anon/pen/pxYMzN */
+
 #pc-stats {
   display: grid;
   grid-template-rows: 85% 15;
+}
+
+#all-dials-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: row;
+}
+
+body {
+
+  font-family: 'Open Sans', sans-serif;
+}
+
+.dial-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  position: relative;
+  zoom: 0.85;
+}
+
+.dial-title {
+  z-index: 2;
+  font-size: 30px;
+  top: 30px;
+  position: relative;
+  color: #47ffff;
+}
+
+.percentage {
+  z-index: 3;
+  margin-top: -105px;
+  margin-left: 7px;
+  font-size: 25px;
+  color: #00C8C8;
+}
+
+#memory-percentage {
+  margin-left: 2px !important;
+  font-size: 23px;
+}
+
+.dial-wrapper {
+  width: 200px;
+  height: 200px;
+  margin: 50px auto;
+  position: relative;
+  z-index: 1;
+}
+
+.dial {
+  border: 100px solid #00C8C8;
+  border-radius: 50%;
+  position: absolute;
+}
+
+.dial-arm {
+  width: 3px;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  z-index: 99;
+}
+
+.dial-arm:before {
+  position: absolute;
+  content: "";
+  background: #92fcf9;
+  height: 140px;
+  width: 3px;
+  top: calc(50% - 25px);
+}
+
+.triangle {
+  width: 0;
+  height: 0;
+  position: absolute;
+  border-left: 100px solid transparent;
+  border-right: 100px solid transparent;
+  border-bottom: 100px solid #1c2122;
+  left: calc(50% - 100px);
+  bottom: 0;
+  z-index: 10;
+}
+
+.circle {
+  position: absolute;
+  border: 50px solid #1c2122;
+  border-radius: 50%;
+  left: calc(50% - 50px);
+  top: calc(50% - 50px);
+  z-index: 20;
+}
+
+.small-circle {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: #92fcf9;
+  border-radius: 50%;
+  left: calc(50% - 10px);
+  bottom: calc(50% - 10px);
+  z-index: 30;
 }

@@ -6,7 +6,8 @@ var socket = io()
 
 $(document).ready(function() {
 
-  $('#pc-stats').hide()
+  $('#volume-mixer').hide()
+  $('#pc-stats').show()
   $('#timer-control').hide()
 })
 

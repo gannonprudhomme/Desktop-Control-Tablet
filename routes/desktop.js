@@ -3,6 +3,7 @@ var router = express.Router()
 var fs = require('fs')
 var bodyParser = require('body-parser') // for parsing basic request data?
 var commands = require('./commands.js')
+var os = require('os-utils')
 
 var volumes = {};
 var volumeData = JSON.parse(fs.readFileSync('./public/volumeData.json', 'utf-8'))
@@ -23,13 +24,38 @@ var socketHandler = function(socket) {
     exec('nircmd true setappvolume ' + data.program + ' ' + data.volume)
   })
 
+  // Send the volume data back to the client
   socket.on('volume_data', function(data, fn) {
     fn(volumeData)
   })
 
+  // Change the current audio device
   socket.on('audio_device', function(data) {
     console.log('audio device ' + data)
     commands.changeAudioOutput(data)
+  })
+
+  // Send the current pc performance stats back to the client
+  socket.on('pc_stats', function(data, ret) {
+    var data = {  }
+
+    // Calculate the current cpu usage over the next minute
+    os.cpuUsage(function(val) {
+      data.cpuUsage = val
+    })
+
+    // Calculate the current free usage over the next minute
+    // Callback should always call after os.cpuUsage
+    os.cpuFree(function(val) {
+      data.cpuFree = val
+
+      data.totalMemory = os.totalmem()
+      data.usedMemory = data.totalMemory - os.freemem()
+
+      // Send the pc usage data back to the client
+      // console.log(data)
+      ret(data)
+    })
   })
 
   // return router
@@ -52,6 +78,16 @@ function loadVolumeData() {
   for(key in volumeData) {
     volumes[key] = volumeData[key];
   }
+}
+
+function getPerformanceUsage() {
+  var data = {}
+
+  os.cpuUsage(function(val) {
+    data.cpuUsage = val;
+
+
+  })
 }
 
 module.exports.socketHandler = socketHandler;

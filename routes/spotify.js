@@ -29,11 +29,19 @@ var socketHandler = function(socket) {
     request.get(options, function(error, response, body) {
       if(!error && response.statusCode === 200) {
           var sendToClient = {}
+
+          // If there isn't a track currently playing, don't attempt to send it
+          if(body.item) {
+            sendToClient.track = body.item.name
+            sendToClient.artist = body.item.album.artists[0].name
+            sendToClient.album_name = body.item.album.name
+            sendToClient.album_image = body.item.album.images[1].url
+          } else {
+            console.log('Not currently playing track, preventing error')
+          }
+
           sendToClient.is_playing = body.is_playing
-          sendToClient.track = body.item.name
-          sendToClient.artist = body.item.album.artists[0].name
-          sendToClient.album_name = body.item.album.name
-          sendToClient.album_image = body.item.album.images[1].url
+
           sendToClient.timeSent = (new Date()).getTime()
 
           var diff = (sendToClient.timeSent - timeReceived);
