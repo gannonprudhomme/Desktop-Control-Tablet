@@ -8,5 +8,13 @@ A Desktop Companion Tablet built to control my Windows 10 home computer with a R
 - Change audio output device
 - Live desktop performance(CPU, memory) monitoring and displaying
 
-## Libraries
+## Set up and usage
+1) Install npm
+2) 
+
+## How it works
+
+## Screenshots
+
+## Libraries used
 - Spotify Web Api
