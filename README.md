@@ -16,5 +16,7 @@ A Desktop Companion Tablet built to control my Windows 10 home computer with a R
 
 ## Screenshots
 
+## Performance/Delay
+
 ## Libraries used
 - Spotify Web Api
