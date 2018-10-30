@@ -1,5 +1,5 @@
 var socket = io()
-var usage_stats = {} // PC Performance usage stats
+// var usage_stats = {} // PC Performance usage stats
 
 var minAngle = 45
 var maxAngle = 315
@@ -23,32 +23,34 @@ window.setInterval(function() {
 
 function getPerformanceInfo() {
   socket.emit('pc_stats', '', function(data) {
-    usage_stats.cpuUsage = data.cpuUsage
-    usage_stats.cpuFree = data.cpuFree
-    usage_stats.usedMemory = data.usedMemory
-    usage_stats.totalMemory = data.totalMemory
+    // usage_stats.cpuUsage = data.cpuUsage
+    // usage_stats.cpuFree = data.cpuFree
+    // usage_stats.usedMemory = data.usedMemory
+    // usage_stats.totalMemory = data.totalMemory
 
-    var cpuPercent = Math.floor(usage_stats.cpuUsage / usage_stats.cpuFree * 100)
-    var memoryPercent = Math.floor((usage_stats.usedMemory) / usage_stats.totalMemory * 100)
+    // Calculate what % of the cpu and ram are being used
+    var cpuPercent = Math.floor(data.cpuUsage * 100) + 5
+    var memoryPercent = Math.floor((data.usedMemory) / data.totalMemory * 100)
 
     // Divide the memory by 1000 to convert to gigabytes
     // Then round * 10 and / 10 to round up to the 1st decimal place
-    var usedMemoryRounded = Math.round((usage_stats.usedMemory / 1000) * 10) / 10;
-    var totalMemoryRounded = Math.round((usage_stats.totalMemory / 1000))
+    var usedMemoryRounded = Math.round((data.usedMemory / 1000) * 10) / 10;
+    var totalMemoryRounded = Math.round((data.totalMemory / 1000))
 
     // console.log(usedMemoryRounded + '/' + totalMemoryRounded + '.0 GB')
+    // console.log(usage_stats.cpuFree + ' ' + usage_stats.cpuUsage)
 
-    // console.log
+    // Rotate the dial arms accordingly
     rotateDial('cpu-dial-arm', Math.floor(cpuPercent))
     rotateDial('memory-dial-arm', Math.floor(memoryPercent))
 
+    if(cpuPercent > 100) { cpuPercent = 100 }
+
+    // Set the according text
     $('#cpu-percentage').text(cpuPercent + '%')
     $('#memory-percentage').text(usedMemoryRounded + ' GB')
     // $('#memory-percentage').text(usedMemoryRounded + '/' + totalMemoryRounded + '.0 GB')
     // $('#memory-percentage').text(memoryPercent + '%')
-
-    // console.log('CPU: ' + Math.round(cpuPercent) + '%')
-    // console.log('Memory: ' + Math.round(memoryPercent) + '%')
   })
 }
 

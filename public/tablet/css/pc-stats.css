@@ -12,11 +12,6 @@
   flex-direction: row;
 }
 
-body {
-
-  font-family: 'Open Sans', sans-serif;
-}
-
 .dial-container {
   display: flex;
   align-items: center;

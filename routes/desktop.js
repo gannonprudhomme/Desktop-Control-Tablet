@@ -35,6 +35,11 @@ var socketHandler = function(socket) {
     commands.changeAudioOutput(data)
   })
 
+  socket.on('screenshot', function(data) {
+    console.log('screenshot!')
+    commands.sendKeypress('ctrl+printscreen')
+  })
+
   // Send the current pc performance stats back to the client
   socket.on('pc_stats', function(data, ret) {
     var data = {  }

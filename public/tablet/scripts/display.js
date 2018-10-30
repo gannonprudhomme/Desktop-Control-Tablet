@@ -45,22 +45,13 @@ $('#deafen-output').click(function() {
 })
 
 $('#mute-microphone').click(function() {
-  var socket = io()
-  socket.emit('chat message', 'hello')
+  socket.emit('discord', 'mute')
 })
 
-function getDiscord() {
-  instance = axios.create({
-    baseURL: 'http://192.168.1.78:3000/discord-api/user',
-    timeout: 3000,
-    headers: {'X-Custom-Header': 'foobar'}
-  })
-  instance.get('', {}).then(function(response) {
+$('#screenshot').click(function() {
+  socket.emit('screenshot', '')
+})
 
-  }).catch(function(error) {
-    console.log(error);
-  })
-}
 
 function desktopPut(url_extension) {
   console.log('sending ' + url_extension)

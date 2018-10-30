@@ -44,7 +44,7 @@
 
 #playback-container {
   border: 1px solid #00C8C8 !important;
-  border-radius: 10px;
+  border-radius: 20px;
   display: flex;
   justify-content: space-between;
   align-content: center !important;
