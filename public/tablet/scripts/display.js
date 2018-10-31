@@ -5,6 +5,8 @@ var audioDevice = 'DAC'
 var socket = io()
 
 $(document).ready(function() {
+  console.log('Window: ' + $(window).width() + ", " + $(window).height())
+  console.log('Document: ' + $(document).width() + ", " + $(document).height())
 
   $('#volume-mixer').hide()
   $('#pc-stats').show()

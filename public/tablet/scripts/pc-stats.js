@@ -12,8 +12,6 @@ var fullColor = '#ff0101' // 75% - 100%
 var i = 0
 $(document).ready(function() {
   $('.dial-arm').css('transform', 'rotate(' + minAngle + 'deg)')
-
-  rotateDial('', 50)
 })
 
 // Retrive the performance info every second
