@@ -1,0 +1,34 @@
+{
+  "music-service": "spotify",
+  "show-current-track": true,
+  "show-media-control": true,
+
+  "show-current-time": true,
+  "show-current-date": true,
+
+  "startView": "volume-mixer",
+  "currentModules": ["volume-mixer", "performance-data"],
+
+  "quickIcons": [
+    {
+      "id": "power-button",
+      "icon": "power-button.png",
+      "script": ""
+    },
+    {
+      "id": "mute-microphone",
+      "icon": "microphone.png",
+      "script": ""
+    },
+    {
+      "id": "deafen-output",
+      "icon": "volume.png",
+      "script": ""
+    },
+   {
+      "id": "screenshot", 
+      "icon": "photo-camera-filled.png",
+      "script": ""
+    }
+  ]
+}

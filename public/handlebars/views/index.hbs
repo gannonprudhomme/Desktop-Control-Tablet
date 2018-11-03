@@ -1,14 +1,102 @@
 {{!--  Inserts anything in this to {{{body}}}--}}
 
+<div class="grid-container">
+    <div id="top-row">
+      {{>top-row}}
+    </div>
 
-<h1> {{ title }} </h1>
-<p> Welcome to  {{ title }} </p>
-{{#if condition }}
-  Condition is met
-{{ else }}
-  Condition not met
-{{/if}}
+    <div id="middle-row">
+      <div id="volume-mixer" class="middle-view">
+        <img class="slider-icon" src="/public/assets/spotify.png"> <!-- In place of master-volume icon -->
+        <label class="slider-label" id="spotify-label">00% </label>
+        <div class="ui-slider-range ui-corner-all" id="spotify-slider"></div>
 
-{{#each anyArray as |val key| }}
-  {{ key }}: {{ val }},
-{{/each}}
+
+        <img class="slider-icon" src="/public/assets/discord.png">
+        <label class="slider-label" id="discord-label">00% </label>
+        <div class="ui-slider-range ui-corner-all" id="discord-slider"></div>
+
+
+        <img class="slider-icon" src="/public/assets/rocketleague.png">
+        <label class="slider-label" id="rocketleague-label">00% </label>
+        <div class="ui-slider-range ui-corner-all" id="rocketleague-slider"></div>
+
+        <img class="slider-icon" src="/public/assets/chrome.png"> <!-- In place of chrome icon-->
+        <label class="slider-label" id="chrome-label">00% </label>
+        <div class="ui-slider-range ui-corner-all" id="chrome-slider"></div>
+      </div>
+
+      <div id="pc-stats" class="middle-view">
+        <div id="all-dials-container">
+          <div class="dial-container">
+            <div class="dial-title"> CPU </div>
+
+            <div id="cpu-dial" class="dial-wrapper">
+              <div class="dial"></div>
+              <div class="circle"></div>
+              <div class="small-circle"></div>
+              <div id="cpu-dial-arm" class="dial-arm rotated-45"></div>
+              <div class="triangle"></div>
+            </div>
+
+
+            <div id="cpu-percentage" class="percentage"> 0% </div>
+          </div>
+
+          <div class="dial-container">
+            <div class="dial-title"> Memory </div>
+
+            <div id="memory-dial" class="dial-wrapper">
+              <div class="dial"></div>
+              <div class="circle"></div>
+              <div class="small-circle"></div>
+              <div id="memory-dial-arm" class="dial-arm rotated-45"></div>
+              <div class="triangle"></div>
+            </div>
+
+
+            <div id="memory-percentage" class="percentage"> 0% </div>
+          </div>
+        </div>
+
+        <div id="quick-launch-icons">
+
+        </div>
+      </div>
+
+      <div id="timer-control" class="middle-view">
+        <div>
+          Timer Stuff here
+        </div>
+      </div>
+    </div>
+
+    <div id="bottom-row">
+      <div id="track">
+        <img id="album-cover" src='https://i.scdn.co/image/a06f250e3d2fee9dd0d1f959d06e49034c388edd'>
+
+        <div id="track-info">
+          <label id="current-track">CURRENT TRACK</label>
+          <label id="current-artist">CURRENT ARTIST</label>
+        </div>
+      </div>
+
+      <div id="spotify-playback">
+        <div id="playback-container">
+          <!-- <h4> Spotify Playback </h4> -->
+          <img class="image-button" id="previous-song" src="/public/assets/next-song.png">
+          <img class="image-button" id="play-pause" src="/public/assets/play.png">
+          <img class="image-button" id="next-song" src="/public/assets/next-song.png">
+        </div>
+      </div>
+
+      <!--Need to highlight which view is active!-->
+      <div id="view-swapper">
+        <div id="control-container">
+          <img id="volume-mixer-toggle" class="image-button toggle-button" src="/public/assets/levels-adjustment.png">
+          <img id="pc-stats-toggle" class="image-button toggle-button" src="/public/assets/dial.png">
+          <img id="timer-control-toggle" class="image-button toggle-button" src="/public/assets/volume.png">
+        </div>
+      </div>
+    </div>
+</div>

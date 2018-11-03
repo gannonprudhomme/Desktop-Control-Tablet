@@ -1,0 +1,22 @@
+<div id="pc-controls">
+  {{#each quickIcons as |val key|}}
+    <img id={{val.id}} class="image-button pc-controls-button" src="/public/assets/{{val.icon}}">
+  {{/each}}
+</div>
+
+{{#if show_current_time}}
+<div id="time">
+  <div> 0:00 PM </div>
+</div>
+{{else}}
+  <div>
+    Empty space for stuff here
+  </diV>
+{{/if}}
+
+<div id="timer">
+  <div id="countdown-number"></div>
+  <svg>
+    <circle r="23" cx="25" cy="25"></circle>
+  </svg>
+</div>

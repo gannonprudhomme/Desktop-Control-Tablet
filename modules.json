@@ -1,0 +1,36 @@
+{
+    "modules": {
+        "volume-mixer": {
+            "folder": "volume-mixer",
+            "icon": "icon.png",
+            "script": "volume.js",
+            "style": "volume.css"
+        },
+
+        "performance-data": {
+            "folder": "performance-stats",
+            "icon": "icon.png",
+            "script": "volume.js",
+            "style": "volume.css"
+        }
+    },
+
+    "possibleQuickIcons": {
+        "power-button": {
+          "icon": "power-button.png",
+          "script": ""
+        },
+        "mute-microphone": {
+            "icon": "microphone.png",
+            "script": ""
+        },
+        "deafen-output": {
+            "icon": "volume.png",
+            "script": ""
+        },
+        "screenshot": {
+            "icon": "photo-camera-filled.png",
+            "script": ""
+        }
+      }
+}
