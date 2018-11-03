@@ -5,6 +5,7 @@ var path = require('path')
 var fs = require('fs')
 var queryString = require('querystring')
 var request = require('request')
+var handleBars = require('express-handlebars') // Handlebars
 
 const app = express()
 const port = 3000
@@ -19,6 +20,12 @@ var spotify = require('./routes/spotify.js')
 var discord = require('./routes/discord.js')
 var desktop = require('./routes/desktop.js')
 var socket = require('./routes/sockets.js')(io)
+
+// 'hps' is the internal name of handleBars and the extension(.hbs) name
+// 'layout' is the default layout(layout.hbs) to be used by HandleBars
+app.engine('hbs', handleBars({extname: 'hbs', defaultLayout: 'layout', layoutsDir: __dirname + '/public/handlebars/views/layouts/'}));
+app.set('views', path.join(__dirname + '/public/handlebars/views'));
+app.set('view engine', 'hbs') // 'hbs' is connected to the app.engine('hbs', ...)
 
 app.use(discord)
 app.use(socket)
@@ -93,6 +100,11 @@ app.get('/tablet', (req, res) => {
 
 app.get('/mobile', (req, res) => {
   res.sendFile(path.join(__dirname + '/public/mobile/control.html'))
+})
+
+app.get('/handlebars', (req, res) => {
+  //  Load in settings file
+  res.render('index.hbs', {title: 'Cool, huh!', condition: true, anyArray: [1, 2, 3] })
 })
 
 // Listen to this port, and handle any errors accordingly
