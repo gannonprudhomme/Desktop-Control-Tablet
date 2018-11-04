@@ -1,0 +1,19 @@
+{{!-- Iterate over all of the modules, and add them respectively --}}
+
+{{#inArray modules 'volume-mixer'}}
+    {{>volume-mixer}}
+{{/inArray}}
+
+{{#inArray modules 'pc-stats'}}
+    {{>pc-stats}}
+{{/inArray}}
+
+{{#inArray modules 'timer-control'}}
+    <div id="timer-control" class="middle-view">
+        <div>
+            Timer Stuff here
+        </div>
+    </div>
+{{/inArray}}
+
+

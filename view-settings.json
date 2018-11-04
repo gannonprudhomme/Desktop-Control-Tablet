@@ -6,9 +6,19 @@
   "show-current-time": true,
   "show-current-date": true,
 
-  "startView": "volume-mixer",
-  "currentModules": ["volume-mixer", "performance-data"],
-
+  "startModule": "volume-mixer",
+  "modules": ["volume-mixer", "pc-stats"],
+  "currentModules": [
+    {
+      "id": "volume-mixer",
+      "icon": "levels-adjustment.png"
+    },
+    {
+      "id": "pc-stats",
+      "icon": "dial.png"
+    }
+  ],
+  
   "quickIcons": [
     {
       "id": "power-button",
@@ -16,19 +26,38 @@
       "script": ""
     },
     {
-      "id": "mute-microphone",
-      "icon": "microphone.png",
-      "script": ""
-    },
-    {
       "id": "deafen-output",
       "icon": "volume.png",
       "script": ""
     },
-   {
+    {
       "id": "screenshot", 
       "icon": "photo-camera-filled.png",
       "script": ""
+    }
+  ],
+
+  "volume-mixers": [
+    {
+      "id": "spotify",
+      "icon": "spotify.png",
+      "color": "#fffff",
+      "programName": "spotify.exe"
+    },
+    {
+      "id": "discord",
+      "icon": "discord.png",
+      "programName": "discord.exe"
+    },
+    {
+      "id": "rocketleague",
+      "icon": "rocketleague.png",
+      "programName": "rocketleague.exe"
+    },
+    {
+      "id": "chrome",
+      "icon": "chrome.png",
+      "programName": "chrome.exe"
     }
   ]
 }

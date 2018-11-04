@@ -7,16 +7,14 @@ var queryString = require('querystring')
 var request = require('request')
 
 var exHbs = require('express-handlebars') //
-var layouts = require('handlebars-layouts')
+var helpers = require('handlebars-helpers')()
 
 var handleBars = exHbs.create({
   extname: 'hbs',
   defaultLayout: 'layout',
   layoutsDir: __dirname + '/public/handlebars/views/layouts/',
   partialsDir: __dirname + '/public/handlebars/views/partials',
-  helpers: {
-
-  }
+  helpers: helpers
 })
 
 const app = express()
@@ -136,7 +134,10 @@ app.get('/handlebars', (req, res) => {
     var json = JSON.parse(fs.readFileSync(path.join(__dirname + '/view-settings.json'), 'utf8'))
     res.render('index.hbs', {
       show_current_time: json['show-current-time'], 
-      quickIcons: json['quickIcons']
+      quickIcons: json['quickIcons'],
+      modules: json['modules'],
+      currentModules: json['currentModules'],
+      volumeMixers: json['volume-mixers']
     })
 
     // After authenticating, get the access and refresh tokens

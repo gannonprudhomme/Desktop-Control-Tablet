@@ -17,6 +17,7 @@
     "gulp": "^3.9.1",
     "gulp-cli": "^2.0.1",
     "gulp4": "^4.0.2",
+    "handlebars-helpers": "^0.10.0",
     "handlebars-layouts": "^3.1.4",
     "mongodb": "^3.1.8",
     "mongoose": "^5.3.9",
