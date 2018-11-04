@@ -7,12 +7,20 @@ var os = require('os-utils')
 
 var volumes = {};
 var volumeData = JSON.parse(fs.readFileSync('./public/volumeData.json', 'utf-8'))
+var settingsData = JSON.parse(fs.readFileSync('./view-settings.json'), 'utf-8')
+
 
 // Handle socket messages
 var socketHandler = function(socket) {
   // var desktop = io.of('/desktop')
   socket.on('disconnect', function() {
     // console.log('user disconnected desktop')
+  })
+
+  // Send the settings back to the client
+  socket.on('settings', function(data, ret) {
+    settingsData = JSON.parse(fs.readFileSync('./view-settings.json'), 'utf-8')
+    ret(settingsData)
   })
 
   var {exec} = require('child_process')
@@ -25,8 +33,8 @@ var socketHandler = function(socket) {
   })
 
   // Send the volume data back to the client
-  socket.on('volume_data', function(data, fn) {
-    fn(volumeData)
+  socket.on('volume_data', function(data, ret) {
+    ret(volumeData)
   })
 
   // Change the current audio device

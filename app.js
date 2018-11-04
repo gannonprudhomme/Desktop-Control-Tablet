@@ -6,6 +6,19 @@ var fs = require('fs')
 var queryString = require('querystring')
 var request = require('request')
 
+// Handlebars stuff
+var exHbs = require('express-handlebars') 
+var helpers = require('handlebars-helpers')()
+
+// Initialize Express-Handlebars
+var handleBars = exHbs.create({
+  extname: 'hbs',
+  defaultLayout: 'layout',
+  layoutsDir: __dirname + '/public/views/layouts/',
+  partialsDir: __dirname + '/public/views/partials',
+  helpers: helpers
+})
+
 const app = express()
 const port = 3000
 
@@ -14,16 +27,23 @@ var http = require('http')
 var server = http.createServer(app)
 var io = require('socket.io').listen(server)
 
+var authenticated = false;
+
 // Routes
 var spotify = require('./routes/spotify.js')
 var discord = require('./routes/discord.js')
 var desktop = require('./routes/desktop.js')
 var socket = require('./routes/sockets.js')(io)
 
+// Attach Handlebars
+// 'hps' is the internal name of handleBars and the extension(.hbs) name
+// 'layout' is the default layout(layout.hbs) to be used by HandleBars
+app.engine('hbs', handleBars.engine);
+app.set('views', path.join(__dirname + '/public/views'));
+app.set('view engine', 'hbs') // 'hbs' is connected to the app.engine('hbs', ...)
+
 app.use(discord)
 app.use(socket)
-//app.use(desktop.router(io))
-//app.use(spotify.router(io))
 
 // Set properties
 app.use(express.static(__dirname))
@@ -37,11 +57,7 @@ app.use(function(req, res, next) {
   next();
 })
 
-var authenticated = false;
 
-// app.use(express.static(__dirname + '/public/'))
-
-// Redirect to spotify authentication?
 app.get('/tablet', (req, res) => {
   if(!authenticated) {
     var state = generateRandomString(8);
@@ -60,7 +76,14 @@ app.get('/tablet', (req, res) => {
 
     authenticated = true;
   } else {
-    res.sendFile(path.join(__dirname + '/public/tablet/index.html'))
+    var json = JSON.parse(fs.readFileSync(path.join(__dirname + '/view-settings.json'), 'utf8'))
+    res.render('index.hbs', {
+      show_current_time: json['show-current-time'], 
+      quickIcons: json['quickIcons'],
+      modules: json['modules'],
+      currentModules: json['currentModules'],
+      volumeMixers: json['volume-mixers']
+    })
 
     // After authenticating, get the access and refresh tokens
     // have a function that takes req as a parameter(or req.query)
@@ -91,10 +114,6 @@ app.get('/tablet', (req, res) => {
   }
 })
 
-app.get('/mobile', (req, res) => {
-  res.sendFile(path.join(__dirname + '/public/mobile/control.html'))
-})
-
 // Listen to this port, and handle any errors accordingly
 server.listen(port, (err) => {
   if(err) {
@@ -106,16 +125,12 @@ server.listen(port, (err) => {
   desktop.loadVolumeData()
 })
 
-function maximizeWindow(programName) {
-
-}
-
 var generateRandomString = function(length) {
-    var text = '';
-    var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var text = '';
+  var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-    for (var i = 0; i < length; i++) {
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-    return text;
-  };
+  for (var i = 0; i < length; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text;
+};

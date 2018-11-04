@@ -4,35 +4,26 @@ var audioDevice = 'DAC'
 
 var socket = io()
 
-$(document).ready(function() {
-  console.log('Window: ' + $(window).width() + ", " + $(window).height())
-  console.log('Document: ' + $(document).width() + ", " + $(document).height())
+var settings = {}
+var moduleKeys = []
 
-  $('#volume-mixer').hide()
-  $('#pc-stats').show()
-  $('#timer-control').hide()
+$(document).ready(function() {
+  // Retrieve the settings from the server
+  socket.emit('settings', '', function(data) {
+    settings = data;
+    moduleKeys = settings['modules']
+
+    // Once we've received the settings data, call intialSetup
+    hideOtherModules(settings['startModule'])
+
+    for(var i = 0; i < moduleKeys.length; i++) {
+      createModuleToggle(moduleKeys[i])
+    }
+  })
 })
 
 $('#power-button').click(function() {
   desktopPut('sleep')
-})
-
-$('#volume-mixer-toggle').click(function() {
-  console.log('mute')
-
-  currentView = 'volume-mixer'
-  $('#volume-mixer').show()
-  $('#pc-stats').hide()
-  $('#timer-control').hide()
-})
-
-$('#pc-stats-toggle').click(function() {
-  // if(!(currentView === 'pc-stats')) {}
-
-  currentView = 'pc-stats'
-  $('#pc-stats').show()
-  $('#volume-mixer').hide()
-  $('#timer-control').hide()
 })
 
 $('#deafen-output').click(function() {
@@ -54,6 +45,12 @@ $('#screenshot').click(function() {
   socket.emit('screenshot', '')
 })
 
+// Generate the click action-listener for the toggle-buttons to show the according module
+function createModuleToggle(id) {
+  $('#' + id + "-toggle").click(function() {
+    hideOtherModules(id)
+  })
+}
 
 function desktopPut(url_extension) {
   console.log('sending ' + url_extension)
@@ -67,6 +64,22 @@ function desktopPut(url_extension) {
   }).catch(function(error) {
     console.log(error);
   })
+}
+
+function initialSetup() {
+  
+}
+
+function hideOtherModules(moduleToShow) {
+  for(var i = 0; i < moduleKeys.length; i++) {
+    var key = moduleKeys[i]
+    
+    if(key != moduleToShow) {
+      $('#' + key).hide()
+    }
+  }
+
+  $('#' + moduleToShow).show()
 }
 
 function updateClock() {

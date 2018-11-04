@@ -53,12 +53,12 @@ var socketHandler = function(socket) {
           console.log('204')
 
         } else {
-          process.stdout.write("Playback info error: ")
-          console.log(body)
-          console.log(error)
+          // process.stdout.write("Playback info error: ")
+          // console.log(body)
+          // console.log(error)
 
           if(body && body.error && body.error.status === 401) {
-            console.log(body.error.message)
+            // console.log(body.error.message)
 
             if(body.error.message === 'Invalid access token') {
               authenticated = false
@@ -68,7 +68,13 @@ var socketHandler = function(socket) {
               // Alternatively, tell the client to refresh the page (or do it for them)
             } else if(body.error.message === 'The access token expired') {
               // Refresh the access token
+              process.stdout.write("Playback info error: ")
+              console.log(body.error.message)
               refreshToken()
+
+            } else {
+              process.stdout.write("Playback info error: ")
+              console.log(body.error.message)
             }
           }
         }

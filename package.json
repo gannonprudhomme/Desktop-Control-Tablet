@@ -13,8 +13,14 @@
     "body-parser": "^1.18.3",
     "cookie-parser": "^1.4.3",
     "express": "^4.16.4",
+    "express-handlebars": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-cli": "^2.0.1",
+    "gulp4": "^4.0.2",
+    "handlebars-helpers": "^0.10.0",
+    "handlebars-layouts": "^3.1.4",
     "mongodb": "^3.1.8",
-    "mongoose": "^5.3.4",
+    "mongoose": "^5.3.9",
     "multer": "^1.4.1",
     "os-utils": "0.0.14",
     "querystring": "^0.2.0",
@@ -22,5 +28,8 @@
     "socket.io": "^2.1.1",
     "systeminformation": "^3.45.9",
     "timesync": "^1.0.3"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.26.3"
   }
 }
