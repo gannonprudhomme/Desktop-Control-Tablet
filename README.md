@@ -7,10 +7,15 @@ A Desktop Companion Tablet built to control my Windows 10 home computer with a R
 - Control volume mixer levels for various programs on desktop
 - Change audio output device
 - Live desktop performance(CPU, memory) monitoring and displaying
+- Modular changes/customization
 
 ## Set up and usage
-1) Install npm
-2) 
+- First, install npm and clone the repo
+
+1) After cd'ing into the repo, run npm install to install all of the relevant packages
+2) Set the IP of your main computer in the files
+3) Connect to http://IP/ on the Pi
+4)
 
 ## How it works
 
@@ -22,6 +27,7 @@ A Desktop Companion Tablet built to control my Windows 10 home computer with a R
   #### Server side
   - Express
   - Socket.io
+  - Handlebars for templating/modularity
   - Spotify Web Api for receiving current tracks
   - os-utils for easy access to CPU & memory usage
   - querystring
