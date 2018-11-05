@@ -28,6 +28,7 @@ A Desktop Companion Tablet built to control my Windows 10 home computer with a R
   - Express
   - Socket.io
   - Handlebars for templating/modularity
+  - Muuri for draggable components
   - Spotify Web Api for receiving current tracks
   - os-utils for easy access to CPU & memory usage
   - querystring
