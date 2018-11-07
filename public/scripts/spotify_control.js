@@ -76,7 +76,7 @@ function sendPlayback(type) {
 
 function getPlaybackInfo() {
   var now = (new Date()).getTime()
-
+  
   socket.emit('get_track', now, function(data) {
     // console.log(data)
 
