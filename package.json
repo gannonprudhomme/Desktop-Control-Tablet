@@ -14,9 +14,8 @@
     "cookie-parser": "^1.4.3",
     "express": "^4.16.4",
     "express-handlebars": "^3.0.0",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.0",
     "gulp-cli": "^2.0.1",
-    "gulp4": "^4.0.2",
     "handlebars-helpers": "^0.10.0",
     "handlebars-layouts": "^3.1.4",
     "mongodb": "^3.1.8",
@@ -27,7 +26,8 @@
     "request": "^2.88.0",
     "socket.io": "^2.1.1",
     "systeminformation": "^3.45.9",
-    "timesync": "^1.0.3"
+    "timesync": "^1.0.3",
+    "tplink-lightbulb": "^1.4.2"
   },
   "devDependencies": {
     "browser-sync": "^2.26.3"
