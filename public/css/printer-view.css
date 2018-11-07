@@ -1,0 +1,9 @@
+#printer-view-container {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+#video{
+    width: 50%;
+    height: 100%;
+}

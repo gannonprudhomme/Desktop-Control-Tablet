@@ -12,6 +12,13 @@
             "icon": "icon.png",
             "script": "volume.js",
             "style": "volume.css"
+        },
+
+        "printer-view": {
+            "folder": "printer-view",
+            "icon": "icon.png",
+            "script": "volume.js",
+            "style": "volume.css"
         }
     },
 
