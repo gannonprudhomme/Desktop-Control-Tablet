@@ -26,7 +26,7 @@
 }
 
 #master-volume-label {
-  color: #333333 !important;
+  color: #bfbfbf !important;
 }
 
 #spotify-label {
@@ -46,8 +46,8 @@
 }
 
 #master-volume-slider .ui-slider-handle {
-  border: 3px solid #333333 !important;
-  background: #333333 !important;
+  border: 3px solid #bfbfbf !important;
+  background: #bfbfbf !important;
 }
 
 #spotify-slider .ui-slider-handle {

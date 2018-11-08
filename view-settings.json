@@ -5,6 +5,8 @@
 
   "show-current-time": true,
   "show-current-date": true,
+  
+  "save-volume-on-change": true,
 
   "startModule": "volume-mixer",
   "modules": ["volume-mixer", "pc-stats"],
@@ -38,6 +40,11 @@
   ],
 
   "volume-mixers": [
+    {
+      "id": "master-volume",
+      "icon": "volume.png",
+      "programName": "master-volume"
+    },
     {
       "id": "spotify",
       "icon": "spotify.png",
