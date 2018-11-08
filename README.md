@@ -4,12 +4,11 @@ A Desktop Companion Tablet built to control my Windows 10 home computer with a R
 ![Screenshot](screenshots/screenshot1.png)
 
 ## Features
-- Listen for Spotify Playback changes every second
-- Control Spotify playback remotely
-- Control volume mixer levels for various programs on desktop
-- Change audio output device
-- Live desktop performance(CPU, memory) monitoring and displaying
-- Modular changes/customization
+- Live Spotify current track display and playback control
+- Built in remote volume mixer control for any desktop program
+- Change current audio output device
+- Live desktop performance(CPU, memory) display
+- Modular, which allows any practically any control-feature to be implemented and inserted
 
 ## Set up and usage
 1) Install npm and nircmd on your PC
