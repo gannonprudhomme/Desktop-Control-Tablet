@@ -1,8 +1,15 @@
 var {exec} = require('child_process')
 var fs = require('fs')
 
-function setVolume(program, name) {
-  exec('nircmd true setappvolume ' + program + ' ' + volume)
+function setVolume(program, volume) {
+  if(program === 'master-volume') {
+    // Set the master volume
+    // Save the separate volumes for each sound device? So my soundbar doesn't blast music super loud
+    exec('nircmd setvolume 0 ' + parseInt(volume * 65535) + ' ' + parseInt(volume * 65535))
+
+  } else {
+    exec('nircmd true setappvolume ' + program + ' ' + volume)
+  }
 }
 
 function sendKeypress(keys) {

@@ -4,11 +4,12 @@ var fs = require('fs')
 var bodyParser = require('body-parser') // for parsing basic request data?
 var commands = require('./commands.js')
 var os = require('os-utils')
+var fileUtils = require('./fileutils.js')
 
 var volumes = {};
 var volumeData = JSON.parse(fs.readFileSync('./public/volumeData.json', 'utf-8'))
-var settingsData = JSON.parse(fs.readFileSync('./view-settings.json'), 'utf-8')
 
+var settingsData = JSON.parse(fs.readFileSync('./view-settings.json'), 'utf-8')
 
 // Handle socket messages
 var socketHandler = function(socket) {
@@ -26,15 +27,22 @@ var socketHandler = function(socket) {
   var {exec} = require('child_process')
   socket.on('set_volume', function(data) {
     var now = (new Date()).getTime()
-    console.log('Volume: ' + data.program + ': ' + (data.volume * 100) + ', Delay: ' + (now - data.time) + 'ms')
+    // console.log('Volume: ' + data.program + ': ' + (data.volume * 100) + ', Delay: ' + (now - data.time) + 'ms')
     commands.saveDelay(now - data.time)
 
-    exec('nircmd true setappvolume ' + data.program + ' ' + data.volume)
-  })
+    volumes[data.program] = data.volume;
+    
+    // Run a command to set the volume for the given program
+    commands.setVolume(data.program, data.volume)
 
+    if(settingsData['save-volume-on-change']) {
+      fileUtils.saveVolumeData(volumes)
+    }
+  })
+  
   // Send the volume data back to the client
   socket.on('volume_data', function(data, ret) {
-    ret(volumeData)
+    ret(volumes)
   })
 
   // Change the current audio device
@@ -70,21 +78,13 @@ var socketHandler = function(socket) {
       ret(data)
     })
   })
-
+  
   // return router
 }
 
-function saveVolumeData() {
-  fs.writeFile('./public/volumeData.json', JSON.stringify(volumeData), function(error) {
-    if(error)
-      console.log(error)
-  })
-}
-
-function loadVolumeData() {
+function importVolumeData() {
   // Fill the volume map with all of the previous data here
-  // Doesn't need to be asynchronous
-  volumeData = JSON.parse(fs.readFileSync('./public/volumeData.json', 'utf-8'))
+  volumeData = fileUtils.loadVolumeData()
 
   // Iterate over all of the keys(programs) in the json object
   // And add them to the local map
@@ -104,4 +104,4 @@ function getPerformanceUsage() {
 }
 
 module.exports.socketHandler = socketHandler;
-module.exports.loadVolumeData = loadVolumeData
+module.exports.importVolumeData = importVolumeData

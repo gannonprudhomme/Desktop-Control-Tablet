@@ -34,6 +34,7 @@ var spotify = require('./routes/spotify.js')
 var discord = require('./routes/discord.js')
 var desktop = require('./routes/desktop.js')
 var socket = require('./routes/sockets.js')(io)
+var fluxbulb = require('./routes/fluxbulb.js') // controlling tp-link lightbulb from f.lux
 
 // Attach Handlebars
 // 'hps' is the internal name of handleBars and the extension(.hbs) name
@@ -44,6 +45,7 @@ app.set('view engine', 'hbs') // 'hbs' is connected to the app.engine('hbs', ...
 
 app.use(discord)
 app.use(socket)
+app.use(fluxbulb)
 
 // Set properties
 app.use(express.static(__dirname))
@@ -56,7 +58,6 @@ app.use(function(req, res, next) {
 
   next();
 })
-
 
 app.get('/tablet', (req, res) => {
   if(!authenticated) {
@@ -76,7 +77,10 @@ app.get('/tablet', (req, res) => {
 
     authenticated = true;
   } else {
+    // Load in the settings file
     var json = JSON.parse(fs.readFileSync(path.join(__dirname + '/view-settings.json'), 'utf8'))
+    
+    // Render the 
     res.render('index.hbs', {
       show_current_time: json['show-current-time'], 
       quickIcons: json['quickIcons'],
@@ -90,6 +94,7 @@ app.get('/tablet', (req, res) => {
     var code = req.query.code || null;
     var state = req.query.state || null;
 
+    // Request options to be sent to the spotify server
     access_code = code;
     var authOptions = {
       url: 'https://accounts.spotify.com/api/token',
@@ -104,6 +109,9 @@ app.get('/tablet', (req, res) => {
       json: true
     }
 
+    // Retrieve the authorization code from Spotify and set the returned access tokens
+    // The access token is to authorize each spotify change, and the refresh token is to refresh a new access token
+    // after it has expired
     request.post(authOptions, function(error, response, body) {
       if(!error && response.statusCode === 200) {
         spotify.setTokens(body.access_token, body.refresh_token)
@@ -114,6 +122,18 @@ app.get('/tablet', (req, res) => {
   }
 })
 
+app.get('/tablet/settings', (req, res) => {
+  var json = JSON.parse(fs.readFileSync(path.join(__dirname + '/view-settings.json'), 'utf8'))
+
+    res.render('index.hbs', {
+      show_current_time: json['show-current-time'], 
+      quickIcons: json['quickIcons'],
+      modules: json['modules'],
+      currentModules: json['currentModules'],
+      volumeMixers: json['volume-mixers']
+    }, {layout: 'settings-layout'})
+})
+
 // Listen to this port, and handle any errors accordingly
 server.listen(port, (err) => {
   if(err) {
@@ -122,7 +142,7 @@ server.listen(port, (err) => {
 
   console.log(`server is listening on ${port}`)
 
-  desktop.loadVolumeData()
+  desktop.importVolumeData()
 })
 
 var generateRandomString = function(length) {
