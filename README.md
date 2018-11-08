@@ -9,6 +9,7 @@ A Desktop Companion Tablet built to control my Windows 10 home computer with a R
 - Change current audio output device
 - Live desktop performance(CPU, memory) display
 - Modular, which allows any practically any control-feature to be implemented and inserted
+- Wireless Smart Bulb control and synchronization with f.lux
 
 ## Set up and usage
 1) Install npm and nircmd on your PC
