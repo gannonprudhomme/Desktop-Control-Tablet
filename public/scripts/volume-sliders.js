@@ -1,4 +1,4 @@
-var volumes = {"master-volume":0, "spotify.exe": 0, "discord.exe": 0, "rocketleague.exe": 0, "chrome.exe": 0}
+var volumes = {"master-volume":0, "spotify.exe": 0, "DiscordPTB.exe": 0, "rocketleague.exe": 0, "chrome.exe": 0}
 var settings = {};
 
 var socket = io()
@@ -63,11 +63,11 @@ function sendVolumeData(program, volume) {
 function getVolumeData() {
   socket.emit('volume_data', '', function(data) {
     volumes["spotify.exe"] = data["spotify.exe"]
-    volumes["discord.exe"] = data["discord.exe"]
+    volumes["DiscordPTB.exe"] = data["DiscordPTB.exe"]
     volumes["rocketleague.exe"] = data["rocketleague.exe"]
     volumes["chrome.exe"] = data["chrome.exe"]
 
-
+    
     // After the volume data is loaded, initialize the sliders
     // We wait for this to determine what the default values of the sliders are going to be
     setSliders()

@@ -7,7 +7,7 @@
   "show-current-date": true,
 
   "startModule": "volume-mixer",
-  "modules": ["volume-mixer", "pc-stats"],
+  "modules": ["volume-mixer", "pc-stats","printer-view"],
   "currentModules": [
     {
       "id": "volume-mixer",
@@ -16,6 +16,10 @@
     {
       "id": "pc-stats",
       "icon": "dial.png"
+    },
+    {
+      "id": "printer-view",
+      "icon": "printer.png"
     }
   ],
   
@@ -47,7 +51,7 @@
     {
       "id": "discord",
       "icon": "discord.png",
-      "programName": "discord.exe"
+      "programName": "DiscordPTB.exe"
     },
     {
       "id": "rocketleague",

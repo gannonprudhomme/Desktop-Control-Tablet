@@ -7,7 +7,7 @@ var commands = require('./commands.js')
 // Spotify constants
 const client_id = 'a6b183eb82c84480aa98deec6cba9b92'
 const client_secret = '156fa2b93faa41afb74bebf84b148ac3'
-const redirect_uri = 'http://192.168.1.78:3000/tablet'
+const redirect_uri = 'http://193.169.2.14:3000/tablet'
 
 // Spotify values returned from authentication
 var access_token;
@@ -29,7 +29,7 @@ var socketHandler = function(socket) {
     request.get(options, function(error, response, body) {
       if(!error && response.statusCode === 200) {
           var sendToClient = {}
-
+        
           // If there isn't a track currently playing, don't attempt to send it
           if(body.item) {
             sendToClient.track = body.item.name
