@@ -1,6 +1,8 @@
 # Desktop-Control-Tablet
 A Desktop Companion Tablet built to control my Windows 10 home computer with a Raspberry Pi and touch screen
 
+![Screenshot](screenshots/screenshot1.png)
+
 ## Features
 - Listen for Spotify Playback changes every second
 - Control Spotify playback remotely
