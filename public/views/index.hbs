@@ -1,6 +1,8 @@
-{{!--  Inserts anything in this to {{{body}}}--}}
-
-<div class="grid-container">
+{{#if settingsPage}}
+  {{>settings}}
+  
+{{else}}
+  <div class="grid-container">
     <div id="top-row">
       {{>top-row}}
     </div>
@@ -13,3 +15,4 @@
       {{>bottom-row}}
     </div>
 </div>
+{{/if}}
