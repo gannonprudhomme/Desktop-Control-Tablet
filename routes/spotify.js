@@ -4,16 +4,21 @@ var router = express.Router()
 
 var commands = require('./commands.js')
 
+// Get the settings json-data from the desktop script
+var settings = require('./desktop.js').settings
+
 // Spotify constants
 const client_id = 'a6b183eb82c84480aa98deec6cba9b92'
 const client_secret = '156fa2b93faa41afb74bebf84b148ac3'
-const redirect_uri = 'http://193.169.2.14:3000/tablet'
+var redirect_uri = 'http://' + settings['host-ip'] +  ':3000/tablet';
 
 // Spotify values returned from authentication
 var access_token;
 var refresh_token; // Used to request a new access token after a certain amount of time
 // var access_code;
 var stateKey = 'spotify_auth_state'
+
+console.log(redirect_uri)
 
 var socketHandler = function(socket) {
   // var spotify = io.of('/spotify')
@@ -148,6 +153,12 @@ function setTokens(access, refresh) {
   refresh_token = refresh;
 }
 
+// Set the redirect uri to be reurned to after authenticating with Spotify
+function setRedirectUri(uri) {
+  redirect_uri = uri
+}
+
+module.exports.setRedirectUri = setRedirectUri
 module.exports.socketHandler = socketHandler
 module.exports.setTokens = setTokens
 // Send out spotify constants

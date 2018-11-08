@@ -2,6 +2,7 @@
   "music-service": "spotify",
   "show-current-track": true,
   "show-media-control": true,
+  "host-ip": "192.168.1.78",
 
   "show-current-time": true,
   "show-current-date": true,

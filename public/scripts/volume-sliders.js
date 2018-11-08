@@ -66,7 +66,6 @@ function getVolumeData() {
     for(var key in data) {
       volumes[key] = data[key];
     }
-
     
     // After the volume data is loaded, initialize the sliders
     // We wait for this to determine what the default values of the sliders are going to be

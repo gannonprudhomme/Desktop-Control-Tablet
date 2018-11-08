@@ -125,13 +125,15 @@ app.get('/tablet', (req, res) => {
 app.get('/tablet/settings', (req, res) => {
   var json = JSON.parse(fs.readFileSync(path.join(__dirname + '/view-settings.json'), 'utf8'))
 
-    res.render('index.hbs', {
+    res.render('settings.hbs', {
+      layout: 'settings-layout',
       show_current_time: json['show-current-time'], 
       quickIcons: json['quickIcons'],
       modules: json['modules'],
       currentModules: json['currentModules'],
-      volumeMixers: json['volume-mixers']
-    }, {layout: 'settings-layout'})
+      volumeMixers: json['volume-mixers'],
+      hostIP: json['host-ip']
+    })
 })
 
 // Listen to this port, and handle any errors accordingly

@@ -6,14 +6,12 @@
             "script": "volume.js",
             "style": "volume.css"
         },
-
         "performance-data": {
             "folder": "performance-stats",
             "icon": "icon.png",
             "script": "volume.js",
             "style": "volume.css"
         },
-
         "printer-view": {
             "folder": "printer-view",
             "icon": "icon.png",
@@ -21,11 +19,10 @@
             "style": "volume.css"
         }
     },
-
     "possibleQuickIcons": {
         "power-button": {
-          "icon": "power-button.png",
-          "script": ""
+            "icon": "power-button.png",
+            "script": ""
         },
         "mute-microphone": {
             "icon": "microphone.png",
@@ -39,5 +36,5 @@
             "icon": "photo-camera-filled.png",
             "script": ""
         }
-      }
+    }
 }

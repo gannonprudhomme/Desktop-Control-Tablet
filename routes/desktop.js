@@ -103,5 +103,7 @@ function getPerformanceUsage() {
   })
 }
 
+// Settings(and all exports) are references, and thus change as they're updated
+module.exports.settings = settingsData
 module.exports.socketHandler = socketHandler;
 module.exports.importVolumeData = importVolumeData

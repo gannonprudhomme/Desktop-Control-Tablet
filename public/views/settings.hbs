@@ -1,0 +1,31 @@
+<!-- Side navigation -->
+<div class="sidenav">
+  <!-- Iterate over the installed/selected modules here-->
+  <a href="#general" class="sidebar-link">General</a>
+  <a href="#modules" class="sidebar-link">Modules</a>
+  <a href="#volume-sliders" class="sidebar-link">Volume Sliders</a>
+  <a href="#pc-stats" class="sidebar-link">PC Stats</a>
+  <a href="#printer-view" class="sidebar-link">Printer View</a>
+</div>
+
+<div class="grid-container" style="margin-left: 160px">
+  <div id="general">
+    general
+  </div>
+
+  <div id="modules" styles="visibility: hidden">
+    modules
+  </div>
+
+  <!-- 
+        Iterate over the installed/selected modules here
+        And auto generate their componenents depending on the file type of the respective json data
+    -->
+  {{#each currentModules}}
+    <div id="{{val.id}}">
+      {{compare (getType val.id)}}
+    </div>
+    
+    {{/each}}
+  </div>
+</div>
