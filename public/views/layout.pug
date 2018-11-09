@@ -1,0 +1,29 @@
+doctype html
+html(lang="en")
+    head
+        title Desktop Companion Tablet
+
+        block stylesheets
+            link(href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css")
+            link(href="/public/css/main.css")
+            link(href="/public/css/top-row.css")
+            link(href="/public/css/pc-stats.css")
+            link(href="/public/css/bottom-row.css")
+            link(href="/public/css/printer-view.css")
+    
+    body
+        // Content of the website, in index.pug
+        block content
+
+        // Libraries
+        script(src="/public/lib/axios.js")
+        script(src="/public/lib/jquery.js")
+        script(src="/public/lib/jquery-ui.min.js")
+        script(src="/public/lib/jquery-ui.min.js")
+        script(src="/public/lib/jquery-ui-touch-punch.min.js")
+        script(src="/public/lib/jquery.transit.min.js")
+        script(src="./socket.io/socket.io.js")
+
+        script(src="/public/scripts/display.js")
+        script(src="/public/scripts/spotify_control.js")
+        script(src="/public/scripts/pc-stats.js")

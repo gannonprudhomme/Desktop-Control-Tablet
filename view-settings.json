@@ -10,19 +10,19 @@
   "save-volume-on-change": true,
 
   "startModule": "volume-mixer",
-  "modules": ["volume-mixer", "pc-stats","printer-view"],
+  "modules": ["volume-mixer", "pc-stats"],
   "currentModules": [
     {
       "id": "volume-mixer",
-      "icon": "levels-adjustment.png"
+      "icon": "levels-adjustment.png",
+      "script": "modules/",
+      "css": ""
     },
     {
       "id": "pc-stats",
-      "icon": "dial.png"
-    },
-    {
-      "id": "printer-view",
-      "icon": "printer.png"
+      "icon": "dial.png",
+      "script": "",
+      "css": ""
     }
   ],
   

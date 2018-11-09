@@ -6,19 +6,6 @@ var fs = require('fs')
 var queryString = require('querystring')
 var request = require('request')
 
-// Handlebars stuff
-var exHbs = require('express-handlebars') 
-var helpers = require('handlebars-helpers')()
-
-// Initialize Express-Handlebars
-var handleBars = exHbs.create({
-  extname: 'hbs',
-  defaultLayout: 'layout',
-  layoutsDir: __dirname + '/public/views/layouts/',
-  partialsDir: __dirname + '/public/views/partials',
-  helpers: helpers
-})
-
 const app = express()
 const port = 3000
 
@@ -39,9 +26,9 @@ var fluxbulb = require('./routes/fluxbulb.js') // controlling tp-link lightbulb 
 // Attach Handlebars
 // 'hps' is the internal name of handleBars and the extension(.hbs) name
 // 'layout' is the default layout(layout.hbs) to be used by HandleBars
-app.engine('hbs', handleBars.engine);
 app.set('views', path.join(__dirname + '/public/views'));
-app.set('view engine', 'hbs') // 'hbs' is connected to the app.engine('hbs', ...)
+app.set('view engine', 'pug') // 'hbs' is connected to the app.engine('hbs', ...)
+app.locals.baseDir = path.join(__dirname + '/public/views') // Set options.baseDir for Pug
 
 app.use(discord)
 app.use(socket)
@@ -51,13 +38,6 @@ app.use(fluxbulb)
 app.use(express.static(__dirname))
 app.use(bodyParser.json()); // For parsing application/json
 app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
-
-app.use(function(req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', 'http://192.168.1.78:3000');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, GET');
-
-  next();
-})
 
 app.get('/tablet', (req, res) => {
   if(!authenticated) {
@@ -81,7 +61,7 @@ app.get('/tablet', (req, res) => {
     var json = JSON.parse(fs.readFileSync(path.join(__dirname + '/view-settings.json'), 'utf8'))
     
     // Render the 
-    res.render('index.hbs', {
+    res.render('index', {
       show_current_time: json['show-current-time'], 
       quickIcons: json['quickIcons'],
       modules: json['modules'],
@@ -125,8 +105,7 @@ app.get('/tablet', (req, res) => {
 app.get('/tablet/settings', (req, res) => {
   var json = JSON.parse(fs.readFileSync(path.join(__dirname + '/view-settings.json'), 'utf8'))
 
-    res.render('settings.hbs', {
-      layout: 'settings-layout',
+    res.render('settings', {
       show_current_time: json['show-current-time'], 
       quickIcons: json['quickIcons'],
       modules: json['modules'],

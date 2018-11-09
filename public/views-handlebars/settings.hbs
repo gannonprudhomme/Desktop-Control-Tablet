@@ -21,11 +21,6 @@
         Iterate over the installed/selected modules here
         And auto generate their componenents depending on the file type of the respective json data
     -->
-  {{#each currentModules}}
-    <div id="{{val.id}}">
-      {{compare (getType val.id)}}
-    </div>
     
-    {{/each}}
   </div>
 </div>
