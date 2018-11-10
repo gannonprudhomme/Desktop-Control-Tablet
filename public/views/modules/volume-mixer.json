@@ -1,0 +1,30 @@
+{
+    "volumeMixers": [
+        {
+          "id": "master-volume",
+          "icon": "volume.png",
+          "programName": "master-volume"
+        },
+        {
+          "id": "spotify",
+          "icon": "spotify.png",
+          "color": "#fffff",
+          "programName": "spotify.exe"
+        },
+        {
+          "id": "discord",
+          "icon": "discord.png",
+          "programName": "DiscordPTB.exe"
+        },
+        {
+          "id": "rocketleague",
+          "icon": "rocketleague.png",
+          "programName": "rocketleague.exe"
+        },
+        {
+          "id": "chrome",
+          "icon": "chrome.png",
+          "programName": "chrome.exe"
+        }
+      ]
+}

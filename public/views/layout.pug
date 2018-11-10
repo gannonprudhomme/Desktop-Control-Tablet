@@ -1,6 +1,7 @@
 doctype html
 html(lang="en")
     head
+
         title Desktop Companion Tablet
 
         link(href="/public/css/main.css", rel='stylesheet')
@@ -9,21 +10,20 @@ html(lang="en")
         link(href="/public/css/printer-view.css", rel='stylesheet')
         link(href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css", rel='stylesheet')
 
+        // Libraries
+        script(src="/public/lib/axios.js")
+        script(src="/public/lib/jquery.js")
+        script(src="/public/lib/jquery-ui.min.js")
+        script(src="/public/lib/jquery-ui-touch-punch.min.js")
+        script(src="/public/lib/jquery.transit.min.js")
+        script(src="./socket.io/socket.io.js")
+
         each module in currentModules
             link(href="/public/css/" + module.css rel="stylesheet")
     
     body
         // Content of the website, in index.pug
         block content
-
-        // Libraries
-        script(src="/public/lib/axios.js")
-        script(src="/public/lib/jquery.js")
-        script(src="/public/lib/jquery-ui.min.js")
-        script(src="/public/lib/jquery-ui.min.js")
-        script(src="/public/lib/jquery-ui-touch-punch.min.js")
-        script(src="/public/lib/jquery.transit.min.js")
-        script(src="./socket.io/socket.io.js")
 
         script(src="/public/scripts/display.js")
         script(src="/public/scripts/spotify_control.js")

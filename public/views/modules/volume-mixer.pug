@@ -6,5 +6,7 @@ mixin volume-slider(id, icon)
 
 #volume-mixer(class="middle-view")
     //- Iterate through the volume sliders and add each one
-    each mixer in volumeMixers
+    for mixer in volumeMixers
         +volume-slider(mixer.id, mixer.icon)
+    else
+        div fuck

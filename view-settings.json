@@ -13,16 +13,20 @@
   "modules": ["volume-mixer", "pc-stats"],
   "currentModules": [
     {
+      "name": "Volume Mixer",
       "id": "volume-mixer",
       "icon": "levels-adjustment.png",
       "script": "volume-mixer.js",
-      "css": "volume-mixer.css"
+      "css": "volume-mixer.css",
+      "settings": "volume-mixer.json"
     },
     {
+      "name": "Peformance Stats",
       "id": "pc-stats",
       "icon": "dial.png",
       "script": "pc-stats.js",
-      "css": "pc-stats.css"
+      "css": "pc-stats.css",
+      "settings": "pc-stats.json"
     }
   ],
   
@@ -41,35 +45,6 @@
       "id": "screenshot", 
       "icon": "photo-camera-filled.png",
       "script": ""
-    }
-  ],
-
-  "volume-mixers": [
-    {
-      "id": "master-volume",
-      "icon": "volume.png",
-      "programName": "master-volume"
-    },
-    {
-      "id": "spotify",
-      "icon": "spotify.png",
-      "color": "#fffff",
-      "programName": "spotify.exe"
-    },
-    {
-      "id": "discord",
-      "icon": "discord.png",
-      "programName": "DiscordPTB.exe"
-    },
-    {
-      "id": "rocketleague",
-      "icon": "rocketleague.png",
-      "programName": "rocketleague.exe"
-    },
-    {
-      "id": "chrome",
-      "icon": "chrome.png",
-      "programName": "chrome.exe"
     }
   ]
 }

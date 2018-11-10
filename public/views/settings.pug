@@ -1,8 +1,30 @@
 doctype html
 html(lang="en")
     head
-        title My Application
+        title Settings
+        
+        link(href="/public/css/settings.css", rel='stylesheet')
+
+        script(src="/public/lib/jquery.js")
+        script(src="/public/lib/jquery-ui.min.js")
+        script(src="../socket.io/socket.io.js")
+
     body
-        h1 Hello Express
-        p I'm new to express
-    
+        .sidenav
+            a.sidebar-link(href="#general") General
+            a.sidebar-link(href="#modules") Modules
+            
+
+            //- Add a settings page for each module
+            for mod in currentModules
+                a.sidebar-link(href="#" + mod.id, class="module") #{mod.name}
+
+        
+        #general(class="main") General
+
+        #modules(class="main") Modules
+
+        each module in currentModules
+            .module-content(id=module.id)
+
+        script(src="/public/scripts/settings.js")

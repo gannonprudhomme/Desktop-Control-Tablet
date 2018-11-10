@@ -41,7 +41,8 @@ function createSlider(id, programName) {
 
 // Loop and create all of the volume sliders
 function setSliders() {
-  var volume_mixers = settings['volume-mixers']
+  console.log(settings)
+  var volume_mixers = settings['volumeMixers']
   for(var i = 0; i < volume_mixers.length; i++) {
     var mixer = volume_mixers[i];
 

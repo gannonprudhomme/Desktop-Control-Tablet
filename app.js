@@ -59,15 +59,22 @@ app.get('/tablet', (req, res) => {
   } else {
     // Load in the settings file
     var json = JSON.parse(fs.readFileSync(path.join(__dirname + '/view-settings.json'), 'utf8'))
-    
-    // Render the 
-    res.render('index', {
+    var options = {
       show_current_time: json['show-current-time'], 
       quickIcons: json['quickIcons'],
       modules: json['modules'],
       currentModules: json['currentModules'],
       volumeMixers: json['volume-mixers']
-    })
+    }
+
+    var modSettings = desktop.getModuleSettings(json['currentModules'])
+
+    options = {...options, ...modSettings}
+
+    console.log(options)
+
+    // Render the 
+    res.render('index', options)
 
     // After authenticating, get the access and refresh tokens
     // have a function that takes req as a parameter(or req.query)
@@ -104,15 +111,19 @@ app.get('/tablet', (req, res) => {
 
 app.get('/tablet/settings', (req, res) => {
   var json = JSON.parse(fs.readFileSync(path.join(__dirname + '/view-settings.json'), 'utf8'))
+  var options = {
+    show_current_time: json['show-current-time'], 
+    quickIcons: json['quickIcons'],
+    modules: json['modules'],
+    currentModules: json['currentModules'],
+    hostIP: json['host-ip']
+  }
 
-    res.render('settings', {
-      show_current_time: json['show-current-time'], 
-      quickIcons: json['quickIcons'],
-      modules: json['modules'],
-      currentModules: json['currentModules'],
-      volumeMixers: json['volume-mixers'],
-      hostIP: json['host-ip']
-    })
+  var modSett = desktop.getModuleSettings(json['currentModules'])
+
+  options = {...options, ...modSett}
+
+  res.render('settings', options)
 })
 
 // Listen to this port, and handle any errors accordingly

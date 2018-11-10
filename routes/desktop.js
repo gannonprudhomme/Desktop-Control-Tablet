@@ -5,11 +5,13 @@ var bodyParser = require('body-parser') // for parsing basic request data?
 var commands = require('./commands.js')
 var os = require('os-utils')
 var fileUtils = require('./fileutils.js')
+var path = require('path')
 
 var volumes = {};
 var volumeData = JSON.parse(fs.readFileSync('./public/volumeData.json', 'utf-8'))
 
 var settingsData = JSON.parse(fs.readFileSync('./view-settings.json'), 'utf-8')
+var moduleSettings = {}
 
 // Handle socket messages
 var socketHandler = function(socket) {
@@ -21,7 +23,28 @@ var socketHandler = function(socket) {
   // Send the settings back to the client
   socket.on('settings', function(data, ret) {
     settingsData = JSON.parse(fs.readFileSync('./view-settings.json'), 'utf-8')
+
+    var modSettings = getModuleSettings(settingsData['currentModules'])
+
+    settingsData = {...settingsData, ...modSettings}
+
     ret(settingsData)
+  })
+
+  socket.on('set_settings', function(data) {
+    console.log(settings)
+
+    console.log('Updated settings with: ')
+    for(var i = 0; i < settings.length; i++) {
+      if(settings[i] !== data[i]) {
+        console.log(data[i])
+      }
+    }
+  })
+
+  socket.on('module_settings', function(data) {
+    var modSettings = {}
+
   })
 
   var {exec} = require('child_process')
@@ -103,7 +126,34 @@ function getPerformanceUsage() {
   })
 }
 
+var moduleSettings;
+function getModuleSettings(currentModules) {
+  console.log('\ngetModuleSettings()')
+
+  // if(moduleSettings !== null) {
+  //   console.log('module settings initialized')
+  // } else {
+  //   console.log('not intialized')
+  // }
+  
+  for(var mod in currentModules) {
+    var modSettings = currentModules[mod]
+    var settingsFile = modSettings['settings']
+
+    var json = JSON.parse(fs.readFileSync('./public/views/modules/' + settingsFile))
+
+    moduleSettings = {...moduleSettings, ...json}
+  }
+
+  console.log(moduleSettings)
+
+  console.log('\n\n')
+
+  return moduleSettings
+}
+
 // Settings(and all exports) are references, and thus change as they're updated
 module.exports.settings = settingsData
-module.exports.socketHandler = socketHandler;
+module.exports.socketHandler = socketHandler
 module.exports.importVolumeData = importVolumeData
+module.exports.getModuleSettings = getModuleSettings
