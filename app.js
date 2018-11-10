@@ -67,11 +67,13 @@ app.get('/tablet', (req, res) => {
       volumeMixers: json['volume-mixers']
     }
 
+    // Load in all of the settings data for all of our current modules
     var modSettings = desktop.getModuleSettings(json['currentModules'])
 
+    // Add the module settings to the above option settings, to be sent to Pug to be used in our page
     options = {...options, ...modSettings}
 
-    console.log(options)
+    //console.log(options)
 
     // Render the 
     res.render('index', options)

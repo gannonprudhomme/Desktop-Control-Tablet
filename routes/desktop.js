@@ -11,7 +11,7 @@ var volumes = {};
 var volumeData = JSON.parse(fs.readFileSync('./public/volumeData.json', 'utf-8'))
 
 var settingsData = JSON.parse(fs.readFileSync('./view-settings.json'), 'utf-8')
-var moduleSettings = {}
+// var moduleSettings = {}
 
 // Handle socket messages
 var socketHandler = function(socket) {
@@ -42,9 +42,31 @@ var socketHandler = function(socket) {
     }
   })
 
-  socket.on('module_settings', function(data) {
-    var modSettings = {}
+  // Retrieve the module settings to be used in creating the HTML elements in settings
+  // Returns it as a (module.id, module json settings) pair
+  socket.on('module_settings', function(data, ret) {
+    var moduleSettings;
 
+    var currentModules = settingsData['currentModules']
+    for(var mod in currentModules) {
+      var modData = currentModules[mod] // The module data from view-settings.json
+      var settingsFile = modData['settings'] // Get the 
+  
+      var json = JSON.parse(fs.readFileSync('./public/views/modules/' + settingsFile))
+  
+      var options = {}
+      // Set the module's id to be the key, which points to its settings data
+      options[modData['id']] = json
+
+      //console.log(options)
+
+      // Concatenate the JSON objects
+      moduleSettings = {...moduleSettings, ...options}
+    }
+
+    //console.log(moduleSettings)
+
+    ret(moduleSettings)
   })
 
   var {exec} = require('child_process')
@@ -128,7 +150,7 @@ function getPerformanceUsage() {
 
 var moduleSettings;
 function getModuleSettings(currentModules) {
-  console.log('\ngetModuleSettings()')
+  //console.log('\ngetModuleSettings()')
 
   // if(moduleSettings !== null) {
   //   console.log('module settings initialized')
@@ -142,12 +164,14 @@ function getModuleSettings(currentModules) {
 
     var json = JSON.parse(fs.readFileSync('./public/views/modules/' + settingsFile))
 
+      // Concatenate the JSON objects
+
     moduleSettings = {...moduleSettings, ...json}
   }
 
-  console.log(moduleSettings)
+  //console.log(moduleSettings)
 
-  console.log('\n\n')
+  //console.log('\n\n')
 
   return moduleSettings
 }
