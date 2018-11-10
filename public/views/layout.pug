@@ -19,7 +19,9 @@ html(lang="en")
         script(src="./socket.io/socket.io.js")
 
         each module in currentModules
-            link(href="/public/css/" + module.css rel="stylesheet")
+            if module.css
+                link(href="/public/css/" + module.css rel="stylesheet")
+            
     
     body
         // Content of the website, in index.pug
@@ -31,4 +33,5 @@ html(lang="en")
 
         //- Load in all module scripts
         each module in currentModules
-            script(src="/public/scripts/" + module.script)
+            if module.script
+                script(src="/public/scripts/" + module.script)

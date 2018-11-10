@@ -76,8 +76,7 @@ function updateSettings() {
 function createModuleElements(id, moduleSettings) {
     // console.log("module settings: ")
     // console.log(moduleSettings)
-
-    var div = $('#' + id)
+    
 
     for(var key in moduleSettings) {
         var data = moduleSettings[key]

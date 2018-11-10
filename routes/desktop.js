@@ -163,7 +163,7 @@ function getModuleSettings(currentModules) {
     var settingsFile = modSettings['settings']
 
     var json = JSON.parse(fs.readFileSync('./public/views/modules/' + settingsFile))
-
+      
       // Concatenate the JSON objects
 
     moduleSettings = {...moduleSettings, ...json}
