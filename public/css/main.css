@@ -1,11 +1,13 @@
 html {
   overflow-y: hidden;
   overflow-x: hidden;
+  height: 100%;
 }
 
 body {
   /* background-image: url('/public/assets/background.png') */
-  background-color: #1c2122
+  background-color: #1c2122;
+  height: 97%;
 }
 
 div {
@@ -22,5 +24,4 @@ div {
   height: 100%;
   width: 100%;
   border: 1px solid #00C8C8 !important;
-  /* border: 0.2px solid #010101; */
 }

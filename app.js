@@ -21,7 +21,7 @@ var spotify = require('./routes/spotify.js')
 var discord = require('./routes/discord.js')
 var desktop = require('./routes/desktop.js')
 var socket = require('./routes/sockets.js')(io)
-var fluxbulb = require('./routes/fluxbulb.js') // controlling tp-link lightbulb from f.lux
+var fluxbulb = require('./routes/fluxbulb.js') // controlling tp-link lightbulb from f.lux 
 
 // Attach Handlebars
 // 'hps' is the internal name of handleBars and the extension(.hbs) name

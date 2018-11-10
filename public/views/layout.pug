@@ -3,13 +3,14 @@ html(lang="en")
     head
         title Desktop Companion Tablet
 
-        block stylesheets
-            link(href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css")
-            link(href="/public/css/main.css")
-            link(href="/public/css/top-row.css")
-            link(href="/public/css/pc-stats.css")
-            link(href="/public/css/bottom-row.css")
-            link(href="/public/css/printer-view.css")
+        link(href="/public/css/main.css", rel='stylesheet')
+        link(href="/public/css/top-row.css", rel='stylesheet')
+        link(href="/public/css/bottom-row.css", rel='stylesheet')
+        link(href="/public/css/printer-view.css", rel='stylesheet')
+        link(href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css", rel='stylesheet')
+
+        each module in currentModules
+            link(href="/public/css/" + module.css rel="stylesheet")
     
     body
         // Content of the website, in index.pug
@@ -27,3 +28,7 @@ html(lang="en")
         script(src="/public/scripts/display.js")
         script(src="/public/scripts/spotify_control.js")
         script(src="/public/scripts/pc-stats.js")
+
+        //- Load in all module scripts
+        each module in currentModules
+            script(src="/public/scripts/" + module.script)

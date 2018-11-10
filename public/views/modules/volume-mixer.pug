@@ -1,0 +1,10 @@
+mixin volume-slider(id, icon)
+    .slider-container
+        img.slider-icon(src="/public/assets/" + icon)
+        label.slider-label(id=id + "-label") 00%
+        div(id=id + "-slider", class="ui-slider-range ui-corner-all")
+
+#volume-mixer(class="middle-view")
+    //- Iterate through the volume sliders and add each one
+    each mixer in volumeMixers
+        +volume-slider(mixer.id, mixer.icon)

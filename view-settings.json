@@ -15,14 +15,14 @@
     {
       "id": "volume-mixer",
       "icon": "levels-adjustment.png",
-      "script": "modules/",
-      "css": ""
+      "script": "volume-mixer.js",
+      "css": "volume-mixer.css"
     },
     {
       "id": "pc-stats",
       "icon": "dial.png",
-      "script": "",
-      "css": ""
+      "script": "pc-stats.js",
+      "css": "pc-stats.css"
     }
   ],
   

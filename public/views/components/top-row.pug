@@ -1,15 +1,12 @@
-extends ../index.pug
+#pc-controls
+    each icon in quickIcons
+        img(id=icon.id class="image-button pc-controls-button" src="/public/assets/" + icon.icon)
+#time
+    div 0.00
 
-block top-row
-    #pc-controls
-        //- each icon in quickIcons
-            img(id="" class="" src="/public/assets/")
-    #time
-        div 0.00
+#timer
+    #countdown-number
+        svg
+            circle(r=23, cx=25, cy=25)
 
-    #timer
-        #countdown-number
-            svg
-                circle(r=23, cx=25, cy=25)
-
-        
+    

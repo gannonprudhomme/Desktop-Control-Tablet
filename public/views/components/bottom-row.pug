@@ -1,0 +1,17 @@
+#track
+    img#album-cover(src="https://i.scdn.co/image/a06f250e3d2fee9dd0d1f959d06e49034c388edd")
+
+    #track-info
+        label#current-track CURRENT TRACK
+        label#current-artist CURRENT ARTIST
+    
+#spotify-playback
+    #playback-container
+        img#previous-song(class="image-button" src="/public/assets/next-song.png")
+        img#play-pause(class="image-button" src="/public/assets/play.png")
+        img#next-song(class="image-button" src="/public/assets/next-song.png")
+
+#view-swapper
+    #control-container
+        each module in currentModules
+            img(id=module.id + "-toggle", class="image-button toggle-button", src="/public/assets/" + module.icon)

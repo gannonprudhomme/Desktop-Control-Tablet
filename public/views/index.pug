@@ -1,11 +1,11 @@
-extends layout.pug
+extends layout
 
 block content
     .grid-container
-        #top-row stuff
-            block top-row
-                .backup Well shit
+        #top-row 
+            include components/top-row
         #middle-row
-            block middle-row-block
+            include components/middle-row
+            
         #bottom-row
-            block bottom-row-block
+            include components/bottom-row
