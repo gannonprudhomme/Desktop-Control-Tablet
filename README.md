@@ -37,7 +37,7 @@ public
       (content)
 ```
 
-3) Add the module to ```view-settings.json```. The webpage will automatically include the script and style sheet files, as well as collect all of the settings object in ```yourmodule.json``` and send them alongside the rest of the settings data to the pug files.
+3) Add the module to ```view-settings.json```. The webpage will automatically include the script and style sheet files, as well as collect all of the json objects in ```yourmodule.json``` and send them alongside the rest of the settings data to the pug files, as well as when retrieving settings from sockets in the script files(such as in ```display.js```).
 ```
   "modules" = [..., "yourmodule"],
   "currentModules: [
