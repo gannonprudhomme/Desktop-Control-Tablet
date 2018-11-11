@@ -61,12 +61,10 @@ $('a').click(function() {
     // front of the href, as we'll just have to concatenate it later
     var href = $(this).attr('href') 
     
-    //console.log('Previous tab' + currentTab)
     if(currentTab != href) {
         $(currentTab).hide()
     }
     
-    //console.log(href)
     $(href).show()
 
     currentTab = href
