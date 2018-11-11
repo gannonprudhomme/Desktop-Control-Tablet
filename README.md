@@ -31,6 +31,12 @@ public
        | yourmodule.pug
        | yourmodule.json
 ```
+1b) In your pug view file, the only requirement is to label the top-most/parent div the id in you will specifiy in ```view-settings.json```
+```pug
+   #yourmodule
+      (content)
+```
+
 2) Add the module to ```view-settings.json```. The webpage will automatically include the script and style sheet files, as well as collect all of the settings object in ```yourmodule.json``` and send them alongside the rest of the settings data to the pug files.
 ```
   "modules" = [..., "yourmodule"],
