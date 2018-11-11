@@ -1,0 +1,10 @@
+{
+    "smartBulb": {
+        "ip": "192.168.1.79",
+        "minColor": 2500,
+        "maxColor": 6500
+    },
+    "flux": {
+        "stuff": "stuff"
+    }
+}

@@ -150,29 +150,20 @@ function getPerformanceUsage() {
 
 var moduleSettings;
 function getModuleSettings(currentModules) {
-  //console.log('\ngetModuleSettings()')
-
-  // if(moduleSettings !== null) {
-  //   console.log('module settings initialized')
-  // } else {
-  //   console.log('not intialized')
-  // }
-  
   for(var mod in currentModules) {
     var modSettings = currentModules[mod]
     var settingsFile = modSettings['settings']
 
-    var json = JSON.parse(fs.readFileSync('./public/views/modules/' + settingsFile))
+    // If there is a settings file
+    if(settingsFile) {
+      // Load it
+      var json = JSON.parse(fs.readFileSync('./public/views/modules/' + settingsFile))
       
       // Concatenate the JSON objects
-
-    moduleSettings = {...moduleSettings, ...json}
+      moduleSettings = {...moduleSettings, ...json}
+    }
   }
-
-  //console.log(moduleSettings)
-
-  //console.log('\n\n')
-
+  
   return moduleSettings
 }
 
