@@ -18,11 +18,44 @@ A Desktop Companion Tablet built to control my Windows 10 home computer with a R
 4) Connect to http://IP/ on the Pi
 5)
 
-## How it works
+## How to add a module
+1) Create a view file(.pug), and optionally a .js, .css and settings(.json) file in their respective folders
+```
+public
+   |  css
+       | yourmodule.css
+   | scripts
+       | yourmodule.js
+   | views
+       | modules
+       | yourmodule.pug
+       | yourmodule.json
+```
+2) Add the module to ```view-settings.json```. The webpage will automatically include the script and style sheet files, as well as collect all of the settings object in ```yourmodule.json``` and send them alongside the rest of the settings data to the pug files.
+```
+  "modules" = [..., "yourmodule"],
+  "currentModules: [
+    ...,
+    {
+      "name": "Your Module",
+      "id": "yourmodule",
+      "script": "yourmodule.js",
+      "css": "yourmodule.css",
+      "settings": "yourmodule.json"
+    }
+  ]
+```
+3) Add the module to the view ```middle-row.pug``` 
+```pug
+  each module in currentModules
+    if(module.id == "volume-mixer")
+      include ../modules/volume-mixer
+    ...
+    else if(module.id == "yourmodule")
+      include ../modules/yourmodule
+```
 
 ## Screenshots
-
-## Performance/Delay
 
 ## Libraries used
   #### Server side
@@ -41,5 +74,3 @@ A Desktop Companion Tablet built to control my Windows 10 home computer with a R
   - Handlebars for templating/modularity
   - Muuri for draggable components
   - Socket.io
-  
-  
