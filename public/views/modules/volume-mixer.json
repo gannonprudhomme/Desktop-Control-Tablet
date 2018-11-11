@@ -8,7 +8,6 @@
         {
           "id": "spotify",
           "icon": "spotify.png",
-          "color": "#fffff",
           "programName": "spotify.exe"
         },
         {
@@ -26,5 +25,6 @@
           "icon": "chrome.png",
           "programName": "chrome.exe"
         }
-      ]
+      ],
+      "bool": true
 }

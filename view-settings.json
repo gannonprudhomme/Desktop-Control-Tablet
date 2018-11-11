@@ -1,13 +1,13 @@
 {
-  "music-service": "spotify",
   "show-current-track": true,
   "show-media-control": true,
-  "host-ip": "192.168.1.78",
-
   "show-current-time": true,
   "show-current-date": true,
   
   "save-volume-on-change": true,
+
+  "host-ip": "192.168.1.78",
+  "music-service": "spotify",
 
   "startModule": "volume-mixer",
   "modules": ["volume-mixer", "pc-stats", "printer-view"],

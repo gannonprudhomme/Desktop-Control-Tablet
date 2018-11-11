@@ -1,6 +1,6 @@
 var settings = {}
 
-var currentTab = '#general'
+var currentTab = '#volume-mixer'
 
 var socket = io()
 var defaultTabs = ['#general', '#modules']
@@ -12,12 +12,10 @@ $(document).ready(function() {
     socket.emit('settings', '', function(data) {
         settings = data
 
-        //console.log(settings)
-
         // Hide the body content of the default tabs
         for(var i in defaultTabs) {
             var name = defaultTabs[i]
-            
+
             if(name != currentTab) {
                 $(name).hide() 
             }
@@ -32,23 +30,29 @@ $(document).ready(function() {
                 $(name).hide() 
             }
         }
+
+        $(currentTab).show()
+
+        var moduleSettings = {}
+        
+        $('#modules').append(createHTML('modules', settings['modules']))
+        $('#modules').append(createHTML('currentModules', settings['currentModules']))
+
+        //createModuleElements('general', settings)
     })
 
     socket.emit('module_settings', '', function(data) {
-        console.log(data)
+        //console.log(data)
 
         var currentModules = settings['currentModules']
         for(var mod in currentModules) {
             var id = currentModules[mod].id
 
-            console.log('Creating module elements for ' + id)
-
-            createModuleElements(data[id])
+            createModuleElements(id, data[id])
         }
     })
 
     // Iterate over all of the tabs, and hide all that aren't the currently viewed tab
-    
 })
 
 // If a user clicks on a link that is 'hidden'
@@ -57,12 +61,12 @@ $('a').click(function() {
     // front of the href, as we'll just have to concatenate it later
     var href = $(this).attr('href') 
     
-    console.log('Previous tab' + currentTab)
+    //console.log('Previous tab' + currentTab)
     if(currentTab != href) {
         $(currentTab).hide()
     }
     
-    console.log(href)
+    //console.log(href)
     $(href).show()
 
     currentTab = href
@@ -74,66 +78,80 @@ function updateSettings() {
 }
 
 function createModuleElements(id, moduleSettings) {
-    // console.log("module settings: ")
-    // console.log(moduleSettings)
-    
+    //console.log("module settings: ")
 
     for(var key in moduleSettings) {
         var data = moduleSettings[key]
 
-        console.log(key + ': ' + createHTML(data))
+        $('#' + id).append(createHTML(key, data))
+        //console.log(key + ': ' + createHTML(data).innerHTML)
     }
 }
 
 // Returns and HTML object, recursive
-function createHTML(settingData) {
+function createHTML(id, settingData) {
     var type = typeof(settingData)
 
-    //console.log('Setting Data: ' + settingData)
-
-    /*if(Array.isArray(settingData)) {
-        console.log("ARRAY" + settingData)
-    } */
-
     if(Array.isArray(settingData)) {
-        var ret = type + ": [";
+        var $parentDiv = $('<div>', {class: 'array'}).append(id)
         
         for(var i in settingData) {
-            ret += createHTML(settingData[i]) + ", "
+            $parentDiv.append(createHTML(i, settingData[i]))
         }
 
-        ret += "]"
-
-        return ret;
+        return $parentDiv;
 
     } else {
+        var $div = $('<div>')
+
         switch(type) {
             case "string":
-                break
+                $div.attr('class', 'element')
+
+                var $input = $('<input>', {type: 'text', class: 'settingData'}).val(settingData)
+
+                $div.append($('<label>', {text: id}))
+                $div.append($input)
+
+                return $div
+
             case "boolean":
-                break
+                $div.attr('class', 'element')
+
+                var $label = $('<label>', {class: 'switch'})
+                $label.append($('<input>', {type: 'checkbox'}))
+                $label.append($('<span>', {class: 'slider'}))
+
+                $div.append($('<label>', {text: id}))
+                $div.append($label)
+
+                return $div
+
             case "number":
-                break
-    
+                $div.attr('class', 'element')
+
+                var $input = $('<input>', {type: 'text'})
+
+                $div.append($('<label>', {text: id}))
+                $div.append(input)
+
+                return $div
+
             case "object":
-                var ret = type + ": [";
-    
+                $div.attr('class', 'object')
+                var $form = $('<form>', {action: ""})
+
                 for(var data in settingData) {
                     // Generate the html for the content of this object
-                    ret += createHTML(data) + ", "
+                    $div.append(createHTML(data, settingData[data]))
                 }
     
-                ret += "]"
-
-                return ret
-    
-                break 
+                return $div
+                
             default:
                 console.log("Unknown type " + type)
         }
     }
-
-    return type + " "
 }
 
 function createDropdown(key) {

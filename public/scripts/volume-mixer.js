@@ -58,7 +58,7 @@ function sendVolumeData(program, volume) {
     time: (new Date()).getTime()
   }
 
-  console.log('sending volume')
+  //console.log('sending volume')
   socket.emit('set_volume', obj)
 }
 

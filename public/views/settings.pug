@@ -19,10 +19,9 @@ html(lang="en")
             for mod in currentModules
                 a.sidebar-link(href="#" + mod.id, class="module") #{mod.name}
 
-        
-        #general(class="main") General
+        #general(class="main")
 
-        #modules(class="main") Modules
+        #modules(class="main")
 
         each module in currentModules
             .module-content(id=module.id)

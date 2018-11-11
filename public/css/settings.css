@@ -32,8 +32,51 @@
 
 /* Style page content */
 .main {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
     margin-left: 13%; /* Same as the width of the sidebar */
     padding: 0px 10px;
+}
+
+.module-content {
+    margin-left: 13%; /* Same as the width of the sidebar */
+    padding: 0px 10px;
+}
+    .element {
+        display: flex;
+        align-items: center;
+        margin: 2px 5px 2px 5px;
+    }
+
+    .array {
+        display: flex;
+        flex-direction: row;
+        grid-gap: 10px;
+    }
+
+        .array > div {
+            margin: 5px;
+        }
+
+    .object {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        flex-direction: column;
+        margin: 30px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+input[type=text] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 6px;
+    margin-bottom: 16px;
 }
 
 /* On smaller screens, where height is less than 450px, change the style of the sidebar (less padding and a smaller font size) */
