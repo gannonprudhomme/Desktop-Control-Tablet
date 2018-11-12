@@ -11,7 +11,7 @@
   "spotify_client_id": "",
   "spotify_client_secret": "",
 
-  "startModule": "volume-mixer",
+  "startModule": "light-control",
 
   "modules": ["volume-mixer", "pc-stats", "light-control"],
   
@@ -35,7 +35,10 @@
     {
       "name": "Smart Bulb Control",
       "id": "light-control",
-      "icon": "bulb.png"
+      "icon": "bulb.png",
+      "script": "light-control.js",
+      "css": "light-control.css",
+      "settings": "light-control.json"
     }
   ],
   
