@@ -69,6 +69,13 @@ var socketHandler = function(socket) {
     ret(moduleSettings)
   })
 
+  socket.on('get_module_settings', function(data, ret) {
+    // Get the JSON settings file for this specific module
+    var json = JSON.parse(fs.readFileSync('./public/views/modules/' + data + '.json'))
+    
+    ret(json)
+  })
+
   var {exec} = require('child_process')
   socket.on('set_volume', function(data) {
     var now = (new Date()).getTime()

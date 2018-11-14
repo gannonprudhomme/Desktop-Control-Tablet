@@ -1,6 +1,6 @@
 #light-control {
     display: grid;
-    grid-template-rows: 40% 60%;
+    grid-template-rows: 30% 70%;
     grid-template-columns: 100%;
     height: 100%;
 }
@@ -44,7 +44,16 @@
         #brightness-container {
             width: 100%;
         }
+            #light-brightness-slider .ui-slider-handle {
+                border: 3px solid #00C8C8 !important;
+                background: #00C8C8 !important;
+            }
 
-        #flux-container {
+        #color-container {
             width: 100%;
         }
+
+            #light-color-slider .ui-slider-handle {
+                border: 3px solid #00C8C8 !important;
+                background: #00C8C8 !important;
+            }

@@ -10,7 +10,7 @@ var socket = io()
 $(document).ready(function() {
   getPlaybackInfo()
 })
-// Check for playback changes every 2 seconds
+// Check for playback changes every half second
 window.setInterval(function() {
   getPlaybackInfo()
 
