@@ -31,7 +31,7 @@ public
        | yourmodule.pug
        | yourmodule.json
 ```
-2) In your pug view file, the only requirement is to label the top-most/parent div the id in you will specifiy in ```view-settings.json```
+2) In your pug view file, the only requirement is to label the top-most/parent div the id you specifiy in ```view-settings.json```
 ```pug
    #yourmodule
       (content)
