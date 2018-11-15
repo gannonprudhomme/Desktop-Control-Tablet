@@ -14,10 +14,12 @@
             img#power-icon(class="toggle-button image-button" src="/public/assets/power-button.png")
 
         #light-connection-container
-            label#connection-label Connection:
-            #circle-container
-                #circle
-            //- img#connection-icon(src="/public/assets/power-button.png")
+            #connection-indicator-container
+                label#connection-label Connection:
+                #circle-container
+                    #circle
+            #timeout-container
+                label#light-timeout Timeout: 0ms
 
     #light-sliders-container
         #brightness-container

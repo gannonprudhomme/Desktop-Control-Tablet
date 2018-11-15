@@ -19,15 +19,28 @@
 
         #light-connection-container {
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            align-items: flex-start;
         }
-            #circle {
-                background: #f00;
-                width: 50px;
-                height:50px;
-                /* border: 3px solid #2fe70a !important; */
-                border-radius: 50%;
+
+            #connection-indicator-container {
+                display: flex;
+                align-items: center;
             }
+
+                #circle {
+                    background: #f00;
+                    width: 50px;
+                    height:50px;
+                    /* border: 3px solid #2fe70a !important; */
+                    border-radius: 50%;
+                }
+
+            #timeout-container {
+                margin-top: 7px;
+            }
+                #light-timeout {
+                }
 
         #light-status-container img {
             width: 50px;
