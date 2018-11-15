@@ -25,7 +25,7 @@ var socketHandler = function(socket) {
     settingsData = JSON.parse(fs.readFileSync('./view-settings.json'), 'utf-8')
 
     var modSettings = getModuleSettings(settingsData['currentModules'])
-
+    
     settingsData = {...settingsData, ...modSettings}
 
     ret(settingsData)

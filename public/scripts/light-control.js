@@ -11,12 +11,10 @@ $(document).ready(function() {
         // We have to wait, as we need to see what the range of the colors for the light are
         setLightSliders()
 
-        
         getLightInfo()
 
         // Set power image, depending on the state of the light
         // $('#power-icon').
-
     })
 })
 
@@ -27,7 +25,7 @@ window.setInterval(function() {
 
 function setLightSliders() {
     $('#light-brightness-slider').slider({
-        value: 0,
+        value: 100,
         min: 0,
         max: 100,
         animate: "fast",
@@ -42,7 +40,7 @@ function setLightSliders() {
     
     // set the min and max value depending on the f.lux range?
     $('#light-color-slider').slider({
-        value: 2500,
+        value: module_settings['maxColor'], // Set the default to the max color/far-right of the slider
         min: module_settings['minColor'],
         max: module_settings['maxColor'],
         animate: "fast",
@@ -64,6 +62,12 @@ function getLightInfo() {
     socket.emit('get_light_info', '', function(data) {
         console.log('Light info:')
         console.log(data)
+
+        if(data['responding']) {
+            $('#circle').css('background', '#2fe70a')
+        } else {
+            $('#circle').css('background', '#f00')
+        }
 
         $('#light-brightness-slider').slider('value', data['brightness'])
         $('#light-brightness-label').text(data['brightness'] + '%')

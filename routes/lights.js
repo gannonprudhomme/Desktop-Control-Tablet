@@ -12,7 +12,12 @@ var bip = module_settings['ip'];  // Enter the bulbs IP - You can find this usin
 var TPLSmartDevice = require('tplink-lightbulb')
 var bulb = new TPLSmartDevice(bip);
 
-var lightData = {'power': false, 'brightness': 0, 'color_temp': 6500}
+var lightData = {'power': false, 'brightness': 0, 'color_temp': 2500}
+
+// If the light has currently responded in the last X seconds
+// Set to false before sending a call to the smart-bulb, then if it is set to true
+// at the end of the timeout call, then we don't change the color of the connection status indicator
+// var lightResponding = false
 
 // On launch, retrieve the light info and set it into lightData
 bulb.info().then(info => {
@@ -23,23 +28,62 @@ bulb.info().then(info => {
 })
 
 var socketHandler = function(socket) {
+    var _lightWasResponding = false // TODO Review the use/necessity of this
+
     socket.on('get_light_info', function(data, ret) {
         // Retrieve the light info from the bulb itself
+        var lightResponding = false
+
         bulb.info().then(info => {
+            if(!_lightWasResponding) {
+                console.log('Light now responding!')
+                console.log(info['light_state'])
+            }
+
+            _lightWasResponding = true
+            lightResponding = true
+
             var light_state = info['light_state']
             lightData['power'] = light_state['on_off']
             lightData['brightness'] = light_state['brightness']
             lightData['color_temp'] = light_state['color_temp']
+            lightData['responding'] = lightResponding // which will always be set to true at this point
+
+            //console.log(lightData)
 
             ret(lightData)
+        }).catch(error => {
+            console.log(error)
         })
+
+        // Timeout the function if the light isn't currently responding
+        setTimeout(function() {
+            // If lightResponding hasn't been set to true at this point, 
+            // then it means the smart-bulb's info() callback hasn't triggered yet
+            if(!lightResponding) {
+                if(_lightWasResponding) {
+                    console.log('Light stopped responding!')
+                }
+
+                lightData['responding'] = false
+                _lightWasResponding = false
+                
+                ret(lightData)
+            }
+        }, 200) // Typical light delay on a TP-LINK LB120 was average ~20ms, while 99%th percentile were 90-150ms
     })
 
     socket.on('set_light_brightness', function(data) {
-        console.log('Setting brightness to ' + data)
+        //console.log('Setting brightness to ' + data)
+
+        var now = (new Date()).getTime()
         
         bulb.power(lightData['power'], transition, {brightness: data}).then(status => {
             //console.log(status)
+
+            var delay = (new Date()).getTime() - now
+
+            //console.log('Brightness delay: ' + delay)
         })
     })
 
@@ -68,11 +112,11 @@ router.post('/flux', (req, res) => {
 
     // Clamp the temperature to the range of the TPLink bulb
     var ctmp;
-    if (temp < 2500) {
-        ctmp = 2500;
+    if (temp < module_settings['minColor']) {
+        ctmp = module_settings['minColor'];
 
-    } else if (temp > 6500) {
-        ctmp = 6500;
+    } else if (temp > module_settings['maxColor']) {
+        ctmp = module_settings['maxColor'];
 
     } else {
         ctmp = temp;
