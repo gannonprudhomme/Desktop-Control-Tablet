@@ -112,10 +112,7 @@ function getLightInfo() {
             // The current timeout either milliseconds, seconds, or minutes
             var timeoutText = ""
 
-            if(diff < 1000) { // If the diff is less than a second
-                timeoutText = diff + 'ms'
-                
-            } else if(diff < 60000) { // If its less than a minute
+            if(diff < 60000) { // If its less than a minute
                 timeoutText = parseInt(diff / 1000) + 'sec(s)'
 
             } else {
