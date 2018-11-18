@@ -7,12 +7,13 @@ var os = require('os-utils')
 var fileUtils = require('./fileutils.js')
 var path = require('path')
 
-var currentAudioDevice = ""
 
 var volumes = {};
 var volumeData = JSON.parse(fs.readFileSync('./public/volumeData.json', 'utf-8'))
 
 var settingsData = JSON.parse(fs.readFileSync('./view-settings.json'), 'utf-8')
+
+var currentAudioDevice = settingsData['audioDevices'][0]
 
 // Handle socket messages
 var socketHandler = function(socket) {
@@ -81,7 +82,7 @@ var socketHandler = function(socket) {
   socket.on('set_volume', function(data) {
     var now = (new Date()).getTime()
     // console.log('Volume: ' + data.program + ': ' + (data.volume * 100) + ', Delay: ' + (now - data.time) + 'ms')
-    commands.saveDelay(now - data.time)
+    // commands.saveDelay(now - data.time)
 
     volumes[currentAudioDevice][data.program] = data.volume;
     
