@@ -37,7 +37,6 @@ var socketHandler = function(socket) {
         bulb.info().then(info => {
             if(!_lightWasResponding) {
                 console.log('Light now responding!')
-                console.log(info['light_state'])
             }
 
             _lightWasResponding = true
@@ -45,11 +44,17 @@ var socketHandler = function(socket) {
 
             var light_state = info['light_state']
             lightData['power'] = light_state['on_off']
+
+            // If the light isn't on
+            if(!lightData['power']) {
+                // Then the light data is going to be located in data.light_state.dft_on_state 
+                // instead of data.light_state
+                light_state = light_state['dft_on_state']
+            }
+
             lightData['brightness'] = light_state['brightness']
             lightData['color_temp'] = light_state['color_temp']
             lightData['responding'] = lightResponding // which will always be set to true at this point
-
-            //console.log(lightData)
 
             ret(lightData)
         }).catch(error => {
@@ -88,7 +93,7 @@ var socketHandler = function(socket) {
     })
 
     socket.on('set_light_color', function(data) {
-        console.log('Setting color to ' + data)
+        //console.log('Setting color to ' + data + 'k')
         bulb.power(lightData['power'], transition, {color_temp: data}).then(status => {
             //console.log(status)
         })

@@ -11,7 +11,6 @@ var volumes = {};
 var volumeData = JSON.parse(fs.readFileSync('./public/volumeData.json', 'utf-8'))
 
 var settingsData = JSON.parse(fs.readFileSync('./view-settings.json'), 'utf-8')
-// var moduleSettings = {}
 
 // Handle socket messages
 var socketHandler = function(socket) {

@@ -35,7 +35,7 @@ $(document).ready(function() {
 // Update light info every 2 seconds
 window.setInterval(function() {
     getLightInfo()
-}, 200)
+}, 500)
 
 function setLightSliders() {
     $('#light-brightness-slider').slider({
@@ -85,16 +85,16 @@ $('#power-icon').click(function() {
 
 function getLightInfo() {
     socket.emit('get_light_info', '', function(data) {
-        console.log('Light info:')
-        console.log(data)
-
         var now = (new Date()).getTime()
 
+        // If the light is currently responding
         if(data['responding']) {
-            $('#circle').css('background', '#2fe70a')
+            $('#circle').css('background', '#2fe70a') // Set the connection indicator circle to green
 
+            // Set the local variable to indicate we are (re)connected
             reconnected = true
 
+            // Hide the connection-timeout indicator
             $('#timeout-container').hide()
         } else {
             $('#circle').css('background', '#f00')
@@ -124,7 +124,7 @@ function getLightInfo() {
             reconnected = false
         }
 
-        if(now - lastBrightnessChange < 2000) {
+        if(now - lastBrightnessChange > 2000) {
             $('#light-brightness-slider').slider('value', data['brightness'])
             $('#light-brightness-label').text(data['brightness'] + '%')
 
