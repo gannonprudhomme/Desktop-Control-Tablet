@@ -1,8 +1,11 @@
 // var volumes = {"master-volume":0, "spotify.exe": 0, "discord.exe": 0, "rocketleague.exe": 0, "chrome.exe": 0}
-var volumes = {}
-var settings = {};
-
+var volumeData = {}
 var socket = io()
+
+var settings = {}
+var currentDeviceName = ""
+var currentDeviceIndex = 0
+var audioDevices = []
 
 $(document).ready(function() {
   // On launch, load the settings file
@@ -20,11 +23,24 @@ $(document.body).on("touchmove", function(event) {
     event.stopPropagation();
 });
 
+$('#audio-device').click(function() {
+  currentDeviceIndex = (currentDeviceIndex + 1) % audioDevices.length
+  currentDeviceName = audioDevices[currentDeviceIndex]
+
+  console.log(currentDeviceIndex + " " + currentDeviceName)
+
+  socket.emit('audio_device', currentDeviceName)
+
+  //console.log(volumeData[currentDeviceName])
+
+  changeSliderValues(volumeData[currentDeviceName])
+})
+
 // Dynamically create(init) the sliders, connecting them to their respective HTML id's
 function createSlider(id, programName) {
   // Generate the jQuery UI slider, at the appropriate ID
   $('#' + id + '-slider').slider({
-    value: volumes[programName] * 100,
+    value: volumeData[currentDeviceName][programName] * 100,
     min: 0,
     max: 100,
     animate: "fast",
@@ -33,20 +49,32 @@ function createSlider(id, programName) {
     slide: function(e, ui) {
       $('#' + id + '-label').text(ui.value + "%")
       sendVolumeData(programName, ui.value / 100)
+      volumeData[currentDeviceName][programName] = ui.value / 100
     }
   })
 
-  $('#' + id + '-label').text(Math.floor(volumes[programName] * 100) + "%")
+  $('#' + id + '-label').text(Math.floor(volumeData[currentDeviceName][programName] * 100) + "%")
 }
 
 // Loop and create all of the volume sliders
 function setSliders() {
-  console.log(settings)
+  //console.log(settings)
   var volume_mixers = settings['volumeMixers']
   for(var i = 0; i < volume_mixers.length; i++) {
     var mixer = volume_mixers[i];
 
     createSlider(mixer['id'], mixer['programName'])
+  }
+}
+
+// Change the slider values when swapping audio outputs
+function changeSliderValues() {
+  var volume_mixers = settings['volumeMixers']
+  for(var i = 0; i < volume_mixers.length; i++) {
+    var mixer = volume_mixers[i];
+
+    $('#' + mixer['id'] + '-slider').slider('value', volumeData[currentDeviceName][mixer['programName']] * 100)
+    $('#' + mixer['id'] + '-label').text(parseInt(volumeData[currentDeviceName][mixer['programName']] * 100) + "%")
   }
 }
 
@@ -64,10 +92,18 @@ function sendVolumeData(program, volume) {
 
 function getVolumeData() {
   socket.emit('volume_data', '', function(data) {
+    var i = 0
+
     for(var key in data) {
-      volumes[key] = data[key];
+      volumeData[key] = data[key];
+
+      audioDevices[i] = key
+
+      i++
     }
-    
+
+    currentDeviceName = audioDevices[currentDeviceIndex]
+
     // After the volume data is loaded, initialize the sliders
     // We wait for this to determine what the default values of the sliders are going to be
     setSliders()

@@ -1,6 +1,5 @@
 var muted = false; // Retrieve if the user is currently muted or not
 var currentView = 'volume-mixer' // ENUM here, volume-mixer, or pc-stats, or pomdo
-var audioDevice = 'DAC'
 
 var socket = io()
 
@@ -24,17 +23,6 @@ $(document).ready(function() {
 
 $('#power-button').click(function() {
   desktopPut('sleep')
-})
-
-$('#deafen-output').click(function() {
-  if(audioDevice == 'DAC') { // Then tell to swap to soundbar
-    audioDevice = 'Sound Bar'
-
-  } else {
-    audioDevice = 'DAC'
-  }
-
-  socket.emit('audio_device', audioDevice)
 })
 
 $('#mute-microphone').click(function() {
@@ -64,10 +52,6 @@ function desktopPut(url_extension) {
   }).catch(function(error) {
     console.log(error);
   })
-}
-
-function initialSetup() {
-  
 }
 
 function hideOtherModules(moduleToShow) {
