@@ -11,8 +11,9 @@
   "spotify_client_id": "",
   "spotify_client_secret": "",
 
-  "startModule": "light-control",
+  "startModule": "volume-mixer",
 
+  "audioDevices": ["DAC", "Sound Bar"],  
   "modules": ["volume-mixer", "pc-stats", "light-control"],
   
   "currentModules": [
@@ -49,7 +50,7 @@
       "script": ""
     },
     {
-      "id": "deafen-output",
+      "id": "audio-device",
       "icon": "volume.png",
       "script": ""
     },

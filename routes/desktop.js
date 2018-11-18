@@ -7,6 +7,8 @@ var os = require('os-utils')
 var fileUtils = require('./fileutils.js')
 var path = require('path')
 
+var currentAudioDevice = ""
+
 var volumes = {};
 var volumeData = JSON.parse(fs.readFileSync('./public/volumeData.json', 'utf-8'))
 
@@ -81,7 +83,7 @@ var socketHandler = function(socket) {
     // console.log('Volume: ' + data.program + ': ' + (data.volume * 100) + ', Delay: ' + (now - data.time) + 'ms')
     commands.saveDelay(now - data.time)
 
-    volumes[data.program] = data.volume;
+    volumes[currentAudioDevice][data.program] = data.volume;
     
     // Run a command to set the volume for the given program
     commands.setVolume(data.program, data.volume)
@@ -100,6 +102,7 @@ var socketHandler = function(socket) {
   socket.on('audio_device', function(data) {
     console.log('audio device ' + data)
     commands.changeAudioOutput(data)
+    currentAudioDevice = data
   })
 
   socket.on('screenshot', function(data) {
@@ -133,6 +136,7 @@ var socketHandler = function(socket) {
   // return router
 }
 
+// Import 
 function importVolumeData() {
   // Fill the volume map with all of the previous data here
   volumeData = fileUtils.loadVolumeData()
