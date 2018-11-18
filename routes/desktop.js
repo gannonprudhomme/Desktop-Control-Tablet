@@ -11,7 +11,6 @@ var volumes = {};
 var volumeData = JSON.parse(fs.readFileSync('./public/volumeData.json', 'utf-8'))
 
 var settingsData = JSON.parse(fs.readFileSync('./view-settings.json'), 'utf-8')
-// var moduleSettings = {}
 
 // Handle socket messages
 var socketHandler = function(socket) {
@@ -25,7 +24,7 @@ var socketHandler = function(socket) {
     settingsData = JSON.parse(fs.readFileSync('./view-settings.json'), 'utf-8')
 
     var modSettings = getModuleSettings(settingsData['currentModules'])
-
+    
     settingsData = {...settingsData, ...modSettings}
 
     ret(settingsData)
@@ -67,6 +66,13 @@ var socketHandler = function(socket) {
     //console.log(moduleSettings)
 
     ret(moduleSettings)
+  })
+
+  socket.on('get_module_settings', function(data, ret) {
+    // Get the JSON settings file for this specific module
+    var json = JSON.parse(fs.readFileSync('./public/views/modules/' + data + '.json'))
+    
+    ret(json)
   })
 
   var {exec} = require('child_process')
@@ -150,29 +156,20 @@ function getPerformanceUsage() {
 
 var moduleSettings;
 function getModuleSettings(currentModules) {
-  //console.log('\ngetModuleSettings()')
-
-  // if(moduleSettings !== null) {
-  //   console.log('module settings initialized')
-  // } else {
-  //   console.log('not intialized')
-  // }
-  
   for(var mod in currentModules) {
     var modSettings = currentModules[mod]
     var settingsFile = modSettings['settings']
 
-    var json = JSON.parse(fs.readFileSync('./public/views/modules/' + settingsFile))
+    // If there is a settings file
+    if(settingsFile) {
+      // Load it
+      var json = JSON.parse(fs.readFileSync('./public/views/modules/' + settingsFile))
       
       // Concatenate the JSON objects
-
-    moduleSettings = {...moduleSettings, ...json}
+      moduleSettings = {...moduleSettings, ...json}
+    }
   }
-
-  //console.log(moduleSettings)
-
-  //console.log('\n\n')
-
+  
   return moduleSettings
 }
 

@@ -8,9 +8,13 @@
 
   "host-ip": "192.168.1.78",
   "music-service": "spotify",
+  "spotify_client_id": "",
+  "spotify_client_secret": "",
 
-  "startModule": "volume-mixer",
-  "modules": ["volume-mixer", "pc-stats", "printer-view"],
+  "startModule": "light-control",
+
+  "modules": ["volume-mixer", "pc-stats", "light-control"],
+  
   "currentModules": [
     {
       "name": "Volume Mixer",
@@ -29,11 +33,12 @@
       "settings": "pc-stats.json"
     },
     {
-      "name": "3D Printer View",
-      "id": "printer-view", 
-      "icon": "printer.png",
-      "css": "printer-view.css",
-      "settings": "printer-view.json"
+      "name": "Smart Bulb Control",
+      "id": "light-control",
+      "icon": "bulb.png",
+      "script": "light-control.js",
+      "css": "light-control.css",
+      "settings": "light-control.json"
     }
   ],
   
@@ -52,6 +57,16 @@
       "id": "screenshot", 
       "icon": "photo-camera-filled.png",
       "script": ""
+    }
+  ],
+
+  "unusedModules?": [
+    {
+      "name": "3D Printer View",
+      "id": "printer-view", 
+      "icon": "printer.png",
+      "css": "printer-view.css",
+      "settings": "printer-view.json"
     }
   ]
 }

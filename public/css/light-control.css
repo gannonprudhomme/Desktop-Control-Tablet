@@ -1,0 +1,102 @@
+#light-control {
+    display: grid;
+    grid-template-rows: 30% 70%;
+    grid-template-columns: 100%;
+    height: 100%;
+}
+
+    #light-status-container {
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-start;
+        margin: 1% 2% 0% 2%;
+    }
+        #light-status-container img {
+            width: 50px;
+            height: 50px;
+        }
+
+        #light-status-container label {
+            font-size: 16px;
+        }
+
+        #light-power-container{
+            display: flex;
+            align-items: center;
+            width: 18%;
+            justify-content: space-between;
+        }
+            /* #power-icon {
+                margin-left: 10%;
+            } */
+
+
+        #light-connection-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            width: 100%;
+        }
+
+            #connection-indicator-container {
+                display: flex;
+                align-items: center;
+                justify-content: space-around;
+                width: 25%;
+            }
+
+                #circle {
+                    background: #f00;
+                    width: 50px;
+                    height:50px;
+                    /* border: 3px solid #2fe70a !important; */
+                    border-radius: 50%;
+                }
+
+            #timeout-container {
+                margin-top: 7px;
+            }
+                /* #light-timeout {
+                } */
+
+        
+
+    #light-sliders-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        width: 100%;
+        margin-left: 10px;
+    }
+        #brightness-container {
+            width: 100%;
+            zoom: 1.1;
+        }
+            #light-brightness-slider .ui-slider-handle {
+                border: 3px solid #00C8C8 !important;
+                background: #00C8C8 !important;
+            }
+
+            #light-brightness-slider {
+                margin-left: 10px;
+            }
+
+        #color-container {
+            width: 100%;
+            zoom: 1.1;
+        }
+
+            #light-color-slider .ui-slider-handle {
+                border: 3px solid #00C8C8 !important;
+                background: #00C8C8 !important;
+            }
+
+            #light-color-label {
+                font-size: 14px;
+            }
+
+            #light-color-slider {
+                margin-left: 10px;
+            }
+            
