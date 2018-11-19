@@ -1,5 +1,5 @@
 # Desktop-Control-Tablet
-A Desktop Companion Tablet built to control my Windows 10 home computer with a Raspberry Pi and touch screen
+A Desktop Companion Tablet built to control my Windows 10 home computer with a Raspberry Pi and touch screen. Focuses on modularity and customizability to allow easy addition and swapping of "modules" and other components.
 
 ![Screenshot](screenshots/screenshot1.png)
 
@@ -13,10 +13,11 @@ A Desktop Companion Tablet built to control my Windows 10 home computer with a R
 
 ## Set up and usage
 1) Install npm and nircmd on your PC
-2) After cd'ing into the repo, run npm install to install all of the relevant packages
-3) Set the IP of your main computer in the files
-4) Connect to http://IP/ on the Pi
-5)
+2) After entering repo folder, run ```npm install``` to install all of the relevant packages
+3) Set the local IP of your main computer in the `host-ip` field of ```view-settings.json```. To find your local IP, run IPCONFIG or your systems equivalent, or go to [whatismyip.com](www.whatismyip.com).
+4) Optionally, in ```view-settings.json``` swap out the included modules that you want to use by first adding/removing their id's in the `modules` array, then by adding/removing their information in `currentModules`.
+4) Connect to http://{LOCAL_IP}/tablet in Chromium on your Pi/device
+5) On first launch, you will be redirected to authenticate with Spotify. If you do not have a Spotify account and/or want to disable Spotify integration, set `"music-service":"spotify"` to `"music-service": "nil"`.
 
 ## How to add a module
 1) Create a view file(.pug), and optionally a .js, .css and settings(.json) file in their respective folders
