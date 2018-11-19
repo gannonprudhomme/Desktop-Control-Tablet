@@ -36,7 +36,7 @@ var socketHandler = function(socket) {
 
         bulb.info().then(info => {
             if(!_lightWasResponding) {
-                console.log('Light now responding!')
+                //console.log('Light now responding!')
             }
 
             _lightWasResponding = true
@@ -67,7 +67,7 @@ var socketHandler = function(socket) {
             // then it means the smart-bulb's info() callback hasn't triggered yet
             if(!lightResponding) {
                 if(_lightWasResponding) {
-                    console.log('Light stopped responding!')
+                    //console.log('Light stopped responding!')
                 }
 
                 lightData['responding'] = false
@@ -127,7 +127,7 @@ router.post('/flux', (req, res) => {
         ctmp = temp;
     }
     
-    console.log('Changing Light to temperature ' + ctmp + 'k')
+    //console.log('Changing Light to temperature ' + ctmp + 'k')
     
     // Create the bulb object
     bulb = new TPLSmartDevice(bip);
