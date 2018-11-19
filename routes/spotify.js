@@ -1,6 +1,7 @@
 var express = require('express')
 var request = require('request')
 var router = express.Router()
+var queryString = require('querystring')
 
 var commands = require('./commands.js')
 
@@ -121,6 +122,51 @@ var socketHandler = function(socket) {
   // return router
 }
 
+// Redirect to the client to authetnicate with Spotify
+function authenticateSpotify(res) {
+  var state = generateRandomString(8);
+
+  //res.cookie(stateKey, state);
+  var scope = 'user-read-private user-read-playback-state user-modify-playback-state user-read-currently-playing'
+  res.redirect('https://accounts.spotify.com/authorize?' +
+    queryString.stringify({
+      response_type:'code',
+      client_id: client_id,
+      scope: scope,
+      redirect_uri: redirect_uri,
+      state: state
+    })
+  )
+}
+
+function getAuthArguments(code, state) {
+  // Request options to be sent to the spotify server
+    access_code = code;
+    var authOptions = {
+      url: 'https://accounts.spotify.com/api/token',
+      form: {
+        code: code,
+        redirect_uri: redirect_uri,
+        grant_type: 'authorization_code'
+      },
+      headers: {
+        'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+      },
+      json: true
+    }
+
+    // Retrieve the authorization code from Spotify and set the returned access tokens
+    // The access token is to authorize each spotify change, and the refresh token is to refresh a new access token
+    // after it has expired
+    request.post(authOptions, function(error, response, body) {
+      if(!error && response.statusCode === 200) {
+        setTokens(body.access_token, body.refresh_token)
+      } else {
+        console.log(error)
+      }
+    })
+}
+
 // Request an access token using the provided refresh token
 function refreshToken() {
   console.log('Refreshing access token')
@@ -165,3 +211,16 @@ module.exports.setTokens = setTokens
 module.exports.client_id = client_id
 module.exports.client_secret = client_secret
 module.exports.redirect_uri = redirect_uri
+
+module.exports.authenticateSpotify = authenticateSpotify
+module.exports.getAuthArguments = getAuthArguments
+
+var generateRandomString = function(length) {
+  var text = '';
+  var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+  for (var i = 0; i < length; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text;
+};

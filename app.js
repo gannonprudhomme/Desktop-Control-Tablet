@@ -14,7 +14,7 @@ var http = require('http')
 var server = http.createServer(app)
 var io = require('socket.io').listen(server)
 
-var authenticated = false;
+var spotifyAuthenticated = false;
 
 // Routes
 var spotify = require('./routes/spotify.js')
@@ -40,22 +40,10 @@ app.use(bodyParser.json()); // For parsing application/json
 app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
 
 app.get('/tablet', (req, res) => {
-  if(!authenticated) {
-    var state = generateRandomString(8);
+  if(!spotifyAuthenticated) {
+    spotify.authenticateSpotify(res)
 
-    //res.cookie(stateKey, state);
-    var scope = 'user-read-private user-read-playback-state user-modify-playback-state user-read-currently-playing'
-    res.redirect('https://accounts.spotify.com/authorize?' +
-      queryString.stringify({
-        response_type:'code',
-        client_id: spotify.client_id,
-        scope: scope,
-        redirect_uri: spotify.redirect_uri,
-        state: state
-      })
-    )
-
-    authenticated = true;
+    spotifyAuthenticated = true;
   } else {
     // Load in the settings file
     var json = JSON.parse(fs.readFileSync(path.join(__dirname + '/view-settings.json'), 'utf8'))
@@ -73,41 +61,17 @@ app.get('/tablet', (req, res) => {
     // Add the module settings to the above option settings, to be sent to Pug to be used in our page
     options = {...options, ...modSettings}
 
-    //console.log(options)
-
-    // Render the 
+    // Render the webpage
     res.render('index', options)
 
+    
     // After authenticating, get the access and refresh tokens
     // have a function that takes req as a parameter(or req.query)
-    var code = req.query.code || null;
-    var state = req.query.state || null;
+    var code = req.query.code || null
+    var state = req.query.code || null
 
-    // Request options to be sent to the spotify server
-    access_code = code;
-    var authOptions = {
-      url: 'https://accounts.spotify.com/api/token',
-      form: {
-        code: code,
-        redirect_uri: spotify.redirect_uri,
-        grant_type: 'authorization_code'
-      },
-      headers: {
-        'Authorization': 'Basic ' + (new Buffer(spotify.client_id + ':' + spotify.client_secret).toString('base64'))
-      },
-      json: true
-    }
-
-    // Retrieve the authorization code from Spotify and set the returned access tokens
-    // The access token is to authorize each spotify change, and the refresh token is to refresh a new access token
-    // after it has expired
-    request.post(authOptions, function(error, response, body) {
-      if(!error && response.statusCode === 200) {
-        spotify.setTokens(body.access_token, body.refresh_token)
-      } else {
-        console.log(error)
-      }
-    })
+    // Get authentication tokens for use in Spotify
+    spotify.getAuthArguments(code, state)
   }
 })
 
