@@ -151,11 +151,9 @@ function importVolumeData() {
 
 function getPerformanceUsage() {
   var data = {}
-
+  
   os.cpuUsage(function(val) {
     data.cpuUsage = val;
-
-
   })
 }
 
