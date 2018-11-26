@@ -28,20 +28,20 @@ describe('Server Route Testing', function() {
     var client
 
     it('Should connect to the server in 3 seconds', function(done) {
-        var connected = false
+        var error = false
         var options ={
             transports: ['websocket'],
             'force new connection': true
         };
 
-        client = io.connect('http://192.168.1.78:3000', options)
+        client = io.connect('http://localhost:3000', options)
         //client.open()
         
         client.on('connect', function(data) {
             //client.emit('play', '123')
 
-            connected = true
-            expect(connected).to.be.equal(true)
+            expect(true).to.be.equal(true)
+            done()
         })
 
         client.on('connect_error', (error) => {
@@ -49,6 +49,7 @@ describe('Server Route Testing', function() {
             console.log('Connect error: ' + error)
 
             expect(client.connected).to.be.equal(true)
+            done()
         })
 
         client.on('error', (error) => {
@@ -56,6 +57,7 @@ describe('Server Route Testing', function() {
             console.log('General error: ' + error)
 
             expect(client.connected).to.be.equal(true)
+            done()
         })
 
         client.on('connect_timeout', (timeout) => {
@@ -63,15 +65,15 @@ describe('Server Route Testing', function() {
             console.log('Timeout ' + timeout)
 
             expect(client.connected).to.be.equal(true)
+            done()
         })
         
-        this.timeout(5000)
+        /*this.timeout(5000)
         setTimeout(function() {
             // console.log(client)
-            expect(client.connected).to.be.equal(true)
 
             done()
-        }, 3000)
+        }, 3000) */
     })
 
     
