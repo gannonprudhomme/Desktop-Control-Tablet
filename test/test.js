@@ -3,7 +3,7 @@ var commands = require('../routes/commands.js')
 var fs = require('fs')
 var desktop = require('../routes/desktop.js')
 var io = require('socket.io-client')
-
+var {exec} = require('child_process')
 
 describe('Desktop Route Testing', function() {
     describe('importVolumeData()', function() {
@@ -76,7 +76,7 @@ describe('Server Route Testing', function() {
         }, 3000) */
     })
 
-    
+    exec('pkill node')
 })
 
 describe('addTwoNumbers', function() { // Creates a testing environment
