@@ -26,6 +26,7 @@
     "querystring": "^0.2.0",
     "request": "^2.88.0",
     "socket.io": "^2.1.1",
+    "socket.io-client": "^2.1.1",
     "systeminformation": "^3.45.9",
     "timesync": "^1.0.3",
     "tplink-lightbulb": "^1.4.2"
