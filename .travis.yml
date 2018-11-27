@@ -7,7 +7,17 @@ node_js:
 cache:
   directories:
       - "node-modules"
-before_script:
+before_install:
+    - git clone --single-branch https://github.com/jasongin/nvs $NVS_HOME
+    - . ~/.nvs/nvs.sh
+    - nvs --version
+    - choco install nircmd
+install:
+    - nvs add latest
+    - nvs use latest
+    - node --version
+    - npm --version
+    - nvs add latest
     - npm install
 script:
     - node app.js &
