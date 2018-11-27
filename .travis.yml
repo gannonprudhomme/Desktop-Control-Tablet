@@ -1,3 +1,6 @@
+# Run it on windows instead of linux for now for Tasklist testing?
+# Could possibly try to get nircmd installed?
+os: windows
 language: node_js
 node_js:
   - "stable"
