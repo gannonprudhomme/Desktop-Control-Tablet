@@ -28,37 +28,26 @@ describe('Desktop Route Testing', function() {
 describe('Server Route Testing', function() {
     var client
     
-    it('Should connect to the server in 3 seconds', function(done) {
-        client = io.connect('http://localhost:3000')
-        //client.open()
-        
-        client.on('connect', function(data) {
-            expect(true).to.be.equal(true)
-            done()
-        })
-        
-        client.on('connect_error', (error) => {
-            // Throw an error
-            console.log('Connect error: ' + error)
+    it('Should connect to the servers', async function() {
+        return new Promise((resolve, reject) => {
+            client = io.connect('http://localhost:3000')
+            //client.open()
             
-            expect(client.connected).to.be.equal(true)
-            done()
-        })
-        
-        client.on('error', (error) => {
-            // Throw an error
-            console.log('General error: ' + error)
+            client.on('connect', (data) => {
+                resolve()
+            })
             
-            expect(client.connected).to.be.equal(true)
-            done()
-        })
-        
-        client.on('connect_timeout', (timeout) => {
-            // Throw an error
-            console.log('Timeout ' + timeout)
+            client.on('connect_error', (error) => {
+                reject(error)
+            })
             
-            expect(client.connected).to.be.equal(true)
-            done()
+            client.on('error', (error) => {
+                reject(error)
+            })
+            
+            client.on('connect_timeout', (timeout) => {
+                reject(timeout)
+            })
         })
     })
     

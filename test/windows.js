@@ -38,14 +38,14 @@ describe('Tasks Testing', function() {
 describe('Desktop Route Testing', function() {
     var client
 
-    before(function() {
+    before(async function() {
         // exec('node app.js') // Start the server
 
         return new Promise((resolve, reject) => {
             client = io.connect('http://localhost:3000')
             //client.open()
             
-            client.on('connect', function(data) {
+            client.on('connect', (data) => {
                 resolve()
             })
             
@@ -64,12 +64,16 @@ describe('Desktop Route Testing', function() {
     })
 
     describe('Active Programs Endpoint', function(done) {
-        it('Should work', function() {
+        it('Should work', async function() {
             var programs = ['chrome.exe']
 
             return new Promise((resolve, reject) => {
                 client.emit('active_programs', programs, (data) => {
-                    resolve()
+                    if(data) {
+                        resolve()
+                    } else { // Might not ever be called?
+                        reject()
+                    }
                 })
             })
         })
@@ -77,7 +81,8 @@ describe('Desktop Route Testing', function() {
 
     // Afterwards, kill the server
     after(function(){
-        exec('TASKKILL /F /IM node.exe')
+        // Add an if statement here so this only runs on Travis-CI
+        //exec('TASKKILL /F /IM node.exe')
     })
 })
 
