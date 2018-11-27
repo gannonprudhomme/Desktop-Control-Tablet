@@ -12,5 +12,4 @@ before_install:
 install:
     - npm install
 script:
-    - node app.js &
     - env IS_HOME=NO mocha --exit
