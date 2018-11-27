@@ -112,6 +112,7 @@ var socketHandler = function(socket) {
     var mixers = volumeMixerData['volumeMixers']
     for(var slider of mixers) {
       var program = slider['programName']
+      var id = slider['id']
       var isActive = false
 
       if(program !== 'master-volume') { // Master-volume will never be in the list of current processes
@@ -121,7 +122,7 @@ var socketHandler = function(socket) {
           isActive = true
         }
 
-        retData[program] = isActive
+        retData[id] = isActive
       } else {
         // master-volume will always be active
         retData['master-volume'] = true

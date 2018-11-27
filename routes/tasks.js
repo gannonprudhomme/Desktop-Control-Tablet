@@ -10,9 +10,8 @@ var tasklist = require('tasklist')
 // Currently the value is the number of tasks with that name
 var taskMap = new Map()
 
-loadTaskList().then(map => {
-    
-})
+// Update the currently running tasks every second
+setInterval(loadTaskList, 1000)
 
 // Returns a Promise with a Map of the current tasks in (taskName : instanceCount) pairs
 function loadTaskList() {
