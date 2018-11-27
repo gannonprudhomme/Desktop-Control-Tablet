@@ -43,7 +43,6 @@ describe('Desktop Route Testing', function() {
 
         return new Promise((resolve, reject) => {
             client = io.connect('http://localhost:3000')
-            //client.open()
             
             client.on('connect', (data) => {
                 resolve()
@@ -81,8 +80,16 @@ describe('Desktop Route Testing', function() {
 
     // Afterwards, kill the server
     after(function(){
-        // Add an if statement here so this only runs on Travis-CI
-        //exec('TASKKILL /F /IM node.exe')
+        // If this is the home pc, don't kill the node server process
+        // If it is, kill it, as the Travis-CI build will hold
+        var is_home = process.env.IS_HOME
+
+        // If the environmental variable exists
+        if(is_home) {
+            if(is_home === 'NO') {
+                exec('TASKKILL /F /IM node.exe')
+            }
+        }
     })
 })
 

@@ -13,4 +13,4 @@ install:
     - npm install
 script:
     - node app.js &
-    - npm test
+    - env IS_HOME=NO mocha --exit
