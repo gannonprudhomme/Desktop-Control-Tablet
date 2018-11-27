@@ -22,6 +22,7 @@ var discord = require('./routes/discord.js')
 var desktop = require('./routes/desktop.js')
 var socket = require('./routes/sockets.js')(io)
 var fluxbulb = require('./routes/lights.js')  // controlling tp-link lightbulb from f.lux 
+var tasks = require('./routes/tasks.js')
 
 // Attach Handlebars
 // 'hps' is the internal name of handleBars and the extension(.hbs) name
