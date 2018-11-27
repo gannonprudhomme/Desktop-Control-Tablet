@@ -3,21 +3,13 @@
 os: windows
 language: node_js
 node_js:
-  - "stable"
+  - "latest"
 cache:
   directories:
       - "node-modules"
 before_install:
-    - git clone --single-branch https://github.com/jasongin/nvs $NVS_HOME
-    - . ~/.nvs/nvs.sh
-    - nvs --version
     - choco install nircmd
 install:
-    - nvs add latest
-    - nvs use latest
-    - node --version
-    - npm --version
-    - nvs add latest
     - npm install
 script:
     - node app.js &
