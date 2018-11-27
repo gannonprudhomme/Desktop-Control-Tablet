@@ -68,7 +68,7 @@ function getCommandOutput(commandName, options) {
 }
 
 function getTaskMap() {
-    return allTasks
+    return taskMap
 }
 
 module.exports.loadTaskList = loadTaskList

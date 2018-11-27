@@ -29,18 +29,10 @@ describe('Server Route Testing', function() {
     var client
     
     it('Should connect to the server in 3 seconds', function(done) {
-        var error = false
-        var options ={
-            transports: ['websocket'],
-            'force new connection': true
-        };
-        
-        client = io.connect('http://localhost:3000', options)
+        client = io.connect('http://localhost:3000')
         //client.open()
         
         client.on('connect', function(data) {
-            //client.emit('play', '123')
-            
             expect(true).to.be.equal(true)
             done()
         })
@@ -68,17 +60,10 @@ describe('Server Route Testing', function() {
             expect(client.connected).to.be.equal(true)
             done()
         })
-        
-        /*this.timeout(5000)
-        setTimeout(function() {
-            // console.log(client)
-            
-            done()
-        }, 3000) */
     })
     
     // End the node server    
-    exec('pkill node')
+    // exec('pkill node')
 })
 
 /

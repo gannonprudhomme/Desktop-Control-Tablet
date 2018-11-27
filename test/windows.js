@@ -9,7 +9,9 @@ if(isWin) {
 
 var expect = require('chai').expect
 var assert = require('chai').assert
+var {exec} = require('child_process')
 var tasks = require('../routes/tasks.js')
+var io = require('socket.io-client')
 
 describe('Tasks Testing', function() {
     describe('Reading Command output', function() {
@@ -30,6 +32,52 @@ describe('Tasks Testing', function() {
                 expect(taskMap.has('Registry')).to.be.equal(true)
             })
         })
+    })
+})
+
+describe('Desktop Route Testing', function() {
+    var client
+
+    before(function() {
+        // exec('node app.js') // Start the server
+
+        return new Promise((resolve, reject) => {
+            client = io.connect('http://localhost:3000')
+            //client.open()
+            
+            client.on('connect', function(data) {
+                resolve()
+            })
+            
+            client.on('connect_error', (error) => {
+                reject(error)
+            })
+            
+            client.on('error', (error) => {
+                reject(error)
+            })
+            
+            client.on('connect_timeout', (timeout) => {
+                reject(timeout)
+            })
+        })
+    })
+
+    describe('Active Programs Endpoint', function(done) {
+        it('Should work', function() {
+            var programs = ['chrome.exe']
+
+            return new Promise((resolve, reject) => {
+                client.emit('active_programs', programs, (data) => {
+                    resolve()
+                })
+            })
+        })
+    })
+
+    // Afterwards, kill the server
+    after(function(){
+        exec('TASKKILL /F /IM node.exe')
     })
 })
 
