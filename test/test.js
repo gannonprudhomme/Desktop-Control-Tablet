@@ -31,7 +31,6 @@ describe('Server Route Testing', function() {
     it('Should connect to the servers', async function() {
         return new Promise((resolve, reject) => {
             client = io.connect('http://localhost:3000')
-            //client.open()
             
             client.on('connect', (data) => {
                 resolve()

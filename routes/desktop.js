@@ -11,6 +11,7 @@ var tasks = require('./tasks')
 var volumes = {};
 var volumeData = JSON.parse(fs.readFileSync('./public/volumeData.json', 'utf-8'))
 var settingsData = JSON.parse(fs.readFileSync('./view-settings.json'), 'utf-8')
+var volumeMixerData = JSON.parse(fs.readFileSync('./public/views/modules/volume-mixer.json', 'utf-8'))
 
 var currentAudioDevice = settingsData['audioDevices'][0]
 
@@ -106,13 +107,25 @@ var socketHandler = function(socket) {
     var retData = {}    
 
     var taskMap = tasks.getTaskMap()
-    for(var program of data) {
-      var isActive = false
-      if(taskMap.has(program)) {
-        isActive = true
-      }
 
-      retData[program] = isActive
+    // Iterate over all of the specified volume mixer's programs
+    var mixers = volumeMixerData['volumeMixers']
+    for(var slider of mixers) {
+      var program = slider['programName']
+      var isActive = false
+
+      if(program !== 'master-volume') { // Master-volume will never be in the list of current processes
+        // If current program is in the map of current tasks
+        if(taskMap.has(program)) { 
+          // Set it as an active task
+          isActive = true
+        }
+
+        retData[program] = isActive
+      } else {
+        // master-volume will always be active
+        retData['master-volume'] = true
+      }
     }
 
     ret(retData)

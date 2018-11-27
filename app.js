@@ -55,7 +55,7 @@ app.get('/tablet', (req, res) => {
       currentModules: json['currentModules'],
       volumeMixers: json['volume-mixers']
     }
-
+    
     // Load in all of the settings data for all of our current modules
     var modSettings = desktop.getModuleSettings(json['currentModules'])
 
@@ -103,6 +103,12 @@ server.listen(port, (err) => {
 
   desktop.importVolumeData()
 })
+
+function kill() {
+  process.exit()
+}
+
+module.exports.kill = kill
 
 var generateRandomString = function(length) {
   var text = '';

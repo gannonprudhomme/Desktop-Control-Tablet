@@ -19,7 +19,7 @@ var refresh_token; // Used to request a new access token after a certain amount 
 // var access_code;
 var stateKey = 'spotify_auth_state'
 
-console.log(redirect_uri)
+// console.log(redirect_uri)
 
 var socketHandler = function(socket) {
   // var spotify = io.of('/spotify')

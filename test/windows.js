@@ -13,6 +13,15 @@ var {exec} = require('child_process')
 var tasks = require('../routes/tasks.js')
 var io = require('socket.io-client')
 
+var app
+var is_home = process.env.IS_HOME
+if(is_home) {
+    if(is_home === 'NO') {
+        // Start the server
+        app = require('../app.js') 
+    }
+}
+
 describe('Tasks Testing', function() {
     describe('Reading Command output', function() {
         it('Should read echo correctly', function() {
@@ -64,8 +73,6 @@ describe('Desktop Route Testing', function() {
 
     describe('Active Programs Endpoint', function(done) {
         it('Should work', async function() {
-            var programs = ['chrome.exe']
-
             return new Promise((resolve, reject) => {
                 client.emit('active_programs', programs, (data) => {
                     if(data) {
@@ -81,13 +88,15 @@ describe('Desktop Route Testing', function() {
     // Afterwards, kill the server
     after(function(){
         // If this is the home pc, don't kill the node server process
-        // If it is, kill it, as the Travis-CI build will hold
-        var is_home = process.env.IS_HOME
+        // If it is, kill it, as the Travis-CI build will held otherwise
 
         // If the environmental variable exists
         if(is_home) {
+            // If not on the home computer
             if(is_home === 'NO') {
-                exec('TASKKILL /F /IM node.exe')
+                // Kill the server
+                console.log('Killing Node process')
+                app.kill()
             }
         }
     })
