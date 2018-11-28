@@ -29,9 +29,8 @@ html(lang="en")
 
         script(src="/public/scripts/display.js")
         script(src="/public/scripts/spotify_control.js")
-        script(src="/public/scripts/pc-stats.js")
 
         //- Load in all module scripts
         each module in currentModules
-            if module.script
+            if module.script 
                 script(src="/public/scripts/" + module.script)

@@ -61,7 +61,7 @@ var socketHandler = function(socket) {
       options[modData['id']] = json
 
       //console.log(options)
-
+      
       // Concatenate the JSON objects
       moduleSettings = {...moduleSettings, ...options}
     }
