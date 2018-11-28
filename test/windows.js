@@ -74,7 +74,7 @@ describe('Desktop Route Testing', function() {
     describe('Active Programs Endpoint', function(done) {
         it('Should work', async function() {
             return new Promise((resolve, reject) => {
-                client.emit('active_programs', programs, (data) => {
+                client.emit('active_programs', '', (data) => {
                     if(data) {
                         resolve()
                     } else { // Might not ever be called?
