@@ -2,16 +2,16 @@ var express = require('express')
 var router = express.Router()
 var fs = require('fs')
 var bodyParser = require('body-parser') // for parsing basic request data?
-var os = require('os-utils')
-var path = require('path')
 var commands = require('./commands.js')
+var os = require('os-utils')
 var fileUtils = require('./fileutils.js')
-var tasks = require('./tasks')
+var path = require('path')
+
 
 var volumes = {};
 var volumeData = JSON.parse(fs.readFileSync('./public/volumeData.json', 'utf-8'))
+
 var settingsData = JSON.parse(fs.readFileSync('./view-settings.json'), 'utf-8')
-var volumeMixerData = JSON.parse(fs.readFileSync('./public/views/modules/volume-mixer.json', 'utf-8'))
 
 var currentAudioDevice = settingsData['audioDevices'][0]
 
@@ -99,39 +99,6 @@ var socketHandler = function(socket) {
     ret(volumes)
   })
 
-  // Send the list of active programs, when given a set of programs to search for
-  // Could load the list of active programs from the settings files instead, as for now they won't change
-  socket.on('active_programs', function(data, ret) {
-    // Search for the programs in data in the list of current tasks
-    // Use the cached version of the list of current tasks
-    var retData = {}    
-
-    var taskMap = tasks.getTaskMap()
-
-    // Iterate over all of the specified volume mixer's programs
-    var mixers = volumeMixerData['volumeMixers']
-    for(var slider of mixers) {
-      var program = slider['programName']
-      var id = slider['id']
-      var isActive = false
-
-      if(program !== 'master-volume') { // Master-volume will never be in the list of current processes
-        // If current program is in the map of current tasks
-        if(taskMap.has(program)) { 
-          // Set it as an active task
-          isActive = true
-        }
-
-        retData[id] = isActive
-      } else {
-        // master-volume will always be active
-        retData['master-volume'] = true
-      }
-    }
-
-    ret(retData)
-  })
-
   // Change the current audio device
   socket.on('audio_device', function(data) {
     console.log('audio device ' + data)
@@ -184,9 +151,11 @@ function importVolumeData() {
 
 function getPerformanceUsage() {
   var data = {}
-  
+
   os.cpuUsage(function(val) {
     data.cpuUsage = val;
+
+
   })
 }
 

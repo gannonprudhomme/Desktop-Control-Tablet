@@ -22,7 +22,7 @@ $('#power-button').click(function() {
 
 $("#play-pause").click(function() {
   lastPlaybackPress = (new Date()).getTime();
-  
+
   // If it's playing when we press the button, pause it
   if(playing) {
     playing = false;
