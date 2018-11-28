@@ -1,4 +1,5 @@
 # Desktop-Control-Tablet
+[![Build Status](https://travis-ci.com/gannonprudhomme/Desktop-Control-Tablet.svg?branch=master)](https://travis-ci.com/gannonprudhomme/Desktop-Control-Tablet) <br>
 A Desktop Companion Tablet built to control my Windows 10 home computer with a Raspberry Pi and touch screen. Focuses on modularity and customizability to allow easy addition and swapping of "modules" and other components.
 
 ![Screenshot](screenshots/screenshot1.png)
