@@ -22,7 +22,6 @@ var discord = require('./routes/discord.js')
 var desktop = require('./routes/desktop.js')
 var socket = require('./routes/sockets.js')(io)
 var fluxbulb = require('./routes/lights.js')  // controlling tp-link lightbulb from f.lux 
-var tasks = require('./routes/tasks.js')
 
 // Attach Handlebars
 // 'hps' is the internal name of handleBars and the extension(.hbs) name
@@ -55,7 +54,7 @@ app.get('/tablet', (req, res) => {
       currentModules: json['currentModules'],
       volumeMixers: json['volume-mixers']
     }
-    
+
     // Load in all of the settings data for all of our current modules
     var modSettings = desktop.getModuleSettings(json['currentModules'])
 
@@ -103,12 +102,6 @@ server.listen(port, (err) => {
 
   desktop.importVolumeData()
 })
-
-function kill() {
-  process.exit()
-}
-
-module.exports.kill = kill
 
 var generateRandomString = function(length) {
   var text = '';

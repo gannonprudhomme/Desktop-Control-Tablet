@@ -10,7 +10,7 @@
   "music-service": "spotify",
   "spotify_client_id": "",
   "spotify_client_secret": "",
-  
+
   "startModule": "volume-mixer",
 
   "audioDevices": ["DAC", "Sound Bar"],  

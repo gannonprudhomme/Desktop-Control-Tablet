@@ -25,11 +25,6 @@ function saveDelay(time) {
   stream.write(time + '\n')
 }
 
-function addTwoNumbers(a, b) {
-  return a+b
-}
-
-module.exports.addTwoNumbers = addTwoNumbers
 module.exports.setVolume = setVolume
 module.exports.sendKeypress = sendKeypress
 module.exports.saveDelay = saveDelay
