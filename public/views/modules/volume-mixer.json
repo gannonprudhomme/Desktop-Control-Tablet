@@ -6,6 +6,11 @@
           "programName": "master-volume"
         },
         {
+          "id": "chrome",
+          "icon": "chrome.png",
+          "programName": "chrome.exe"
+        },
+        {
           "id": "spotify",
           "icon": "spotify.png",
           "programName": "Spotify.exe"
@@ -19,11 +24,6 @@
           "id": "rocketleague",
           "icon": "rocketleague.png",
           "programName": "RocketLeague.exe"
-        },
-        {
-          "id": "chrome",
-          "icon": "chrome.png",
-          "programName": "chrome.exe"
         }
       ],
       "bool": true
