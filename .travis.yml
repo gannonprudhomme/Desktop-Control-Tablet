@@ -1,11 +1,15 @@
+# Run it on windows instead of linux for now for Tasklist testing?
+# Could possibly try to get nircmd installed?
+os: windows
 language: node_js
 node_js:
-  - "stable"
+  - "latest"
 cache:
   directories:
       - "node-modules"
-before_script:
+before_install:
+    - choco install nircmd
+install:
     - npm install
 script:
-    - node app.js &
-    - npm test
+    - env IS_HOME=NO mocha --exit

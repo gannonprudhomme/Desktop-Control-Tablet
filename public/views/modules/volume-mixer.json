@@ -8,17 +8,17 @@
         {
           "id": "spotify",
           "icon": "spotify.png",
-          "programName": "spotify.exe"
+          "programName": "Spotify.exe"
         },
         {
           "id": "discord",
           "icon": "discord.png",
-          "programName": "discord.exe"
+          "programName": "Discord.exe"
         },
         {
           "id": "rocketleague",
           "icon": "rocketleague.png",
-          "programName": "rocketleague.exe"
+          "programName": "RocketLeague.exe"
         },
         {
           "id": "chrome",
