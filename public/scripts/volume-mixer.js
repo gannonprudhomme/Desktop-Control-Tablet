@@ -14,6 +14,12 @@ $(document).ready(function() {
 
     // Once it's loaded, load the volume data
     getVolumeData()
+    getActivePrograms()
+
+    window.setInterval(function() {
+      getActivePrograms()
+    
+    }, 3000)
   })
 })
 
@@ -102,10 +108,25 @@ function getVolumeData() {
       i++
     }
 
+    console.log(volumeData)    
     currentDeviceName = audioDevices[currentDeviceIndex]
 
     // After the volume data is loaded, initialize the sliders
     // We wait for this to determine what the default values of the sliders are going to be
     setSliders()
+  })
+}
+
+function getActivePrograms() {
+  socket.emit('active_programs', '', function(data) {
+    for(var id in data) {
+      // If the program is active
+      if(data[id]) {
+        // Display it
+        $('#' + id + '-container').show()
+      } else { // Otherwise, hide it
+        $('#' + id + '-container').hide()
+      }
+    }
   })
 }
