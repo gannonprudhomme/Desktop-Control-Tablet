@@ -56,7 +56,7 @@ var socketHandler = function(socket) {
           ret(sendToClient)
         } else if(response && response.statusCode === 204) {
           // Nothing is playing, do nothing
-          console.log('204')
+          //console.log('204')
 
         } else {
           // process.stdout.write("Playback info error: ")
