@@ -19,6 +19,9 @@ var refresh_token; // Used to request a new access token after a certain amount 
 // var access_code;
 var stateKey = 'spotify_auth_state'
 
+// If we're using toastify shortcuts to pause/play/skip songs for Spotify
+var useToastify = settings['use_toastify']
+
 // console.log(redirect_uri)
 
 var socketHandler = function(socket) {
@@ -92,7 +95,11 @@ var socketHandler = function(socket) {
     console.log('Play delay: ' + delay)
     commands.saveDelay(delay)
 
-    commands.sendKeypress('ctrl+alt+up')
+    if(useToastify) {
+      commands.sendKeypress('ctrl+alt+up')
+    } else {
+      sendSpotifyCommand('play')
+    }
   })
 
   socket.on('pause', function(data) {
@@ -100,7 +107,11 @@ var socketHandler = function(socket) {
     console.log('Pause delay: ' + delay)
     commands.saveDelay(delay)
 
-    commands.sendKeypress('ctrl+alt+up')
+    if(useToastify) {
+      commands.sendKeypress('ctrl+alt+up')
+    } else {
+      sendSpotifyCommand('pause')
+    }
   })
 
   socket.on('next', function(data) {
@@ -108,7 +119,11 @@ var socketHandler = function(socket) {
     console.log('Next delay: ' + delay)
     commands.saveDelay(delay)
 
-    commands.sendKeypress('ctrl+alt+right')
+    if(useToastify) {
+      commands.sendKeypress('ctrl+alt+right')
+    } else {
+      sendSpotifyCommand('next')
+    }
   })
 
   socket.on('previous', function(data) {
@@ -116,7 +131,11 @@ var socketHandler = function(socket) {
     console.log('Prev delay: ' + delay)
     commands.saveDelay(delay)
 
-    commands.sendKeypress('ctrl+alt+left')
+    if(useToastify) {
+      commands.sendKeypress('ctrl+alt+left')
+    } else {
+      sendSpotifyCommand('previous')
+    }
   })
 
   // return router
@@ -202,6 +221,37 @@ function setTokens(access, refresh) {
 // Set the redirect uri to be reurned to after authenticating with Spotify
 function setRedirectUri(uri) {
   redirect_uri = uri
+}
+
+function sendSpotifyCommand(command) {
+  var options = {
+    url: 'https://api.spotify.com/v1/me/player/' + command,
+    headers: {
+      'Authorization': 'Bearer ' + access_token
+    }
+  }
+
+  if(command == 'play' || command == 'pause') { // Send PUT call for pause & play
+    // Send the playback command to the Spotify server
+    request.put(options, function(error, response, body) {
+      if(!error) {
+        
+      } else {
+        console.log(error)
+        console.log(body)
+      }
+    })
+  } else { // Send POST call for next & previous songs
+    // Send the playback command to the Spotify server
+    request.post(options, function(error, response, body) {
+      if(!error) {
+        
+      } else {
+        console.log(error)
+        console.log(body)
+      }
+    })
+  }
 }
 
 module.exports.setRedirectUri = setRedirectUri
