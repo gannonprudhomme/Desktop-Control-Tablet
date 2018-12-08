@@ -2,7 +2,7 @@ var express = require('express')
 var router = express.Router()
 var {exec} = require('child_process')
 var child_process = require('child_process')
-var tasklist = require('tasklist')
+var psList = require('ps-list')
 
 // Map of all of the tasks
 // Doesn't really need to be a mapped key-value pair, just need the
@@ -16,16 +16,15 @@ setInterval(loadTaskList, 1000)
 // Returns a Promise with a Map of the current tasks in (taskName : instanceCount) pairs
 function loadTaskList() {
     return new Promise((resolve, reject) => {
-        // Read the current tasks
-        tasklist().then(tasks => {
+        psList().then(tasks => {
             // Clear the previous tasks
             taskMap.clear()
-
+    
             // Iterate over all of the tasks
             for(var i in tasks) {
                 var task = tasks[i]
-                var name = task['imageName']
-
+                var name = task['name']
+    
                 // If the map already has this key
                 if(taskMap.has(name)) {
                     // Increment how many tasks of that name are running
@@ -35,13 +34,13 @@ function loadTaskList() {
                     taskMap.set(name, 1)
                 }
             }
-
+    
             // Send the task map back
             resolve(taskMap)
         }).catch(error => {
             // If there was an error in retrieving the task list, reject the promise
             // console.log(error)
-
+    
             reject(error)
         })
     })
