@@ -45,7 +45,6 @@
     {
       "name": "Weather",
       "id": "weather",
-      "icon": "weather.png",
       "script": "weather_control.js",
       "css": "weather.css",
       "settings": "weather.json"
