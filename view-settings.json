@@ -41,6 +41,14 @@
       "script": "light-control.js",
       "css": "light-control.css",
       "settings": "light-control.json"
+    },
+    {
+      "name": "Weather",
+      "id": "weather",
+      "icon": "bulb.png",
+      "script": "weather_control.js",
+      "css": "weather.css",
+      "settings": "weather.json"
     }
   ],
   
