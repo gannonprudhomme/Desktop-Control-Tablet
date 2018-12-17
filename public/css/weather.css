@@ -1,0 +1,22 @@
+#weather {
+    font-size: 20px;
+    margin-left: -40%;
+    margin-bottom: 5%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 120%;
+    height: 100%;
+}
+
+    #forecast {
+        color: #00C8C8;
+        width: 50%;
+    }
+
+    #temperature {
+        color: #00C8C8;
+
+        font-size: 24px;
+        width: 20%;
+    }

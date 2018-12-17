@@ -4,9 +4,15 @@
 #time
     div 0.00
 
-#timer
-    #countdown-number
-        svg
-            circle(r=23, cx=25, cy=25)
+each module in currentModules  
+    if(module.id == "weather")
+        include ../modules/weather-widget
+
+    
+
+//- #timer
+//-     #countdown-number
+//-         svg
+//-             circle(r=23, cx=25, cy=25)
 
     
