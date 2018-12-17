@@ -20,6 +20,13 @@ A Desktop Companion Tablet built to control my Windows 10 home computer with a R
 4) Connect to http://{LOCAL_IP}/tablet in Chromium on your Pi/device
 5) On first launch, you will be redirected to authenticate with Spotify. If you do not have a Spotify account and/or want to disable Spotify integration, set `"music-service":"spotify"` to `"music-service": "nil"`.
 
+## Included Modules
+- Spotify
+- Volume Mixers
+- Desktop Performance Stats
+- TP-Link Light Control
+- Weather
+
 ## How to add a module
 1) Create a view file(.pug), and optionally a .js, .css and settings(.json) file in their respective folders
 ```
