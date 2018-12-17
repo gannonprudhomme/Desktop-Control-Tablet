@@ -71,10 +71,10 @@ public
 ```
 
 ## Screenshots
-Performance Stats Module
+#### Performance Stats Module
 ![Performance Stats](screenshots/performance-stats-screenshot.png)
 
-Smart Bulb Control Module
+#### Smart Bulb Control Module
 ![Smart Bulb Control](screenshots/light-screenshot.png)
 
 ## Libraries used
