@@ -9,8 +9,9 @@ A Desktop Companion Tablet built to control my Windows 10 home computer with a R
 - Built in remote volume mixer control for any desktop program
 - Change current audio output device
 - Live desktop performance(CPU, memory) display
-- Modular, which allows any practically any control-feature to be implemented and inserted
+- Modular, which allows any practically any control-feature to be implemented and inserted easily
 - Wireless Smart Bulb control and synchronization with f.lux
+- Live current weather display and updates
 
 ## Set up and usage
 1) Install npm and nircmd on your PC
@@ -25,7 +26,7 @@ A Desktop Companion Tablet built to control my Windows 10 home computer with a R
 - Volume Mixers
 - Desktop Performance Stats
 - TP-Link Light Control
-- Weather
+- [Weather](docs/modules/WEATHER.MD)
 
 ## How to add a module
 1) Create a view file(.pug), and optionally a .js, .css and settings(.json) file in their respective folders
