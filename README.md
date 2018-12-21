@@ -22,10 +22,10 @@ A Desktop Companion Tablet built to control my Windows 10 home computer with a R
 5) On first launch, you will be redirected to authenticate with Spotify. If you do not have a Spotify account and/or want to disable Spotify integration, set `"music-service":"spotify"` to `"music-service": "nil"`.
 
 ## Included Modules
-- Spotify
-- Volume Mixers
+- [Spotify](docs/SPOTIFY.md)
+- [Volume Mixers](docs/modules/VOLUME_MIXERS.md)
 - Desktop Performance Stats
-- TP-Link Light Control
+- [TP-Link Light Control](docs/modules/LIGHT_CONTROL.md)
 - [Weather](docs/modules/WEATHER.MD)
 
 ## How to add a module
