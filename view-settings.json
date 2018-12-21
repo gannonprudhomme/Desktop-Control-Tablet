@@ -45,7 +45,7 @@
     {
       "name": "Weather",
       "id": "weather",
-      "script": "weather_control.js",
+      "script": "weather-control.js",
       "css": "weather.css",
       "settings": "weather.json"
     }
