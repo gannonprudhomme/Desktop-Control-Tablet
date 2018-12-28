@@ -1,5 +1,4 @@
 # Light Control
-
 ## Description
 The light control module allows control of TP-LINK Smart Bulbs from the website using the [tplink-lightbulb](https://www.npmjs.com/package/tplink-lightbulb) npm package. 
 
