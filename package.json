@@ -31,7 +31,8 @@
     "string-hash": "^1.1.3",
     "systeminformation": "^3.45.9",
     "timesync": "^1.0.3",
-    "tplink-lightbulb": "^1.4.2"
+    "tplink-lightbulb": "^1.4.2",
+    "weather-js": "^2.0.0"
   },
   "devDependencies": {
     "browser-sync": "^2.26.3",

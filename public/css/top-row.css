@@ -33,13 +33,13 @@
   font-size: 30px;
 }
 
-#timer {
+/* #timer {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 50%;
   height: 100%;
-}
+} */
 
 #countdown-number {
   position: absolute;

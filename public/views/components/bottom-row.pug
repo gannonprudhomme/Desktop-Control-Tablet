@@ -14,4 +14,5 @@
 #view-swapper
     #control-container
         each module in currentModules
-            img(id=module.id + "-toggle", class="image-button toggle-button", src="/public/assets/" + module.icon)
+            if module.icon
+                img(id=module.id + "-toggle", class="image-button toggle-button", src="/public/assets/" + module.icon)

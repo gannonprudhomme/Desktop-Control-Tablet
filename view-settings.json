@@ -15,7 +15,7 @@
   "startModule": "volume-mixer",
 
   "audioDevices": ["DAC", "Sound Bar"],  
-  "modules": ["volume-mixer", "pc-stats", "light-control"],
+  "modules": ["volume-mixer", "pc-stats", "light-control", "weather"],
   
   "currentModules": [
     {
@@ -41,6 +41,13 @@
       "script": "light-control.js",
       "css": "light-control.css",
       "settings": "light-control.json"
+    },
+    {
+      "name": "Weather",
+      "id": "weather",
+      "script": "weather-control.js",
+      "css": "weather.css",
+      "settings": "weather.json"
     }
   ],
   
