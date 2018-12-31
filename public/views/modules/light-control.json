@@ -1,5 +1,18 @@
 {
-    "ip": "192.168.1.81",
-    "minColor": 2700,
-    "maxColor": 6500
+    "lights": [
+        {
+            "type": "lifx",
+            "ip": "192.168.1.__",
+            "rgb": true,
+            "minColor": 2500,
+            "maxColor": 6700
+        },
+        {
+            "type": "tp-link",
+            "ip": "192.168.1.81",
+            "rgb": false,
+            "minColor": 2700,
+            "maxColor": 6500
+        }
+    ]
 }
