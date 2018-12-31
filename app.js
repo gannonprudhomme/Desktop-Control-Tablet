@@ -86,8 +86,10 @@ app.get('/tablet/settings', (req, res) => {
     hostIP: json['host-ip']
   }
 
+  // Combine all of the module settings into one dictionary
   var modSett = desktop.getModuleSettings(json['currentModules'])
 
+  // Concatenate the options and the module settings
   options = {...options, ...modSett}
 
   res.render('settings', options)

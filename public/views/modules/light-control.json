@@ -1,6 +1,12 @@
 {
+    "ip": "192.168.1.81",
+    "rgb": false,
+    "minColor": 2700,
+    "maxColor": 6500,
+    
     "lights": [
         {
+            "id": "Desk-Lamp",
             "type": "lifx",
             "ip": "192.168.1.__",
             "rgb": true,
@@ -8,6 +14,7 @@
             "maxColor": 6700
         },
         {
+            "id": "Ceiling-Lights",
             "type": "tp-link",
             "ip": "192.168.1.81",
             "rgb": false,

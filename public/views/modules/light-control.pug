@@ -8,28 +8,35 @@
     Probably something to do with the light bulb responding or not
 
 #light-control(class="middle-view") 
-    #light-status-container
-        #light-power-container
-            label#power-label Power:
-            img#power-icon(class="toggle-button image-button" src="/public/assets/power-button.png")
+    for light in lights
+        .light-container(id=light.id)
+            .light-status-container
+                .light-power-container
+                    label.power-label Power:
+                    img.power-icon(class="toggle-button image-button" src="/public/assets/power-button.png")
 
-        #light-connection-container
-            #connection-indicator-container
-                label#connection-label Connection:
-                #circle-container
-                    #circle
-            #timeout-container
-                label#light-timeout Timeout: 0ms
+                .light-connection-container
+                    .connection-indicator-container
+                        label.connection-label Connection:
+                        .circle-container
+                            .circle
+                    .timeout-container
+                        label.light-timeout Timeout: 0ms
 
-    #light-sliders-container
-        #brightness-container
-            .slider-container
-                img.slider-icon(src="/public/assets/light-bulb.png")
-                label.slider-label(id="light-brightness-label") 100%
-                div(id="light-brightness-slider", class="ui-slider-range ui-corner-all")
-        
-        #color-container
-            .slider-container
-                img.slider-icon(src="/public/assets/f.lux.png")
-                label.slider-label(id="light-color-label") 6500k
-                div(id="light-color-slider", class="ui-slider-range ui-corner-all")
+            .light-sliders-container
+                .brightness-container
+                    .slider-container
+                        img.slider-icon(src="/public/assets/light-bulb.png")
+                        label.slider-label(id="light-brightness-label") 100%
+                        div(id="light-brightness-slider", class="ui-slider-range ui-corner-all")
+                
+                .color-container
+                    .slider-container
+                        img.slider-icon(src="/public/assets/f.lux.png")
+                        label.slider-label(id="light-color-label") 6500k
+                        div(id="light-color-slider", class="ui-slider-range ui-corner-all")
+                if light[rgb]
+                    .slider-container
+                        img.slider-icon(src="/public/assets/f.lux.png")
+                        label.slider-label(id="light-color-label") 6500k
+                        div(id="light-color-slider", class="ui-slider-range ui-corner-all")
