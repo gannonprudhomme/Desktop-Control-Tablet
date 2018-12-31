@@ -190,6 +190,8 @@ function getPerformanceUsage() {
   })
 }
 
+// Combine all of the settings from the module settings file
+// and return them
 var moduleSettings;
 function getModuleSettings(currentModules) {
   for(var mod in currentModules) {
