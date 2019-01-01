@@ -1,6 +1,7 @@
 var socket = io()
 
 var module_settings = {} // Need to get the module settings
+var lights = {}
 
 // Compared to the current time when potentially old light data would change the
 // sliders back to their previous position
@@ -13,16 +14,22 @@ var lightTimeout = 0
 // If we've reconnected since when we most-recently timed-out
 var reconnected = false
 
+var currentLightID = 'all-lights'
+
 $(document).ready(function() {
     // Get the module settings from the server
     socket.emit('get_module_settings', 'light-control', function(data) {
         module_settings = data
+        lights = module_settings['lights']
 
         // Once we've retrieved the module data, initialize the color sliders
         // We have to wait, as we need to see what the range of the colors for the light are
         setLightSliders()
 
         getLightInfo()
+
+        // Hide all of the lights, and show the all lights selector
+        switchToLightPage('Desk-Lamp')
 
         // Set power image, depending on the state of the light
         // $('#power-icon').
@@ -38,6 +45,11 @@ window.setInterval(function() {
 }, 500)
 
 function setLightSliders() {
+    // Iterate over all of the lights 
+    for(var i in module_settings['lights']) {
+
+    }
+
     $('#light-brightness-slider').slider({
         value: 100, // 100%
         min: 0, // 0%
@@ -79,11 +91,14 @@ function setLightSliders() {
     $('#light-color-label').text('2500k')
 }
 
+// When the power icon is clicked, send a socket message to toggle it
 $('#power-icon').click(function() {
     togglePower()
 })
 
 function getLightInfo() {
+    // Iterate over the lights from module settings
+
     socket.emit('get_light_info', '', function(data) {
         var now = (new Date()).getTime()
 
@@ -136,6 +151,28 @@ function getLightInfo() {
         $('#light-color-slider').slider('value', data['color_temp'])
         $('#light-color-label').text(data['color_temp'] + 'k')
     })
+}
+
+// Can swap between any of the lights, or access all of them
+function switchToLightPage(lightID) {
+    if(light == 'all-lights') { // If we're trying to switch to all lights
+        // Hide all of the other lights
+
+        // Show the all light selector page
+
+        return
+    }
+    
+
+    for(var i in lights) {
+        var light = lights[i]
+
+        // If this light isn't the light page we're trying to show
+        if(light['id'] != lightID) { 
+            // Hide it
+            $('#' + light['id']).hide()
+        }
+    }
 }
 
 function togglePower() {

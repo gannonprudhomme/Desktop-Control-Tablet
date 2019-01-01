@@ -7,7 +7,9 @@
     Need to figure out how to know when we're connected to the bulb or not
     Probably something to do with the light bulb responding or not
 
-#light-control(class="middle-view") 
+#light-control(class="middle-view")
+    //- Add global light control here
+
     for light in lights
         .light-container(id=light.id)
             .light-status-container
@@ -15,8 +17,15 @@
                     label.power-label Power:
                     img.power-icon(class="toggle-button image-button" src="/public/assets/power-button.png")
 
-                .light-switcher.container
-
+                .light-switcher-container
+                    .light-switcher(id="all-lights-switcher")
+                        label#all-lights-label All Lights
+                        img#all-lights-icon(src="/public/assets/f.lux.png")
+                    for light in lights
+                        .light-switcher(id=light.id + "-switcher")
+                            label(id=light.id + "switcher-label") light.name
+                            img(id=light.id + "switch-icon" src="/public/assets/light-bulb.png")        
+                        
 
                 .light-connection-container
                     .connection-indicator-container
@@ -38,8 +47,10 @@
                         img.slider-icon(src="/public/assets/f.lux.png")
                         label.slider-label(id=light.id + "-light-color-label") 6500k
                         div(id=light.id + "-light-color-slider", class="ui-slider-range ui-corner-all")
+                        
                 if light.rgb
-                    .slider-container
-                        img.slider-icon(src="/public/assets/f.lux.png")
-                        label.slider-label(id=light.id + "-light-rgb-label") 6500k
-                        div(id=light.id + "-light-rgb-slider", class="ui-slider-range ui-corner-all")
+                    .rgb-container
+                        .slider-container
+                            img.slider-icon(src="/public/assets/f.lux.png")
+                            label.slider-label(id=light.id + "-light-rgb-label") 6500k
+                            div(id=light.id + "-light-rgb-slider", class="ui-slider-range ui-corner-all")
