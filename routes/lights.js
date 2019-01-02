@@ -231,7 +231,6 @@ var socketHandler = function(socket) {
     })
 
     socket.on('set_light_color', function(data) {
-        //console.log('Setting color to ' + data + 'k')
         var lightID = data['id']
         var color_temp = data['color']
 
@@ -239,12 +238,13 @@ var socketHandler = function(socket) {
         var lightObj = lightsData[lightID]['object']
 
         // Get the type of the bulb
-        var type = lightsData[lightID][type]
+        var type = lightsData[lightID]['type']
         if(type == 'tp-link') {
             lightObj.power(lightsData[lightID]['power'], transition, {color_temp: color_temp}).then(status => {
                 //console.log(status)
             })
         } else if(type == 'lifx') {
+            console.log('lifx light control')
             var lifxData = lightsData[lightID]
 
             lightObj.color(lifxData['hue'], lifxData['saturation'], lifxData['brightness'], color_temp)
