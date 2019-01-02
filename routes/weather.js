@@ -15,14 +15,30 @@ var socketHandler = function(socket) {
 function getForecast() {
     return new Promise((result, reject) => {
         weather.find({search: weatherSettings['zipcode'], degreeType: 'F'}, function(error, d) {
-            if(error) console.log(error)
-            var data = d[0]
-
+            if(error) { // If there was an error
+                console.log(error)
+                reject(error)
+            }
+            
             var retData = {}
-            retData['currentTemp'] = data['current']['temperature']
-            retData['currentWeather'] = data['current']['skytext']
-            retData['futureForecasts'] = data['forecast'] // Forecasts for the today + next 3 days
-            result(retData)
+
+            // If the data was loaded
+            if(d) {
+                var data = d[0]
+
+                retData['currentTemp'] = data['current']['temperature']
+                retData['currentWeather'] = data['current']['skytext']
+                retData['futureForecasts'] = data['forecast'] // Forecasts for the today + next 3 days
+                result(retData)
+
+            } else { // Couldn't load the data, return invalid data
+                console.log('Weather data couldnt be loaded!')
+                retData['currentTemp'] = -99
+                retData['currentWeather'] = 'N/A'
+                retData['futureForecasts'] = [] // Forecasts for the today + next 3 days
+                result(retData)
+
+            }
         })
     })
 }
