@@ -29,7 +29,8 @@ function initLights() {
         var id = light['id']
 
         lightsData[id] = {
-            'type': light['type'],
+            'type': light['type'], // We need the type to know how to handle a light given its ID
+            // 'ip': light['ip'], // We need the IP for matching LIFX bulbs 
             'power': false,
             'brightness': 0,
             'color_temp': light["minColor"],
@@ -44,21 +45,57 @@ function initLights() {
             
             // Get its current status
             bulb.info().then(info => {
+                console.log(info)
+
                 var light_state = info['light_state']
                 lightData[id]['power'] = light_state['on_off']
                 lightData[id]['brightness'] = light_state['brightness']
                 lightData[id]['color_temp'] = light_state['color_temp']
+            }).catch((error) => {
+                console.log(error)
             })
 
         } else if(light['type'] == 'lifx') {
-            lifx.on('light-new', function(light) {
-                console.log('new light found')
-                console.log(light)
-            })
+            // Set temporary hue and saturation, we'll load its data outside of this for-loop
+            lightsData[id]['hue'] = 0
+            lightsData[id]['saturation'] = 0
         }
     }
 
-    console.log(lightsData)
+    // On initialization of a new light
+    lifx.on('light-new', function(light) {
+        var lightID
+
+        var lightIP = light.address
+        // Check which light this is
+        for(var i in lightsSettings) {
+            var lightSetting = lightsSettings[i]
+            
+            // If this light has the IP for the initialized LIFX light
+            if(lightIP == lightSetting['ip']) {
+                lightID = lightSetting['id']
+                break // End the for loop, we've found the according light
+            }
+        }
+
+        // If we found the light
+        if(lightID != null) {
+            // Set the according light object
+            lightsData[lightID]['object'] = light
+
+            // Load its data
+            getLifxInfo(light, lightID).then((lightData) => {
+
+            }).catch((error) => {
+                console.log(error)
+            })
+
+        } else { // Didn't find the light
+            console.log("LIGHT-CONTROL ERROR, Couldn't find LIFX light with IP: " + lightIP)
+        }
+    })
+
+    lifx.init()
 }
 
 var socketHandler = function(socket) {
@@ -66,12 +103,12 @@ var socketHandler = function(socket) {
 
     socket.on('get_light_info', function(data, ret) {
         // Retrieve the light info from the bulb itself
-        var lightID = data["id"]
+        var lightID = data['id']
         
         var lightResponding = false
 
         // Get the type of the bulb
-        var type = lightsData[lightID]["type"]
+        var type = lightsData[lightID]['type']
 
         if(type == "tp-link") {
             var bulb = lightsData[lightID]["object"] // Load the respective TPLSmartDevice object
@@ -94,11 +131,13 @@ var socketHandler = function(socket) {
                     light_state = light_state['dft_on_state']
                 }
     
-                // Update the light data array
+                // Update the light data dictionary
                 lightsData[lightID]['brightness'] = light_state['brightness']
                 lightsData[lightID]['color_temp'] = light_state['color_temp']
                 lightsData[lightID]['responding'] = lightResponding // which will always be set to true at this point
     
+                // Create the dictionary to be returned the client
+                // We create this separately, as we don't need to send back the full data(like light type and its object)
                 var retData = {
                     "brightness": light_state['brightness'],
                     "color_temp": light_state['color_temp'],
@@ -110,37 +149,46 @@ var socketHandler = function(socket) {
             }).catch(error => {
                 console.log(error)
             })
-    
-            // Timeout the function if the light isn't currently responding
-            setTimeout(function() {
-                // If lightResponding hasn't been set to true at this point, 
-                // then it means the smart-bulb's info() callback hasn't triggered yet
-                if(!lightResponding) {
-                    if(_lightWasResponding) {
-                        //console.log('Light stopped responding!')
-                    }
-                    
-                    lightsData[lightID]['responding'] = false
-                    _lightWasResponding = false
-
-                    var retData = {
-                        "brightness": lightsData[lightID]['brightness'],
-                        "color_temp": lightsData[lightID]['color_temp'],
-                        "responding": false
-                    }
-                    
-                    ret(retData)
-                }
-            }, 200) // Typical light delay on a TP-LINK LB120 was average ~20ms, while 99%th percentile were 90-150ms
+            
         } else if(type == "lifx") {
             // Or iterate through all of the lights
-            lifx.on('light-new', function(light) {
+            getLifxInfo(lightsData[lightID]['object']).then((data) => {
+                var retData = {
+                    "brightness": data['brightness'],
+                    "color_temp": data['color_temp'],
+                    "responding": lightResponding
+                }
 
+            }).catch((error) => {
+                console.log(error)
             })
 
         } else {
             // Something went wrong
         }
+
+        // Timeout the function if the light isn't currently responding
+        /*setTimeout(function() {
+            // If lightResponding hasn't been set to true at this point, 
+            // then it means the smart-bulb's info() callback hasn't triggered yet
+            if(!lightResponding) {
+                if(_lightWasResponding) {
+                    //console.log('Light stopped responding!')
+                }
+                
+                lightsData[lightID]['responding'] = false
+                _lightWasResponding = false
+
+                var retData = {
+                    "brightness": lightsData[lightID]['brightness'],
+                    "color_temp": lightsData[lightID]['color_temp'],
+                    "responding": false
+                }
+                
+                ret(retData)
+            }
+        }, 200) // Typical light delay on a TP-LINK LB120 was average ~20ms, while 99%th percentile were 90-150ms
+        */
     })
 
     socket.on('set_light_brightness', function(data) {
@@ -189,6 +237,31 @@ var socketHandler = function(socket) {
     })
 }
 
+
+// Returns a promise for retrieving the light data
+function getLifxInfo(lightObject, lightID) {
+    return new Promise((resolve, reject) => {
+        lightObject.getState(function(err, data) {
+            if(err) { 
+                console.log(err)
+                // reject(err)
+            }
+    
+            var colorData = data['color']
+    
+            lightsData[lightID]['hue'] = colorData['hue']
+            lightsData[lightID]['saturation'] = colorData['saturation']
+            lightsData[lightID]['brightness'] = colorData['brightness']
+            lightsData[lightID]['color_temp'] = colorData['kelvin']
+    
+            // Set if the light is on or not
+            lightsData[lightID]["power"] = (data["power"] == 1)
+    
+            resolve(lightData[lightID])
+        })
+    })
+}
+
 // Handle flux changes to update the lightbulb
 router.post('/flux', (req, res) => {
     /*
@@ -209,6 +282,8 @@ router.post('/flux', (req, res) => {
     
     //console.log('Changing Light to temperature ' + ctmp + 'k')
     
+    // Iterate through all of the bulbs and update them + their respective data
+
     // Create the bulb object
     bulb = new TPLSmartDevice(bip);
 
