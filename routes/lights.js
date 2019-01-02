@@ -165,7 +165,9 @@ var socketHandler = function(socket) {
                     ret(retData)
                 }).catch((error) => {
                     if(error.message == 'No LIFX response in time') {
-                        console.log('LIFX Bulb not responding')
+                        // console.log('LIFX Bulb not responding')
+                    } else {
+                        console.log(error)
                     }
                 })
             } else { // LIFX object is null for this light
