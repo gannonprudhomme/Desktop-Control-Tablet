@@ -40,14 +40,13 @@ $(document).ready(function() {
         // Once we've retrieved the module data, initialize everything
         // We have to wait, as we need to see what the range of the colors for the light are
 
-        setLightSlider(allLightsData) // Set the sliders for the all-lights page
+        setLightSlider(-1) // Set the sliders for the all-lights page
 
         // Set the sliders for the rest of the lights
         for(var i in lights) {
-            setLightSlider(lights[i])
+            setLightSlider(i)
+            getLightInfo(i)
         }
-
-        getLightInfo()
 
         // Hide all of the lights, and show the all lights selector
         switchToLightPage('Desk-Lamp')
@@ -65,7 +64,9 @@ $(document).ready(function() {
 
 // Update light info every 2 seconds
 window.setInterval(function() {
-    getLightInfo()
+    for(var i in lights) {
+        getLightInfo(i)
+    }
 }, 500)
 
 // Set Index = -1 to access all-lights
@@ -87,7 +88,7 @@ function setLightSlider(index) {
     
         slide: function(e, ui) {
             $('#' + lightData['id'] + 'light-brightness-label').text(ui.value + '%')
-            setBrightness(lightData['id', ui.value)
+            setBrightness(lightData['id'], ui.value)
 
             // Set the current to time in milliseconds
             // Compared to the current time when potentially old light data would change the
@@ -164,72 +165,73 @@ $('#power-icon').click(function() {
     togglePower()
 })
 
-function getLightInfo(lightID) {
-    // Iterate over the lights from module settings
+function getLightInfo(index) {
     // Should this receieve an array of all of the data for the lights? Or should we send them individually
     // Probs indidiually, as the lights will respond at different speeds
-    for(var i in lights) {
-        var light = lights[i]
-
-        // Check if the light has an ID
-        // If not, throw an error?
-
-        // Retrieve the current information for this light
-        socket.emit('get_light_info', light['id'], function(data) {
-            var now = (new Date()).getTime()
-    
-            // If the light is currently responding
-            if(data['responding']) {
-                $('#circle').css('background', '#2fe70a') // Set the connection indicator circle to green
-    
-                // Set the local variable to indicate we are (re)connected
-                reconnected = true
-    
-                // Hide the connection-timeout indicator
-                $('#timeout-container').hide()
-            } else {
-                $('#circle').css('background', '#f00')
-    
-                // If we were connected to the light on the last getLightInfo call
-                if(reconnected) {
-                    // Start the light timeout timer and display it
-                    lightTimeout = (new Date()).getTime()
-    
-                    $('#timeout-container').show()
-                }
-    
-                var diff = now - lightTimeout
-    
-                // The current timeout either milliseconds, seconds, or minutes
-                var timeoutText = ""
-    
-                if(diff < 60000) { // If its less than a minute
-                    timeoutText = parseInt(diff / 1000) + 'sec(s)'
-    
-                } else {
-                    timeoutText = parseInt(diff / 60000) + 'min(s)'
-                }
-    
-                $('#light-timeout').text('Timeout: ' + timeoutText)
-    
-                reconnected = false
-            }
-
-            // Check if the bulb is LIFX or TP-Link
-    
-            if(now - lastBrightnessChange > 2000) {
-                $('#light-brightness-slider').slider('value', data['brightness'])
-                $('#light-brightness-label').text(data['brightness'] + '%')
-    
-            } else {
-                console.log('Old(?) Brightness Data Rejected: ' + data['brightness'])
-            }
-    
-            // Prioritize the data from the light,
-            $('#light-color-slider').slider('value', data['color_temp'])
-            $('#light-color-label').text(data['color_temp'] + 'k')
-        })
+    if(index < 0) { // Error checking
+        return
     }
+
+    var light = lights[index]
+
+    // Check if the light has an ID
+    // If not, throw an error?
+
+    // Retrieve the current information for this light
+    socket.emit('get_light_info', light['id'], function(data) {
+        var now = (new Date()).getTime()
+
+        // If the light is currently responding
+        if(data['responding']) {
+            $('#circle').css('background', '#2fe70a') // Set the connection indicator circle to green
+
+            // Set the local variable to indicate we are (re)connected
+            reconnected = true
+
+            // Hide the connection-timeout indicator
+            $('#timeout-container').hide()
+        } else {
+            $('#circle').css('background', '#f00')
+
+            // If we were connected to the light on the last getLightInfo call
+            if(reconnected) {
+                // Start the light timeout timer and display it
+                lightTimeout = (new Date()).getTime()
+
+                $('#timeout-container').show()
+            }
+
+            var diff = now - lightTimeout
+
+            // The current timeout either milliseconds, seconds, or minutes
+            var timeoutText = ""
+
+            if(diff < 60000) { // If its less than a minute
+                timeoutText = parseInt(diff / 1000) + 'sec(s)'
+
+            } else {
+                timeoutText = parseInt(diff / 60000) + 'min(s)'
+            }
+
+            $('#light-timeout').text('Timeout: ' + timeoutText)
+
+            reconnected = false
+        }
+
+        // Check if the bulb is LIFX or TP-Link
+
+        if(now - lastBrightnessChange > 2000) {
+            $('#light-brightness-slider').slider('value', data['brightness'])
+            $('#light-brightness-label').text(data['brightness'] + '%')
+
+        } else {
+            console.log('Old(?) Brightness Data Rejected: ' + data['brightness'])
+        }
+
+        // Prioritize the data from the light,
+        $('#light-color-slider').slider('value', data['color_temp'])
+        $('#light-color-label').text(data['color_temp'] + 'k')
+    })
 }
 
 // Can swap between any of the lights, or access all of them
