@@ -178,7 +178,7 @@ function getLightInfo(index) {
     // If not, throw an error?
 
     // Retrieve the current information for this light
-    socket.emit('get_light_info', light['id'], function(data) {
+    socket.emit('get_light_info', {"id": light['id']}, function(data) {
         var now = (new Date()).getTime()
 
         // If the light is currently responding
@@ -272,12 +272,12 @@ function togglePower() {
 }
 
 // Set the brightness color
-function setBrightness(lightID, brightness) {
+function setBrightness(lightData, brightness) {
     if(lightID == 'all-lights') {
         // Update the rest of the lights
 
     } else { // Send it for an individual lights
-        socket.emit('set_light_brightness', {"lightID":lightID, "color": color})
+        socket.emit('set_light_brightness', {"id":lightID, "color": color})
     }
 }
 
