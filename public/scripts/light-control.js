@@ -298,6 +298,6 @@ function setLightColor(lightID, color) {
         // Update the rest of the lights
 
     } else { // Send it for an individual light
-        socket.emit('set_light_color', {"lightID": lightID, "color": color})
+        socket.emit('set_light_color', {"id": lightID, "color": color})
     }
 }

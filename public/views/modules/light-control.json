@@ -12,7 +12,7 @@
             "ip": "192.168.1.10",
             "rgb": true,
             "minColor": 2500,
-            "maxColor": 6700
+            "maxColor": 9000
         },
         {
             "name": "Ceiling Lights",
