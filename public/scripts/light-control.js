@@ -2,6 +2,7 @@ var socket = io()
 
 var module_settings = {} // Need to get the module settings
 var lights = {} // Array of all of the current lights, also include all lights data?
+var allLightsData = {}
 
 // Compared to the current time when potentially old light data would change the
 // sliders back to their previous position
@@ -16,15 +17,35 @@ var reconnected = false
 
 var currentLightID = 'all-lights'
 
+var selectedLightColor = '#00C8C8'
+var deselectedLightColor = '#fffff'
+
 $(document).ready(function() {
     // Get the module settings from the server
     socket.emit('get_module_settings', 'light-control', function(data) {
         module_settings = data
         lights = module_settings['lights']
+        
+        // Initialize all lights data
+        allLightsData = {
+            "name": "All Lights",
+            "id": "all-lights",
+            "minColor": 2500, // largest min color
+            "maxColor": 6500, // smallest max color
+            "rgb": false
+            // no ip
+            // no type
+        }
 
-        // Once we've retrieved the module data, initialize the color sliders
+        // Once we've retrieved the module data, initialize everything
         // We have to wait, as we need to see what the range of the colors for the light are
-        setLightSliders()
+
+        setLightSlider(allLightsData) // Set the sliders for the all-lights page
+
+        // Set the sliders for the rest of the lights
+        for(var i in lights) {
+            setLightSlider(lights[i])
+        }
 
         getLightInfo()
 
@@ -32,7 +53,7 @@ $(document).ready(function() {
         switchToLightPage('Desk-Lamp')
 
         // Set the switch buttons' according text
-        setLightSwitchButtons()
+        //setLightSwitchButtons()
 
         // Set power image, depending on the state of the light
         // $('#power-icon').
@@ -47,13 +68,17 @@ window.setInterval(function() {
     getLightInfo()
 }, 500)
 
-function setLightSliders() {
-    // Iterate over all of the lights 
-    for(var i in module_settings['lights']) {
-
+// Set Index = -1 to access all-lights
+function setLightSlider(index) {
+    var lightData = {}
+    if(index == -1) {
+        lightData = allLightsData
+    } else {
+        lightData = lights[index]
     }
 
-    $('#light-brightness-slider').slider({
+    // Set all-lights sliders
+    $('#' + lightData['id'] + '-light-brightness-slider').slider({
         value: 100, // 100%
         min: 0, // 0%
         max: 100, // 100%
@@ -61,49 +86,57 @@ function setLightSliders() {
         orientation: "horizontal",
     
         slide: function(e, ui) {
-            $('#light-brightness-label').text(ui.value + '%')
-            setBrightness(ui.value)
+            $('#' + lightData['id'] + 'light-brightness-label').text(ui.value + '%')
+            setBrightness(lightData['id', ui.value)
 
             // Set the current to time in milliseconds
             // Compared to the current time when potentially old light data would change the
             // sliders back to their previous position
-            lastBrightnessChange = (new Date()).getTime()
+            //lastBrightnessChange = (new Date()).getTime()
         }
     })
-    $('#light-brightness-label').text('00%')
+    $('#' + lightData['id'] + '-light-brightness-label').text('00%')
     
     // set the min and max value depending on the f.lux range?
-    $('#light-color-slider').slider({
-        value: module_settings['maxColor'], // Set the default to the max color/far-right of the slider
-        min: module_settings['minColor'], // the minimum color-temperature value of the light bulb
-        max: module_settings['maxColor'], // ^
+    $('#' + lightData['id'] + '-light-color-slider').slider({
+        value: lightData['maxColor'], // Set the default to the max color/far-right of the slider
+        min: lightData['minColor'], // the minimum color-temperature value of the light bulb
+        max: lightData['maxColor'], // ^
         animate: "fast", // Animation speed, fast so it feels more responsive
         orientation: "horizontal",
     
         slide: function(e, ui) {
-            $('#light-color-label').text(ui.value + 'k')
-            setLightColor(ui.value)
+            $('#' + lightData['id'] + '-light-color-label').text(ui.value + 'k')
+            setLightColor(lightData['id'], ui.value)
 
             // Set the current to time in milliseconds
             // Compared to the current time when potentially old light data would change the
             // sliders back to their previous position
-            lastColorChange = (new Date()).getTime()
+            //lastColorChange = (new Date()).getTime()
 
         }
     })
-    $('#light-color-label').text('2500k')
+    $('#' + lightData['id'] + '-light-color-label').text('2500k') // Set default color-label text
+
+    // Set the RGB slider(s)
+    if(lightData['rgb']) {
+
+    }
 }
 
 // Add a click handler for all of the light-switcher-icon objects
 $(".light-switcher-icon").on('click', function(event){
     event.stopPropagation();
     event.stopImmediatePropagation();
-    //(... rest of your JS code)
 
-    var lightID = event.target.id
-    console.log(lightID + ' Click')
     // Get the substring for the actual lightID and switch to it
-    //switchToLightPage(lightID)
+    var id = event.target.id // Get the lightID+"-switcher-icon"
+    var len = id.length;
+    var lightID = id.substring(0, len - ("-switcher-icon").length) // Get the actual lightID
+    console.log(lightID + ' Click')
+
+    
+    switchToLightPage(lightID)
 });
 
 // Set the switch buttons' according text
@@ -120,8 +153,9 @@ function setLightSwitchButtons() {
         var id = light['id']
 
         console.log('Setting ' + '#' + id + '-switcher-label')
-        // Set the text for  them
-        $('#' + id + '-switcher-label').val(id)
+
+        // Set the text for  them, might have to iterate over them
+        $('#' + id + '-switcher-label').html(id)
     }
 }
 
@@ -130,7 +164,7 @@ $('#power-icon').click(function() {
     togglePower()
 })
 
-function getLightInfo() {
+function getLightInfo(lightID) {
     // Iterate over the lights from module settings
     // Should this receieve an array of all of the data for the lights? Or should we send them individually
     // Probs indidiually, as the lights will respond at different speeds
@@ -200,12 +234,11 @@ function getLightInfo() {
 
 // Can swap between any of the lights, or access all of them
 function switchToLightPage(lightID) {
-    console.log('Switching light to ' + lightID)
-    if(light == 'all-lights') { // If we're trying to switch to all lights
-        // Hide all of the other lights
-
-        // Show the all light selector page
-    } else {
+    // console.log('Switching light to ' + lightID)
+    if(light != 'all-lights') { // If we're trying to switch to all lights
+        // console.log('Hiding #all-lights')
+        
+        $('#all-lights-switcher-label').css('color', deselectedLightColor)
         $('#all-lights').hide()
     }
     
@@ -216,12 +249,20 @@ function switchToLightPage(lightID) {
 
         // If this light isn't the light page we're trying to show
         if(light['id'] != lightID) { 
+            // console.log('Hiding ' + '#' + light['id'])
+
+            $('#' + light['id'] + '-switcher-label').css('color', deselectedLightColor)
+
             // Hide it
             $('#' + light['id']).hide()
         }
     }
 
+    // Show the selected light page
     $('#' + lightID).show()
+
+    // Set the according label's color
+    $('#' + lightID + '-switcher-label').css('color', selectedLightColor)
 }
 
 function togglePower() {
@@ -229,11 +270,21 @@ function togglePower() {
 }
 
 // Set the brightness color
-function setBrightness(brightness) {
-    socket.emit('set_light_brightness', brightness)
+function setBrightness(lightID, brightness) {
+    if(lightID == 'all-lights') {
+        // Update the rest of the lights
+
+    } else { // Send it for an individual lights
+        socket.emit('set_light_brightness', {"lightID":lightID, "color": color})
+    }
 }
 
 // Set the light color
-function setLightColor(color) {
-    socket.emit('set_light_color', color)
+function setLightColor(lightID, color) {
+    if(lightID == 'all-lights') {
+        // Update the rest of the lights
+
+    } else { // Send it for an individual light
+        socket.emit('set_light_color', {"lightID": lightID, "color": color})
+    }
 }
