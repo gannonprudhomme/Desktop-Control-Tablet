@@ -45,12 +45,12 @@ function initLights() {
             
             // Get its current status
             bulb.info().then(info => {
-                console.log(info)
-
                 var light_state = info['light_state']
-                lightData[id]['power'] = light_state['on_off']
-                lightData[id]['brightness'] = light_state['brightness']
-                lightData[id]['color_temp'] = light_state['color_temp']
+
+                lightsData[id]['power'] = light_state['on_off']
+                lightsData[id]['brightness'] = light_state['brightness']
+                lightsData[id]['color_temp'] = light_state['color_temp']
+
             }).catch((error) => {
                 console.log(error)
             })
@@ -139,9 +139,9 @@ var socketHandler = function(socket) {
                 // Create the dictionary to be returned the client
                 // We create this separately, as we don't need to send back the full data(like light type and its object)
                 var retData = {
-                    "brightness": light_state['brightness'],
-                    "color_temp": light_state['color_temp'],
-                    "responding": lightResponding
+                    'brightness': light_state['brightness'],
+                    'color_temp': light_state['color_temp'],
+                    'responding': lightResponding
                 }
 
                 // Don't wanna send the light object or anything
@@ -151,20 +151,25 @@ var socketHandler = function(socket) {
             })
             
         } else if(type == "lifx") {
-            // Or iterate through all of the lights
-            getLifxInfo(lightsData[lightID]['object']).then((data) => {
-                var retData = {
-                    "brightness": data['brightness'],
-                    "color_temp": data['color_temp'],
-                    "responding": lightResponding
-                }
+            if(lightsData[lightID]['object'] != null) {
+                // Or iterate through all of the lights
+                getLifxInfo(lightsData[lightID]['object'], lightID).then((data) => {
+                    var retData = {
+                        'hue': data['hue'],
+                        'saturation': data['saturation'],
+                        'brightness': data['brightness'],
+                        'color_temp': data['color_temp'],
+                        'responding': lightResponding
+                    }
 
-            }).catch((error) => {
-                console.log(error)
-            })
+                    ret(retData)
+                }).catch((error) => {
+                    console.log(error)
+                })
+            } else { // LIFX object is null for this light
+            }
 
-        } else {
-            // Something went wrong
+        } else { // Unknown light type
         }
 
         // Timeout the function if the light isn't currently responding
@@ -241,14 +246,27 @@ var socketHandler = function(socket) {
 // Returns a promise for retrieving the light data
 function getLifxInfo(lightObject, lightID) {
     return new Promise((resolve, reject) => {
+        // Error checking
+        if(lightObject == null) {
+            reject(Error("lightObject is null"))
+            return
+        }
+
+        if(lightID == null) {
+            reject(Error("lightID is null"))
+            return
+        }
+
         lightObject.getState(function(err, data) {
             if(err) { 
-                console.log(err)
-                // reject(err)
+                // console.log(err) // This error should be handled elsewhere
+                reject(err)
+                return
             }
-    
+
+            
             var colorData = data['color']
-    
+            
             lightsData[lightID]['hue'] = colorData['hue']
             lightsData[lightID]['saturation'] = colorData['saturation']
             lightsData[lightID]['brightness'] = colorData['brightness']
@@ -257,7 +275,7 @@ function getLifxInfo(lightObject, lightID) {
             // Set if the light is on or not
             lightsData[lightID]["power"] = (data["power"] == 1)
     
-            resolve(lightData[lightID])
+            resolve(lightsData[lightID])
         })
     })
 }
