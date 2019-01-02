@@ -25,7 +25,7 @@ A Desktop Companion Tablet built to control my Windows 10 home computer with a R
 - [Spotify](docs/SPOTIFY.md)
 - [Volume Mixers](docs/modules/VOLUME_MIXERS.md)
 - Desktop Performance Stats
-- [TP-Link Light Control](docs/modules/LIGHT_CONTROL.md)
+- [Smart Light Control](docs/modules/LIGHT_CONTROL.md)
 - [Weather](docs/modules/WEATHER.MD)
 
 ## How to add a module
