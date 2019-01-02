@@ -17,14 +17,15 @@
 
                 .light-switcher-container
                     .light-switcher(id="all-lights-switcher")
-                        img#all-lights-icon(src="/public/assets/f.lux.png")
-                        label#all-lights-label All Lights
+                        img.light-switcher-icon(id="all-lights-switcher-icon" src="/public/assets/f.lux.png")
+                        label.light-switcher-label(id="all-lights-switcher-label") All Lights
 
                     //- Eventually change this to 
+                    //- Eventually change this to 
                     for light in lights
-                        .light-switcher(id="all-lights-switcher")
-                            img(id="all-lights-switch-icon" src="/public/assets/light-bulb.png")        
-                            label(id="all-lights-switcher-label") light.name
+                        .light-switcher(id=light.id + "-switcher")
+                            img(id=light.id + "switcher-icon" src="/public/assets/light-bulb.png")        
+                            label(id=light.id + "switcher-label") light.name
 
                 .light-connection-container
                     .connection-indicator-container
@@ -57,14 +58,14 @@
 
                 .light-switcher-container
                     .light-switcher(id="all-lights-switcher")
-                        img#all-lights-icon(src="/public/assets/f.lux.png")
-                        label#all-lights-label All Lights
+                        img.light-switcher-icon(id="all-lights-switcher-icon" src="/public/assets/f.lux.png")
+                        label.light-switcher-label(id="all-lights-switcher-label") All Lights
 
                     //- Eventually change this to 
                     for light in lights
                         .light-switcher(id=light.id + "-switcher")
-                            img(id=light.id + "switch-icon" src="/public/assets/light-bulb.png")        
-                            label(id=light.id + "switcher-label") light.name
+                            img.light-switcher-icon(id=light.id + "-switcher-icon" src="/public/assets/light-bulb.png")        
+                            label.light-switcher-label(id=light.id + "switcher-label") light.name
 
                 .light-connection-container
                     .connection-indicator-container
