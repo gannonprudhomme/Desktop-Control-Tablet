@@ -25,7 +25,7 @@
                     for light in lights
                         .light-switcher(id=light.id + "-switcher")
                             img.light-switcher-icon(id=light.id + "-switcher-icon" src="/public/assets/light-bulb.png")        
-                            label.light-switcher-label(id=light.id + "-switcher-label") light.name
+                            label.light-switcher-label(class=light.id + "-switcher-label" id=light.id + "-switcher-label") #{light.name}
 
                 .light-connection-container
                     .connection-indicator-container
@@ -65,7 +65,7 @@
                     for light in lights
                         .light-switcher(id=light.id + "-switcher")
                             img.light-switcher-icon(id=light.id + "-switcher-icon" src="/public/assets/light-bulb.png")        
-                            label.light-switcher-label(id=light.id + "-switcher-label") light.name
+                            label.light-switcher-label(id=light.id + "-switcher-label") #{light.name}
 
                 .light-connection-container
                     .connection-indicator-container
