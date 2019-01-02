@@ -205,12 +205,18 @@ var socketHandler = function(socket) {
 
         var now = (new Date()).getTime()
 
-        var bulbID = data["id"]
+        var lightID = data['id']
+        var brightness= data['brightness']
+
+        // Set the new brightness in the lightsData dictionary for this object
+        lightsData[lightID]['brightness'] = brightness
+
+        var lightObj = lightsData[lightID]['object']
         
         // Get the type of the bulb
-        var type = ""
+        var type = lightsData[lightID]['type']
         if(type == "tp-link") {
-            bulb.power(lightData['power'], transition, {brightness: data}).then(status => {
+            lightObj.power(lightsData[lightID]['power'], transition, {brightness: data}).then(status => {
                 //console.log(status)
     
                 var delay = (new Date()).getTime() - now
@@ -218,31 +224,55 @@ var socketHandler = function(socket) {
                 //console.log('Brightness delay: ' + delay)
             })
         } else if(type == "lifx") {
+            var lifxData = lightsData[lightID]
 
+            lightObj.color(lifxData['hue'], lifxData['saturation'], brightness, lifxData['color_temp'])
         }
     })
 
     socket.on('set_light_color', function(data) {
         //console.log('Setting color to ' + data + 'k')
-        var lightID = data["id"]
-        var color = data["color"]
+        var lightID = data['id']
+        var color_temp = data['color']
+
+        // Get the according light object
+        var lightObj = lightsData[lightID]['object']
 
         // Get the type of the bulb
-        var type = ""
+        var type = lightsData[lightID][type]
+        if(type == 'tp-link') {
+            lightObj.power(lightsData[lightID]['power'], transition, {color_temp: color_temp}).then(status => {
+                //console.log(status)
+            })
+        } else if(type == 'lifx') {
+            var lifxData = lightsData[lightID]
 
-        bulb.power(lightData['power'], transition, {color_temp: color}).then(status => {
-            //console.log(status)
-        })
+            lightObj.color(lifxData['hue'], lifxData['saturation'], lifxData['brightness'], color_temp)
+        }
     })
 
     socket.on('toggle_light_power', function(data) {
-        lightData['power'] = !lightData['power']
+        var lightID = data['id']
+
+        lightsData[lightID]['power'] = !lightData[lightID]['power']
 
         //console.log('Changing light power to: ' + lightData['power'])
 
-        bulb.power(lightData['power']).then(status => {
-            //console.log(status)
-        })
+        // Get the according light object
+        var lightObj = lightsData[lightID]['object']
+        if(lightObj == null) {
+            // Error
+        }
+
+        // Get the type of this bulb
+        var type = lightsData[lightID]['type']
+        if(type == 'tp-link') {
+            bulb.power(lightsData['power']).then(status => {
+                //console.log(status)
+            })
+        } else if(type == 'lifx') {
+            lightObj.on()
+        }
     })
 }
 
