@@ -6,8 +6,12 @@ var allLightsData = {}
 
 // Compared to the current time when potentially old light data would change the
 // sliders back to their previous position
-var lastBrightnessChange = 0
-var lastColorChange = 0
+var lightsLastChange = {
+    "all-lights": {
+        "brightness": 0,
+        "color_temp": 0
+    }
+}
 
 // Set to the current time when we first receieve data about the light not responding
 var lightTimeout = 0
@@ -46,6 +50,11 @@ $(document).ready(function() {
         for(var i in lights) {
             setLightSlider(i)
             getLightInfo(i)
+
+            lightsLastChange[lights[i]['id']] = {
+                "brightness": 0,
+                "color": 0
+            }
         }
 
         // Hide all of the lights, and show the all lights selector
@@ -87,13 +96,13 @@ function setLightSlider(index) {
         orientation: "horizontal",
     
         slide: function(e, ui) {
-            $('#' + lightData['id'] + 'light-brightness-label').text(ui.value + '%')
+            $('#' + lightData['id'] + '-light-brightness-label').text(ui.value + '%')
             setBrightness(lightData['id'], ui.value)
 
             // Set the current to time in milliseconds
             // Compared to the current time when potentially old light data would change the
             // sliders back to their previous position
-            //lastBrightnessChange = (new Date()).getTime()
+            lightsLastChange[lightData['id']]['brightness'] = (new Date()).getTime()
         }
     })
     $('#' + lightData['id'] + '-light-brightness-label').text('100%')
@@ -220,7 +229,7 @@ function getLightInfo(index) {
 
         // Check if the bulb is LIFX or TP-Link
 
-        if(now - lastBrightnessChange > 2000) {
+        if(now - lightsLastChange[light['id']]['brightness'] > 2000) {
             $('#' + light['id'] + '-light-brightness-slider').slider('value', data['brightness'])
             $('#' + light['id'] + '-light-brightness-label').text(data['brightness'] + '%')
 
@@ -228,7 +237,7 @@ function getLightInfo(index) {
             console.log('Old(?) Brightness Data Rejected: ' + data['brightness'])
         }
 
-        console.log(data)
+        // console.log(data)
 
         // Prioritize the data from the light,
         $('#' + light['id'] + '-light-color-slider').slider('value', data['color_temp'])
