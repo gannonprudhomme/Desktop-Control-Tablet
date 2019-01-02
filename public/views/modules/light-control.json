@@ -9,7 +9,7 @@
             "name": "Desk Lamp",
             "id": "Desk-Lamp",
             "type": "lifx",
-            "ip": "192.168.1.__",
+            "ip": "192.168.1.10",
             "rgb": true,
             "minColor": 2500,
             "maxColor": 6700
@@ -18,7 +18,7 @@
             "name": "Ceiling Lights",
             "id": "Ceiling-Lights",
             "type": "tp-link",
-            "ip": "192.168.1.81",
+            "ip": "192.168.1.3",
             "rgb": false,
             "minColor": 2700,
             "maxColor": 6500

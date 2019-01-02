@@ -78,7 +78,7 @@ function setLightSlider(index) {
         lightData = lights[index]
     }
 
-    // Set all-lights sliders
+    // Set light brightness slider for this light
     $('#' + lightData['id'] + '-light-brightness-slider').slider({
         value: 100, // 100%
         min: 0, // 0%
@@ -96,7 +96,7 @@ function setLightSlider(index) {
             //lastBrightnessChange = (new Date()).getTime()
         }
     })
-    $('#' + lightData['id'] + '-light-brightness-label').text('00%')
+    $('#' + lightData['id'] + '-light-brightness-label').text('100%')
     
     // set the min and max value depending on the f.lux range?
     $('#' + lightData['id'] + '-light-color-slider').slider({
@@ -181,7 +181,7 @@ function getLightInfo(index) {
     socket.emit('get_light_info', {"id": light['id']}, function(data) {
         var now = (new Date()).getTime()
 
-        // If the light is currently responding
+        // If the light is currently responding, update the connection circle
         if(data['responding']) {
             $('#circle').css('background', '#2fe70a') // Set the connection indicator circle to green
 
@@ -221,16 +221,18 @@ function getLightInfo(index) {
         // Check if the bulb is LIFX or TP-Link
 
         if(now - lastBrightnessChange > 2000) {
-            $('#light-brightness-slider').slider('value', data['brightness'])
-            $('#light-brightness-label').text(data['brightness'] + '%')
+            $('#' + light['id'] + '-light-brightness-slider').slider('value', data['brightness'])
+            $('#' + light['id'] + '-light-brightness-label').text(data['brightness'] + '%')
 
         } else {
             console.log('Old(?) Brightness Data Rejected: ' + data['brightness'])
         }
 
+        console.log(data)
+
         // Prioritize the data from the light,
-        $('#light-color-slider').slider('value', data['color_temp'])
-        $('#light-color-label').text(data['color_temp'] + 'k')
+        $('#' + light['id'] + '-light-color-slider').slider('value', data['color_temp'])
+        $('#' + light['id'] + '-light-color-label').text(data['color_temp'] + 'k')
     })
 }
 
@@ -272,12 +274,12 @@ function togglePower() {
 }
 
 // Set the brightness color
-function setBrightness(lightData, brightness) {
+function setBrightness(lightID, brightness) {
     if(lightID == 'all-lights') {
         // Update the rest of the lights
 
     } else { // Send it for an individual lights
-        socket.emit('set_light_brightness', {"id":lightID, "color": color})
+        socket.emit('set_light_brightness', {"id":lightID, "brightness": brightness})
     }
 }
 
