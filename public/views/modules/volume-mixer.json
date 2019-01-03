@@ -24,6 +24,16 @@
           "id": "rocketleague",
           "icon": "rocketleague.png",
           "programName": "RocketLeague.exe"
+        },
+        {
+          "id": "fortnite",
+          "icon": "fortnite.png",
+          "programName": "FortniteClient-Win64-Shipping.exe"
+        },
+        {
+          "id": "xbox",
+          "icon": "xbox.svg",
+          "programName": "XboxApp.exe"
         }
       ]
 }
