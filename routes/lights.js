@@ -244,7 +244,6 @@ var socketHandler = function(socket) {
                 //console.log(status)
             })
         } else if(type == 'lifx') {
-            console.log('lifx light control')
             var lifxData = lightsData[lightID]
 
             lightObj.color(lifxData['hue'], lifxData['saturation'], lifxData['brightness'], color_temp)

@@ -287,7 +287,12 @@ function setBrightness(lightID, brightness) {
     if(lightID == 'all-lights') {
         // Update the rest of the lights
 
-    } else { // Send it for an individual lights
+        // Iterate over all of the lights
+        for(var i in lights) {
+            // And set the brightness for them
+            socket.emit('set_light_brightness', {'id': lights[i]['id'], 'brightness': brightness})
+        }
+    } else { // Send it for an individual light
         socket.emit('set_light_brightness', {"id":lightID, "brightness": brightness})
     }
 }
@@ -296,7 +301,12 @@ function setBrightness(lightID, brightness) {
 function setLightColor(lightID, color) {
     if(lightID == 'all-lights') {
         // Update the rest of the lights
-
+        
+        // Iterate over all of the lights
+        for(var i in lights) {
+            // And set the color temperature for them
+            socket.emit('set_light_color', {'id': lights[i]['id'], 'color': color})
+        }
     } else { // Send it for an individual light
         socket.emit('set_light_color', {"id": lightID, "color": color})
     }
