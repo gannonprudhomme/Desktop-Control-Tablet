@@ -38,7 +38,12 @@
         {
           "id": "witcher3",
           "icon": "witcher3.png",
-          "programName": "witcher3.exe"
+          "programName": "D:/Games/The Witcher 3 Wild Hunt/bin/x64/witcher3.exe"
+        },
+        {
+          "id": "minecraft",
+          "icon": "minecraft.png",
+          "programName": "javaw.exe"
         }
       ]
 }
