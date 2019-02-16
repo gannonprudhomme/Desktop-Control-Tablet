@@ -18,14 +18,14 @@ A Desktop Companion Tablet built to control my Windows 10 home computer with a R
 2) After entering repo folder, run ```npm install``` to install all of the relevant packages
 3) Set the local IP of your main computer in the `host-ip` field of ```view-settings.json```. To find your local IP, run ```IPCONFIG``` in cmd or your systems equivalent, or go to [whatismyip.com](http://whatismyip.com).
 4) Optionally, in ```view-settings.json``` swap out the included modules that you want to use by first adding/removing their id's in the `modules` array, then by adding/removing their information in `currentModules`.
-4) Connect to http://{LOCAL_IP}/tablet in Chromium on your Pi/device
+4) Connect to http://{LOCAL_IP}:3000/tablet in Chromium on your Pi/device
 5) On first launch, you will be redirected to authenticate with Spotify. If you do not have a Spotify account and/or want to disable Spotify integration, set `"music-service":"spotify"` to `"music-service": "nil"`.
 
 ## Included Modules
 - [Spotify](docs/SPOTIFY.md)
 - [Volume Mixers](docs/modules/VOLUME_MIXERS.md)
 - Desktop Performance Stats
-- [TP-Link Light Control](docs/modules/LIGHT_CONTROL.md)
+- [Smart Light Control](docs/modules/LIGHT_CONTROL.md)
 - [Weather](docs/modules/WEATHER.MD)
 
 ## How to add a module

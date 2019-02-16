@@ -1,26 +1,30 @@
 #light-control {
+    height: 100%;
+}
+
+.light-container {
     display: grid;
     grid-template-rows: 30% 70%;
     grid-template-columns: 100%;
     height: 100%;
 }
 
-    #light-status-container {
+    .light-status-container {
         display: flex;
         justify-content: space-around;
         align-items: flex-start;
         margin: 1% 2% 0% 2%;
     }
-        #light-status-container img {
+        .light-status-container img {
             width: 50px;
             height: 50px;
         }
 
-        #light-status-container label {
+        .light-status-container label {
             font-size: 16px;
         }
 
-        #light-power-container{
+        .light-power-container{
             display: flex;
             align-items: center;
             width: 18%;
@@ -29,23 +33,33 @@
             /* #power-icon {
                 margin-left: 10%;
             } */
+        .light-switcher-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+            .light-switcher {
+                display: flex;
+                flex-direction: column;
+                align-items: space;
+                margin: 0px 10px 0px 10px;
+            }
 
 
-        #light-connection-container {
+        .light-connection-container {
             display: flex;
             flex-direction: column;
             align-items: flex-end;
-            width: 100%;
         }
 
-            #connection-indicator-container {
+            .connection-indicator-container {
                 display: flex;
                 align-items: center;
                 justify-content: space-around;
                 width: 25%;
             }
 
-                #circle {
+                .connection-circle {
                     background: #f00;
                     width: 50px;
                     height:50px;
@@ -53,7 +67,7 @@
                     border-radius: 50%;
                 }
 
-            #timeout-container {
+            .timeout-container {
                 margin-top: 7px;
             }
                 /* #light-timeout {
@@ -61,7 +75,7 @@
 
         
 
-    #light-sliders-container {
+    .light-sliders-container {
         display: flex;
         flex-direction: column;
         justify-content: space-around;
@@ -69,34 +83,38 @@
         width: 100%;
         margin-left: 10px;
     }
-        #brightness-container {
+        .brightness-container {
             width: 100%;
             zoom: 1.1;
         }
-            #light-brightness-slider .ui-slider-handle {
+            .light-brightness-slider .ui-slider-handle {
                 border: 3px solid #00C8C8 !important;
                 background: #00C8C8 !important;
             }
 
-            #light-brightness-slider {
+            .light-brightness-slider {
                 margin-left: 10px;
             }
 
-        #color-container {
+        .color-container {
             width: 100%;
             zoom: 1.1;
         }
 
-            #light-color-slider .ui-slider-handle {
+            .light-color-slider .ui-slider-handle {
                 border: 3px solid #00C8C8 !important;
                 background: #00C8C8 !important;
             }
 
-            #light-color-label {
+            .light-color-label {
                 font-size: 14px;
             }
 
-            #light-color-slider {
+            .light-color-slider {
                 margin-left: 10px;
             }
-            
+
+        .rgb-container {
+            width: 100%;
+            zoom: 1.1;
+        }

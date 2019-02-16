@@ -6,11 +6,11 @@
   
   "save-volume-on-change": true,
 
-  "host-ip": "192.168.1.80",
+  "host-ip": "192.168.1.212",
   "music-service": "spotify",
   "spotify_client_id": "",
   "spotify_client_secret": "",
-  "use-toasitfy": false,
+  "use-toasitfy": true,
   
   "startModule": "volume-mixer",
 

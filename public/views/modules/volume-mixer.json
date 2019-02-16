@@ -24,6 +24,31 @@
           "id": "rocketleague",
           "icon": "rocketleague.png",
           "programName": "RocketLeague.exe"
+        },
+        {
+          "id": "fortnite",
+          "icon": "fortnite.png",
+          "programName": "FortniteClient-Win64-Shipping.exe"
+        },
+        {
+          "id": "xbox",
+          "icon": "xbox.svg",
+          "programName": "XboxApp.exe"
+        }, 
+        {
+          "id": "witcher3",
+          "icon": "witcher3.png",
+          "programName": "D:/Games/The Witcher 3 Wild Hunt/bin/x64/witcher3.exe"
+        },
+        {
+          "id": "minecraft",
+          "icon": "minecraft.png",
+          "programName": "javaw.exe"
+        },
+        {
+          "id": "apex-legends",
+          "icon": "apex-legends.png",
+          "programName": "r5apex.exe"
         }
       ]
 }

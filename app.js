@@ -4,7 +4,7 @@ var bodyParser = require('body-parser') // for parsing basic request data?
 var path = require('path')
 var fs = require('fs')
 var queryString = require('querystring')
-var request = require('request')
+// var request = require('request') // Unused?
 
 const app = express()
 const port = 3000
@@ -64,8 +64,7 @@ app.get('/tablet', (req, res) => {
 
     // Render the webpage
     res.render('index', options)
-
-    
+        
     // After authenticating, get the access and refresh tokens
     // have a function that takes req as a parameter(or req.query)
     var code = req.query.code || null
@@ -86,8 +85,10 @@ app.get('/tablet/settings', (req, res) => {
     hostIP: json['host-ip']
   }
 
+  // Combine all of the module settings into one dictionary
   var modSett = desktop.getModuleSettings(json['currentModules'])
 
+  // Concatenate the options and the module settings
   options = {...options, ...modSett}
 
   res.render('settings', options)

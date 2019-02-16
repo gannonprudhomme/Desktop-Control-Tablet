@@ -7,29 +7,95 @@
     Need to figure out how to know when we're connected to the bulb or not
     Probably something to do with the light bulb responding or not
 
-#light-control(class="middle-view") 
-    #light-status-container
-        #light-power-container
-            label#power-label Power:
-            img#power-icon(class="toggle-button image-button" src="/public/assets/power-button.png")
+#light-control(class="middle-view")
+    //- Add global light control here
+    .light-container(id='all-lights')
+            .light-status-container
+                .light-power-container
+                    label.power-label Power:
+                    img.power-icon(class="toggle-button image-button" src="/public/assets/power-button.png")
 
-        #light-connection-container
-            #connection-indicator-container
-                label#connection-label Connection:
-                #circle-container
-                    #circle
-            #timeout-container
-                label#light-timeout Timeout: 0ms
+                .light-switcher-container
+                    .light-switcher(id="all-lights-switcher")
+                        img.light-switcher-icon(class="image-button toggle-button" id="all-lights-switcher-icon" src="/public/assets/f.lux.png")
+                        label.light-switcher-label(id="all-lights-switcher-label") All Lights
 
-    #light-sliders-container
-        #brightness-container
-            .slider-container
-                img.slider-icon(src="/public/assets/light-bulb.png")
-                label.slider-label(id="light-brightness-label") 100%
-                div(id="light-brightness-slider", class="ui-slider-range ui-corner-all")
-        
-        #color-container
-            .slider-container
-                img.slider-icon(src="/public/assets/f.lux.png")
-                label.slider-label(id="light-color-label") 6500k
-                div(id="light-color-slider", class="ui-slider-range ui-corner-all")
+                    //- Eventually change this to 
+                    //- Eventually change this to 
+                    for light in lights
+                        .light-switcher(id=light.id + "-switcher")
+                            img.light-switcher-icon(class="image-button toggle-button" id=light.id + "-switcher-icon" src="/public/assets/light-bulb.png")        
+                            label.light-switcher-label #{light.name}
+
+                .light-connection-container
+                    .connection-indicator-container
+                        label.connection-label Connection:
+                        .connection-circle-container
+                            .connection-circle
+                    .timeout-container
+                        label.light-timeout Timeout: 0ms
+
+            .light-sliders-container
+                .brightness-container
+                    .slider-container
+                        img.slider-icon(src="/public/assets/light-bulb.png")
+                        label.slider-label(id="all-lights-light-brightness-label") 100%
+                        div(id="all-lights-light-brightness-slider", class="ui-slider-range ui-corner-all")
+                
+                .color-container
+                    .slider-container
+                        img.slider-icon(src="/public/assets/f.lux.png")
+                        label.slider-label(id="all-lights-light-color-label") 6500k
+                        div(id="all-lights-light-color-slider", class="ui-slider-range ui-corner-all")
+
+    //- Iterate over all of the lights and add their respective pages
+    for light in lights
+        .light-container(id=light.id)
+            .light-status-container
+                .light-power-container
+                    label.power-label Power:
+                    img.power-icon(class="toggle-button image-button" src="/public/assets/power-button.png")
+
+                .light-switcher-container
+                    .light-switcher(id="all-lights-switcher")
+                        img.light-switcher-icon(class="image-button toggle-button" id="all-lights-switcher-icon" src="/public/assets/f.lux.png")
+                        label.light-switcher-label All Lights
+
+                    //- Eventually change this to 
+                    for l in lights
+                        .light-switcher(id=l.id + "-switcher")
+                            img.light-switcher-icon(class="image-button toggle-button" id=l.id + "-switcher-icon" src="/public/assets/light-bulb.png")        
+                            //- Only call the switcher-label in the light.id's tab light.id-switcher-label
+                                We do this so we can change the color of it directly when we switch to it
+                            if l.id == light.id
+                                label.light-switcher-label(id=light.id + "-switcher-label") #{l.name}
+                            else
+                                label.light-switcher-label #{l.name}
+
+                .light-connection-container
+                    .connection-indicator-container
+                        label.connection-label Connection:
+                        .connection-circle-container
+                            .connection-circle
+                    .timeout-container
+                        label.light-timeout Timeout: 0ms
+
+            .light-sliders-container
+                .brightness-container
+                    .slider-container
+                        img.slider-icon(src="/public/assets/light-bulb.png")
+                        label.slider-label(id=light.id + "-light-brightness-label") 100%
+                        div(id=light.id + "-light-brightness-slider", class="ui-slider-range ui-corner-all")
+                
+                .color-container
+                    .slider-container
+                        img.slider-icon(src="/public/assets/f.lux.png")
+                        label.slider-label(id=light.id + "-light-color-label") 6500k
+                        div(id=light.id + "-light-color-slider", class="ui-slider-range ui-corner-all")
+
+                if light.rgb
+                    .rgb-container
+                        .slider-container
+                            img.slider-icon(src="/public/assets/f.lux.png")
+                            label.slider-label(id=light.id + "-light-rgb-label") 6500k
+                            div(id=light.id + "-light-rgb-slider", class="ui-slider-range ui-corner-all")
