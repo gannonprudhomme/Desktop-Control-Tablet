@@ -44,6 +44,11 @@
           "id": "minecraft",
           "icon": "minecraft.png",
           "programName": "javaw.exe"
+        },
+        {
+          "id": "apex-legends",
+          "icon": "apex-legends.png",
+          "programName": "r5apex.exe"
         }
       ]
 }
