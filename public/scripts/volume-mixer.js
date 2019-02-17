@@ -3,7 +3,7 @@ var volumeData = {}
 var socket = require('socket.io-client')('http://localhost:3000')
 
 var settings = {}
-var currentDeviceName = ""
+var currentDeviceName = "DAC"
 var currentDeviceIndex = 0
 var audioDevices = []
 
@@ -75,7 +75,7 @@ function setSliders() {
 
 // Change the slider values when swapping audio outputs
 function changeSliderValues() {
-  console.log(settings)
+  //console.log(settings)
   var volume_mixers = settings['volumeMixers']
   for(var i = 0; i < volume_mixers.length; i++) {
     var mixer = volume_mixers[i];
@@ -85,7 +85,7 @@ function changeSliderValues() {
   }
 }
 
-// Send volume data back to the server
+// Send volume data back to the server/
 function sendVolumeData(program, volume) {
   var obj = {
     program: program,
