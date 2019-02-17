@@ -13,18 +13,18 @@
             .light-status-container
                 .light-power-container
                     label.power-label Power:
-                    img.power-icon(class="toggle-button image-button" src="/public/assets/power-button.png")
+                    img.power-icon(class="toggle-button image-button" src="../assets/power-button.png")
 
                 .light-switcher-container
                     .light-switcher(id="all-lights-switcher")
-                        img.light-switcher-icon(class="image-button toggle-button" id="all-lights-switcher-icon" src="/public/assets/f.lux.png")
+                        img.light-switcher-icon(class="image-button toggle-button" id="all-lights-switcher-icon" src="../assets/f.lux.png")
                         label.light-switcher-label(id="all-lights-switcher-label") All Lights
 
                     //- Eventually change this to 
                     //- Eventually change this to 
                     for light in lights
                         .light-switcher(id=light.id + "-switcher")
-                            img.light-switcher-icon(class="image-button toggle-button" id=light.id + "-switcher-icon" src="/public/assets/light-bulb.png")        
+                            img.light-switcher-icon(class="image-button toggle-button" id=light.id + "-switcher-icon" src="../assets/light-bulb.png")        
                             label.light-switcher-label #{light.name}
 
                 .light-connection-container
@@ -38,13 +38,13 @@
             .light-sliders-container
                 .brightness-container
                     .slider-container
-                        img.slider-icon(src="/public/assets/light-bulb.png")
+                        img.slider-icon(src="../assets/light-bulb.png")
                         label.slider-label(id="all-lights-light-brightness-label") 100%
                         div(id="all-lights-light-brightness-slider", class="ui-slider-range ui-corner-all")
                 
                 .color-container
                     .slider-container
-                        img.slider-icon(src="/public/assets/f.lux.png")
+                        img.slider-icon(src="../assets/f.lux.png")
                         label.slider-label(id="all-lights-light-color-label") 6500k
                         div(id="all-lights-light-color-slider", class="ui-slider-range ui-corner-all")
 
@@ -54,17 +54,17 @@
             .light-status-container
                 .light-power-container
                     label.power-label Power:
-                    img.power-icon(class="toggle-button image-button" src="/public/assets/power-button.png")
+                    img.power-icon(class="toggle-button image-button" src="../assets/power-button.png")
 
                 .light-switcher-container
                     .light-switcher(id="all-lights-switcher")
-                        img.light-switcher-icon(class="image-button toggle-button" id="all-lights-switcher-icon" src="/public/assets/f.lux.png")
+                        img.light-switcher-icon(class="image-button toggle-button" id="all-lights-switcher-icon" src="../assets/f.lux.png")
                         label.light-switcher-label All Lights
 
                     //- Eventually change this to 
                     for l in lights
                         .light-switcher(id=l.id + "-switcher")
-                            img.light-switcher-icon(class="image-button toggle-button" id=l.id + "-switcher-icon" src="/public/assets/light-bulb.png")        
+                            img.light-switcher-icon(class="image-button toggle-button" id=l.id + "-switcher-icon" src="../assets/light-bulb.png")        
                             //- Only call the switcher-label in the light.id's tab light.id-switcher-label
                                 We do this so we can change the color of it directly when we switch to it
                             if l.id == light.id
@@ -83,19 +83,19 @@
             .light-sliders-container
                 .brightness-container
                     .slider-container
-                        img.slider-icon(src="/public/assets/light-bulb.png")
+                        img.slider-icon(src="../assets/light-bulb.png")
                         label.slider-label(id=light.id + "-light-brightness-label") 100%
                         div(id=light.id + "-light-brightness-slider", class="ui-slider-range ui-corner-all")
                 
                 .color-container
                     .slider-container
-                        img.slider-icon(src="/public/assets/f.lux.png")
+                        img.slider-icon(src="../assets/f.lux.png")
                         label.slider-label(id=light.id + "-light-color-label") 6500k
                         div(id=light.id + "-light-color-slider", class="ui-slider-range ui-corner-all")
 
                 if light.rgb
                     .rgb-container
                         .slider-container
-                            img.slider-icon(src="/public/assets/f.lux.png")
+                            img.slider-icon(src="../assets/f.lux.png")
                             label.slider-label(id=light.id + "-light-rgb-label") 6500k
                             div(id=light.id + "-light-rgb-slider", class="ui-slider-range ui-corner-all")

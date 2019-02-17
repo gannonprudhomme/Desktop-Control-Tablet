@@ -4,33 +4,33 @@ html(lang="en")
 
         title Desktop Companion Tablet
 
-        link(href="/public/css/main.css", rel='stylesheet')
-        link(href="/public/css/top-row.css", rel='stylesheet')
-        link(href="/public/css/bottom-row.css", rel='stylesheet')
-        link(href="/public/css/printer-view.css", rel='stylesheet')
-        link(href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css", rel='stylesheet')
+        link(href="../css/main.css", rel='stylesheet')
+        link(href="../css/top-row.css", rel='stylesheet')
+        link(href="../css/bottom-row.css", rel='stylesheet')
+        link(href="../css/printer-view.css", rel='stylesheet')
+        link(href="../lib/jquery-ui.min.css", rel='stylesheet')
 
         // Libraries
-        script(src="/public/lib/axios.js")
-        script(src="/public/lib/jquery.js")
-        script(src="/public/lib/jquery-ui.min.js")
-        script(src="/public/lib/jquery-ui-touch-punch.min.js")
-        script(src="/public/lib/jquery.transit.min.js")
+        script(src="../lib/axios.js")
+        script(src="../lib/jquery.js")
+        script(src="../lib/jquery-ui.min.js")
+        script(src="../lib/jquery-ui-touch-punch.min.js")
+        script(src="../lib/jquery.transit.min.js")
         script(src="/socket.io/socket.io.js")
 
         each module in currentModules
             if module.css
-                link(href="/public/css/" + module.css rel="stylesheet")
+                link(href="../css/" + module.css rel="stylesheet")
             
     
     body
         // Content of the website, in index.pug
         block content
 
-        script(src="/public/scripts/display.js")
-        script(src="/public/scripts/spotify_control.js")
+        script(src="../scripts/display.js")
+        script(src="../scripts/spotify_control.js")
 
         //- Load in all module scripts
         each module in currentModules
             if module.script 
-                script(src="/public/scripts/" + module.script)
+                script(src="../scripts/" + module.script)
