@@ -10,13 +10,17 @@ html(lang="en")
         link(href="../css/printer-view.css", rel='stylesheet')
         link(href="../lib/jquery-ui.min.css", rel='stylesheet')
 
-        // Libraries
-        script(src="../lib/axios.js")
+        <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+        //- Libraries
         script(src="../lib/jquery.js")
+        script(src="../lib/axios.js")
         script(src="../lib/jquery-ui.min.js")
         script(src="../lib/jquery-ui-touch-punch.min.js")
         script(src="../lib/jquery.transit.min.js")
-        script(src="/socket.io/socket.io.js")
+        //- script(src="/socket.io/socket.io.js")
+
+        <script>if (window.module) module = window.module;</script>
 
         each module in currentModules
             if module.css
