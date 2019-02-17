@@ -7,6 +7,16 @@
   "save-volume-on-change": true,
 
   "host-ip": "192.168.1.212",
+  "remotes": [
+    {
+      "name": "Gannon's PC",
+      "ip": "192.168.1.212" 
+    },
+    {
+      "name": "Gannon's Macbook Pro",
+      "ip": "192.168.1.81"
+    }
+  ],
   "music-service": "spotify",
   "spotify_client_id": "",
   "spotify_client_secret": "",
