@@ -28,14 +28,14 @@ $("#play-pause").click(function() {
     playing = false;
 
     // Swap to the play image
-    $('#play-pause').attr('src', '../assets/play.png')
+    $('#play-pause').attr('src', '/public/assets/play.png')
 
     sendPlayback('pause')
   } else {
     playing = true
 
     // Swap to the pause image
-    $('#play-pause').attr('src', '../assets/pause.png')
+    $('#play-pause').attr('src', '/public/assets/pause.png')
 
     sendPlayback('play')
   }
