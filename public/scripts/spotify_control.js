@@ -5,7 +5,7 @@ var lastTrackRequest = 0 // Time since we last requested for a track,
 
 // var socket = io('/spotify')
 // io.connect('/spotify')
-var socket = io()
+var socket = require('socket.io-client')('http://localhost:3000')
 
 $(document).ready(function() {
   getPlaybackInfo()
@@ -28,14 +28,14 @@ $("#play-pause").click(function() {
     playing = false;
 
     // Swap to the play image
-    $('#play-pause').attr('src', '/public/assets/play.png')
+    $('#play-pause').attr('src', '../assets/play.png')
 
     sendPlayback('pause')
   } else {
     playing = true
 
     // Swap to the pause image
-    $('#play-pause').attr('src', '/public/assets/pause.png')
+    $('#play-pause').attr('src', '../assets/pause.png')
 
     sendPlayback('play')
   }

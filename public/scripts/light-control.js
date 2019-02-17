@@ -1,4 +1,4 @@
-var socket = io()
+var socket = require('socket.io-client')('http://localhost:3000')
 
 var module_settings = {} // Need to get the module settings
 var lights = {} // Array of all of the current lights, also include all lights data?

@@ -2,7 +2,7 @@ var settings = {}
 
 var currentTab = '#volume-mixer'
 
-var socket = io()
+var socket = require('socket.io-client')('http://localhost:3000')
 var defaultTabs = ['#general', '#modules']
 
 var moduleSettings;

@@ -1,6 +1,6 @@
 // var volumes = {"master-volume":0, "spotify.exe": 0, "discord.exe": 0, "rocketleague.exe": 0, "chrome.exe": 0}
 var volumeData = {}
-var socket = io()
+var socket = require('socket.io-client')('http://localhost:3000')
 
 var settings = {}
 var currentDeviceName = ""
@@ -75,6 +75,7 @@ function setSliders() {
 
 // Change the slider values when swapping audio outputs
 function changeSliderValues() {
+  console.log(settings)
   var volume_mixers = settings['volumeMixers']
   for(var i = 0; i < volume_mixers.length; i++) {
     var mixer = volume_mixers[i];

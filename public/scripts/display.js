@@ -1,7 +1,7 @@
 var muted = false; // Retrieve if the user is currently muted or not
 var currentView = 'volume-mixer' // ENUM here, volume-mixer, or pc-stats, or pomdo
 
-var socket = io()
+var socket = require('socket.io-client')('http://localhost:3000')
 
 var settings = {}
 var moduleKeys = []
