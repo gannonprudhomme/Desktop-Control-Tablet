@@ -7,12 +7,12 @@
     
 #spotify-playback
     #playback-container
-        img#previous-song(class="image-button" src="../assets/next-song.png")
-        img#play-pause(class="image-button" src="../assets/play.png")
-        img#next-song(class="image-button" src="../assets/next-song.png")
+        img#previous-song(class="image-button" src="/public/assets/next-song.png")
+        img#play-pause(class="image-button" src="/public/assets/play.png")
+        img#next-song(class="image-button" src="/public/assets/next-song.png")
 
 #view-swapper
     #control-container
         each module in currentModules
             if module.icon
-                img(id=module.id + "-toggle", class="image-button toggle-button", src="../assets/" + module.icon)
+                img(id=module.id + "-toggle", class="image-button toggle-button", src="/public/assets/" + module.icon)
