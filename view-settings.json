@@ -22,7 +22,7 @@
   "music-service": "spotify",
   "spotify_client_id": "",
   "spotify_client_secret": "",
-  "use-toasitfy": true,
+  "use-toastify": true,
   
   "startModule": "volume-mixer",
 
