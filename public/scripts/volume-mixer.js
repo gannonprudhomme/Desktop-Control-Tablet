@@ -9,8 +9,10 @@ var audioDevices = []
 
 $(document).ready(function() {
   // On launch, load the settings file
+  console.log('Attempting to get settings')
   socket.emit('settings', '', function(data) {
     settings = data;
+    console.log('Retrieved settings')
 
     // Once it's loaded, load the volume data
     getVolumeData()
@@ -99,14 +101,16 @@ function sendVolumeData(program, volume) {
 }
 
 function getVolumeData() {
+  console.log('Attempting to retrieve volume data')
   socket.emit('volume_data', '', function(data) {
     var i = 0
-
+    console.log('Retrieved volume data')
+    
     for(var key in data) {
       volumeData[key] = data[key];
-
+      
       audioDevices[i] = key
-
+      
       i++
     }
 
@@ -120,6 +124,7 @@ function getVolumeData() {
 }
 
 function getActivePrograms() {
+  // Attempt to retrieve the list of active programs
   socket.emit('active_programs', '', function(data) {
     for(var id in data) {
       // If the program is active

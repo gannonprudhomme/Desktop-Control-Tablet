@@ -1,5 +1,4 @@
 var fs = require('fs')
-var commands = require('./commands.js')
 var fileUtils = require('./fileutils.js')
 
 var volumes = {};
@@ -16,8 +15,15 @@ var socketHandler = function(socket) {
     // console.log('user disconnected desktop')
   })
 
+
+  socket.on('browser_error', function(data) {
+    console.log(data)
+  })
+
   // Send the settings back to the client
   socket.on('settings', function(data, ret) {
+    console.log('Sending settings')
+
     settingsData = JSON.parse(fs.readFileSync('./view-settings.json'), 'utf-8')
 
     var modSettings = getModuleSettings(settingsData['currentModules'])
@@ -71,6 +77,7 @@ var socketHandler = function(socket) {
   })
 
   socket.on('volume_data', function(data, ret) {
+    console.log('Sending volume Data!')
     ret(volumes)
   })
 }
@@ -116,8 +123,6 @@ function setVolume(program, volume) {
 
 function setCurrentAudioDevice(device) {
   currentAudioDevice = device
-
-  commands.changeAudioOutput(device)
 }
 
 // Settings(and all exports) are references, and thus change as they're updated
