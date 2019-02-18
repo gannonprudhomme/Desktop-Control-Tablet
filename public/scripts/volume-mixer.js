@@ -12,7 +12,8 @@ $(document).ready(function() {
 
   // Try to retrieve the settings every second until we're successful
   window.setInterval(function() {
-    if(settings === {}) {
+    if(Object.keys(settings).length === 0) {
+      console.log('Calling')
       initialize()
     } else {
       console.log('Success!')
