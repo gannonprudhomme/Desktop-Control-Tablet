@@ -18,6 +18,7 @@ var socketHandler = function(socket) {
     socket.on('audio_device', function(data) {
         client.emit('audio_device', data)
 
+        // Set the currentAudioDevice property in desktop.js to be used for various volume stuff
         desktop.setCurrentAudioDevice(data)
     })
   
@@ -35,8 +36,15 @@ var socketHandler = function(socket) {
     socket.on('set_volume', function(data) {
         client.emit('set_volume', data)
 
+        // Set the volume in the volumes array in desktop.js and save it to the file system
         desktop.setVolume(data.program, data.volume)
     })
 }
 
+// Send a string of key-presses to the client(windows 10 server)
+function sendKeypress(keys) {
+    client.emit('shortcut', keys)
+}
+
 module.exports.socketHandler = socketHandler
+module.exports.sendKeypress = sendKeypress 
