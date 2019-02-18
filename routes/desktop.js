@@ -72,6 +72,13 @@ var socketHandler = function(socket) {
     ret(moduleSettings)
   })
 
+  socket.on('get_module_settings', function(data, ret) {
+    // Get the JSON settings file for this specific module
+    let json = JSON.parse(fs.readFileSync('./public/views/modules/' + data + '.json'))
+
+    ret(json)
+  })
+
   socket.on('volume-mixer-settings', function(data, ret) {
     ret(volumeMixerData)
   })
