@@ -26,7 +26,9 @@ var deselectedLightColor = '#fffff'
 
 $(document).ready(function() {
     // Get the module settings from the server
+    console.log('Light control: Atttempting to get module settings')
     socket.emit('get_module_settings', 'light-control', function(data) {
+        console.log('Light control: Received module_settings')
         module_settings = data
         lights = module_settings['lights']
         
