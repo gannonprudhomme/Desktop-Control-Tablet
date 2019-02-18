@@ -16,7 +16,7 @@ $(document).ready(function() {
   // Try to retrieve the settings every second until we're successful
   window.setInterval(function() {
     if(Object.keys(settings).length === 0) { // If the settings data is loaded
-      console.log('Volume: Attempting to get settings')
+      console.log('Volume: Attempting to get settings, connected: ' + socket.connected)
       socket.emit('settings', '', function(data) {
         console.log('Volume: Retrieved settings')
 
@@ -122,7 +122,7 @@ function sendVolumeData(program, volume) {
 }
 
 function getVolumeData() {
-  console.log('Attempting to retrieve volume data')
+  //console.log('Volume: Attempting to retrieve volume data')
   socket.emit('volume_data', '', function(data) {
     var i = 0
     console.log('Retrieved volume data')
