@@ -4,7 +4,6 @@ require('./app.js') // initialize the server
 
 let mainWindow
 
-const maximizeWindow = true
 
 // Create the window
 function createWindow() {
@@ -20,7 +19,7 @@ function createWindow() {
     mainWindow.on('closed', function() {
         mainWindow = null
     })
-
+    
     mainWindow.maximize()
     
     console.log('created window')
@@ -30,7 +29,7 @@ function createWindow() {
 app.on('ready', async() => {
     // Create window
     createWindow()
-
+    
     mainWindow.loadURL('http://localhost:3000/tablet')
 })
 
@@ -44,7 +43,10 @@ app.on('window-all-closed', function() {
 app.on('activate', function() {
     if(mainWindow == null) {
         createWindow()
-
+        
         mainWindow.loadURL('http://localhost:3000/tablet')
     }
 })
+
+// Disable Electron warnings
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
