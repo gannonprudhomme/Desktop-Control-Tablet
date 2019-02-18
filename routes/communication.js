@@ -1,4 +1,14 @@
-var client = require('socket.io-client')('http://localhost:3001') // Connection to the Desktop server
+const fs = require('fs')
+const desktop = require('./desktop.js')
+const socket_io = require('socket.io-client')
+
+// The settings for the remote servers
+const remoteSettings = JSON.parse(fs.readFileSync('./view-settings.json', 'utf-8'))['remotes']
+
+console.log(remoteSettings)
+
+// Connect to the remote server, just whatever is the first one for now
+const client = socket_io('http://' + remoteSettings[0]['ip'] + ':3001')
 
 var socketHandler = function(socket) {
     socket.on('active_programs', function(data, ret) {
@@ -9,6 +19,8 @@ var socketHandler = function(socket) {
   
     socket.on('audio_device', function(data) {
         client.emit('audio_device', data)
+
+        desktop.setCurrentAudioDevice(data)
     })
   
     socket.on('screenshot', function(data) {
@@ -16,6 +28,7 @@ var socketHandler = function(socket) {
     })
   
     socket.on('pc_stats', function(data, ret) {
+        // First need to check if the client(windows 10 server) is connected or not
         client.emit('pc_stats', '', function(retData) {
             ret(retData)
         })
@@ -24,7 +37,7 @@ var socketHandler = function(socket) {
     socket.on('set_volume', function(data) {
         client.emit('set_volume', data)
 
-        fileUtils.saveVolumeData(data)
+        desktop.setVolume(data.program, data.volume)
     })
 }
 
