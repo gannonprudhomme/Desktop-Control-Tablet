@@ -7,35 +7,43 @@ var currentDeviceName = "DAC"
 var currentDeviceIndex = 0
 var audioDevices = []
 
+// If we've initialized everything or not
+var isInitialized = false
+
 $(document).ready(function() {
   // On launch, load the settings file
 
   // Try to retrieve the settings every second until we're successful
   window.setInterval(function() {
-    if(Object.keys(settings).length === 0) {
-      console.log('Calling')
-      initialize()
+    if(Object.keys(settings).length === 0) { // If the settings data is loaded
+      console.log('Volume: Attempting to get settings')
+      socket.emit('settings', '', function(data) {
+        console.log('Volume: Retrieved settings')
+
+        settings = data
+        initialize()
+      })
     } else {
-      console.log('Success!')
+      // Settings data is loaded, check if we need to initialize the view
+      if(!isInitialized) {
+        initialize()
+      }
     }
   }, 1000)
 })
 
 function initialize() {
-  console.log('Attempting to get settings')
-  socket.emit('settings', '', function(data) {
-    settings = data;
-    console.log('Retrieved settings')
+  // Once it's loaded, load the volume data
+  getVolumeData()
+  getActivePrograms()
 
-    // Once it's loaded, load the volume data
-    getVolumeData()
+  window.setInterval(function() {
     getActivePrograms()
+  
+  }, 3000)
 
-    window.setInterval(function() {
-      getActivePrograms()
-    
-    }, 3000)
-  })
+  isInitialized = true
+  console.log('Volume: Initialized')
 }
 
 // Prevents weird/unnatural sliding of the document
@@ -59,7 +67,7 @@ $('#audio-device').click(function() {
 
 // Dynamically create(init) the sliders, connecting them to their respective HTML id's
 function createSlider(id, programName) {
-  console.log('Creating slider ' + id + ' ' + programName)
+  //console.log('Creating slider ' + id + ' ' + programName)
   // Generate the jQuery UI slider, at the appropriate ID
   $('#' + id + '-slider').slider({
     value: volumeData[currentDeviceName][programName] * 100,
