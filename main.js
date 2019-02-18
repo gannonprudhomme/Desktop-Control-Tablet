@@ -4,11 +4,14 @@ require('./app.js') // initialize the server
 
 let mainWindow
 
+const maximizeWindow = true
+
 // Create the window
 function createWindow() {
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
+        frame: false, // Disable the title and menu bar
         webPreferences: {
             nodeIntegration: true
         }
@@ -17,6 +20,8 @@ function createWindow() {
     mainWindow.on('closed', function() {
         mainWindow = null
     })
+
+    mainWindow.maximize()
     
     console.log('created window')
 }
