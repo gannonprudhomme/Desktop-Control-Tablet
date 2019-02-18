@@ -7,9 +7,10 @@ var settings = {}
 var moduleKeys = []
 
 $(document).ready(function() {
+  console.log('Display: Attempting to get settings, connected: ' + socket.connected)
   // Retrieve the settings from the server
   socket.emit('settings', '', function(data) {
-    console.log('Display: Retrieved Settings!')
+    console.log('Display: Retrieved Settings & Initialized!')
     settings = data;
     moduleKeys = settings['modules']
 
