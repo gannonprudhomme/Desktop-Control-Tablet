@@ -9,6 +9,18 @@ var audioDevices = []
 
 $(document).ready(function() {
   // On launch, load the settings file
+
+  // Try to retrieve the settings every second until we're successful
+  window.setInterval(function() {
+    if(settings === {}) {
+      initialize()
+    } else {
+      console.log('Success!')
+    }
+  }, 1000)
+})
+
+function initialize() {
   console.log('Attempting to get settings')
   socket.emit('settings', '', function(data) {
     settings = data;
@@ -23,7 +35,7 @@ $(document).ready(function() {
     
     }, 3000)
   })
-})
+}
 
 // Prevents weird/unnatural sliding of the document
 $(document.body).on("touchmove", function(event) {
