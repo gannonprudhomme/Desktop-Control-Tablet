@@ -1,6 +1,6 @@
 const {app, BrowserWindow} = require('electron')
 
-require('./app.js') // initialize the server
+const server = require('./app.js') // initialize the server
 
 let mainWindow
 
@@ -18,11 +18,12 @@ function createWindow() {
     
     mainWindow.on('closed', function() {
         mainWindow = null
+        server.kill() // Kill the node server
     })
     
     mainWindow.maximize()
     
-    console.log('created window')
+    console.log('Created window')
 }
 
 // When electron is ready, load the pug file and its settings and render it
@@ -37,6 +38,7 @@ app.on('ready', async() => {
 app.on('window-all-closed', function() {
     if(process.platfornm !== 'darwin') {
         app.quit()
+        server.kill() // Kill the node server
     }
 })
 
