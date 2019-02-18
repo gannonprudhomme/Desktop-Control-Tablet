@@ -5,8 +5,6 @@ const socket_io = require('socket.io-client')
 // The settings for the remote servers
 const remoteSettings = JSON.parse(fs.readFileSync('./view-settings.json', 'utf-8'))['remotes']
 
-console.log(remoteSettings)
-
 // Connect to the remote server, just whatever is the first one for now
 const client = socket_io('http://' + remoteSettings[0]['ip'] + ':3001')
 
