@@ -73,10 +73,6 @@ var socketHandler = function(socket) {
   socket.on('volume_data', function(data, ret) {
     ret(volumes)
   })
-
-  socket.on('set_volume', function(data) {
-
-  })
 }
 
 // Import 
