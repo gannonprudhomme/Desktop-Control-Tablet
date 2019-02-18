@@ -45,7 +45,12 @@
       spotify.authenticateSpotify(res)
 
       spotifyAuthenticated = true;
+
+      console.log('Redirecting to Spotify')
+
     } else {
+      console.log('Redirected from Spotify, initializing')
+
       // Load in the settings file
       var json = JSON.parse(fs.readFileSync(path.join(__dirname + '/view-settings.json'), 'utf8'))
       var options = {

@@ -44,6 +44,7 @@ $('#audio-device').click(function() {
 
 // Dynamically create(init) the sliders, connecting them to their respective HTML id's
 function createSlider(id, programName) {
+  console.log('Creating slider ' + id + ' ' + programName)
   // Generate the jQuery UI slider, at the appropriate ID
   $('#' + id + '-slider').slider({
     value: volumeData[currentDeviceName][programName] * 100,
