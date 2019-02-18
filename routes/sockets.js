@@ -10,6 +10,7 @@ var router = express.Router()
 
 var returnRouter = function(io) {
   io.on('connection', function(socket) {
+    console.log('connection!')
     handleDesktop.socketHandler(socket)
     handleSpotify.socketHandler(socket)
     handleLight.socketHandler(socket)
