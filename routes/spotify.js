@@ -19,8 +19,6 @@ var refresh_token; // Used to request a new access token after a certain amount 
 // If we're using toastify shortcuts to pause/play/skip songs for Spotify
 var useToastify = settings['use-toastify']
 
-console.log('Use toastify? ' + useToastify)
-
 // console.log(redirect_uri)
 
 var socketHandler = function(socket) {
