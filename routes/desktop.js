@@ -1,12 +1,6 @@
-var express = require('express')
-var router = express.Router()
 var fs = require('fs')
-var bodyParser = require('body-parser') // for parsing basic request data?
-var os = require('os-utils')
-var path = require('path')
 var commands = require('./commands.js')
 var fileUtils = require('./fileutils.js')
-var tasks = require('./tasks')
 
 var volumes = {};
 var volumeData = JSON.parse(fs.readFileSync('./public/volumeData.json', 'utf-8'))
@@ -32,7 +26,8 @@ var socketHandler = function(socket) {
 
     ret(settingsData)
   })
-
+  
+  // Is this unused?
   socket.on('set_settings', function(data) {
     console.log(settings)
 
@@ -78,6 +73,10 @@ var socketHandler = function(socket) {
   socket.on('volume_data', function(data, ret) {
     ret(volumes)
   })
+
+  socket.on('set_volume', function(data) {
+
+  })
 }
 
 // Import 
@@ -87,7 +86,7 @@ function importVolumeData() {
 
   // Iterate over all of the keys(programs) in the json object
   // And add them to the local map
-  for(key in volumeData) {
+  for(var key in volumeData) {
     volumes[key] = volumeData[key];
   }
 }
@@ -113,8 +112,22 @@ function getModuleSettings(currentModules) {
   return moduleSettings
 }
 
+function setVolume(program, volume) {
+  volumes[currentAudioDevice][program] = volume
+
+  fileUtils.saveVolumeData(volumes)
+}
+
+function setCurrentAudioDevice(device) {
+  currentAudioDevice = device
+
+  commands.changeAudioOutput(device)
+}
+
 // Settings(and all exports) are references, and thus change as they're updated
 module.exports.settings = settingsData
 module.exports.socketHandler = socketHandler
 module.exports.importVolumeData = importVolumeData
 module.exports.getModuleSettings = getModuleSettings
+module.exports.setVolume = setVolume
+module.exports.setCurrentAudioDevice = setCurrentAudioDevice
