@@ -6,39 +6,22 @@ var socket = require('socket.io-client')('http://localhost:3000')
 var settings = {}
 var moduleKeys = []
 
-var isInitialized = false
-
-$(document).ready(function() {// Try to retrieve the settings every second until we're successful
-  window.setInterval(function() {
-    if(Object.keys(settings).length === 0) { // If the settings data is loaded
-      console.log('Display: Attempting to get settings')
-      socket.emit('settings', '', function(data) {
-        console.log('Display: Retrieved settings')
-
-        settings = data
-        initialize()
-      })
-    } else {
-      // Settings data is loaded, check if we need to initialize the view
-      if(!isInitialized) {
-        initialize()
-      }
-    }
-  }, 1000)
-})
-
-function initialize() {
+$(document).ready(function() {
+  // Retrieve the settings from the server
+  socket.emit('settings', '', function(data) {
+    console.log('Display: Retrieved Settings!')
+    settings = data;
     moduleKeys = settings['modules']
 
     // Once we've received the settings data, call intialSetup
     hideOtherModules(settings['startModule'])
 
+    // Create all of the bottom-right module switch icons
     for(var i = 0; i < moduleKeys.length; i++) {
       createModuleToggle(moduleKeys[i])
     }
-
-    console.log("Display: Initialized!")
-}
+  })
+})
 
 $('#power-button').click(function() {
   desktopPut('sleep')
