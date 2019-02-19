@@ -80,6 +80,7 @@ var socketHandler = function(socket) {
   })
 
   socket.on('volume-mixer-settings', function(data, ret) {
+    console.log('Sending volume-mixer-settings')
     ret(volumeMixerData)
   })
 
