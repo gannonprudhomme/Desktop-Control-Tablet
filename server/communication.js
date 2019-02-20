@@ -8,6 +8,7 @@ const remoteSettings = JSON.parse(fs.readFileSync('./view-settings.json', 'utf-8
 // Connect to the remote server, just whatever is the first one for now
 const client = socket_io('http://' + remoteSettings[0]['ip'] + ':3001')
 
+// TODO: Need to add a timeout, which will in turn notify the rest of the client that the server isn't responding
 var socketHandler = function(socket) {
     socket.on('active_programs', function(data, ret) {
         client.emit('active_programs', '', function(retData) {

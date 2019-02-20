@@ -1,11 +1,11 @@
 var request = require('request')
 var queryString = require('querystring')
 
-var commands = require('./commands.js')
+var commands = require('../commands.js')
 
 // Get the settings json-data from the desktop script
 var settings = require('./desktop.js').settings
-var communication = require('./communication.js')
+var communication = require('../communication.js')
 
 // Spotify constants
 const client_id = 'a6b183eb82c84480aa98deec6cba9b92'
