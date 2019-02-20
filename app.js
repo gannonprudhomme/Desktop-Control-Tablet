@@ -16,20 +16,17 @@
   var io = require('socket.io').listen(server)
 
   // Routes
-  var spotify = require('./routes/spotify.js')
-  var discord = require('./routes/discord.js')
-  var desktop = require('./routes/desktop.js')
-  var socket = require('./routes/sockets.js')(io)
-  var fluxbulb = require('./routes/lights.js')  // controlling tp-link lightbulb from f.lux 
-  var tasks = require('./routes/tasks.js')
+  var spotify = require('./server/routes/spotify.js')
+  var desktop = require('./server/routes/desktop.js')
+  var socket = require('./server/routes/sockets.js')(io)
+  var fluxbulb = require('./server/routes/lights.js')  // controlling tp-link lightbulb from f.lux 
+  var tasks = require('./server/tasks.js')
 
-  var communication = require('./routes/communication.js')
+  var communication = require('./server/communication.js')
 
   app.set('views', path.join(__dirname + '/public/views'));
   app.set('view engine', 'pug') // 'hbs' is connected to the app.engine('hbs', ...)
   app.locals.baseDir = path.join(__dirname + '/public/views') // Set options.baseDir for Pug
-
-  app.use(discord)
   app.use(socket)
   app.use(fluxbulb.router)
 

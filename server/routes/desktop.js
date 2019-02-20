@@ -1,5 +1,5 @@
 var fs = require('fs')
-var fileUtils = require('./fileutils.js')
+var fileUtils = require('../fileutils.js')
 
 var volumes = {};
 var volumeData = JSON.parse(fs.readFileSync('./public/volumeData.json', 'utf-8'))

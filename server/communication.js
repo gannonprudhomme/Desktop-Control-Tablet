@@ -1,5 +1,5 @@
 const fs = require('fs')
-const desktop = require('./desktop.js')
+const desktop = require('./routes/desktop.js')
 const socket_io = require('socket.io-client')
 
 // The settings for the remote servers

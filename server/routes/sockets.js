@@ -1,9 +1,9 @@
 // Joins all of the socket connections into one
 
 var handleDesktop = require('./desktop.js')
-var handleSpotify = require('./spotify.js/index.js')
-var handleLight = require('./lights.js/index.js')
-var handleWeather = require('./weather.js/index.js')
+var handleSpotify = require('./spotify.js')
+var handleLight = require('./lights.js')
+var handleWeather = require('./weather.js')
 var handleCommunication = require('../communication.js')
 var express = require('express')
 var router = express.Router()
