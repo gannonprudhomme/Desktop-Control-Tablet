@@ -1,24 +1,50 @@
 var muted = false; // Retrieve if the user is currently muted or not
 var currentView = 'volume-mixer' // ENUM here, volume-mixer, or pc-stats, or pomdo
 
-var socket = io()
+var socket = require('socket.io-client')('http://localhost:3000')
 
 var settings = {}
 var moduleKeys = []
 
+var displayInitialized = false
+
 $(document).ready(function() {
+  console.log('Display: Attempting to get settings, connected: ' + socket.connected)
   // Retrieve the settings from the server
   socket.emit('settings', '', function(data) {
+    console.log('Display: Retrieved Settings & Initialized!')
     settings = data;
     moduleKeys = settings['modules']
 
     // Once we've received the settings data, call intialSetup
     hideOtherModules(settings['startModule'])
 
+    // Create all of the bottom-right module switch icons
     for(var i = 0; i < moduleKeys.length; i++) {
       createModuleToggle(moduleKeys[i])
     }
+
+    displayInitialized = true
   })
+
+  window.setInterval(function() {
+    if(Object.keys(settings).length > 0) {
+      if(!displayInitialized) {
+        console.log('Display: Initialized in loop')
+        moduleKeys = settings['modules']
+
+        // Once we've received the settings data, call intialSetup
+        hideOtherModules(settings['startModule'])
+
+        // Create all of the bottom-right module switch icons
+        for(var i = 0; i < moduleKeys.length; i++) {
+          createModuleToggle(moduleKeys[i])
+        }
+
+        displayInitialized = true
+      }
+    }
+  }, 300)
 })
 
 $('#power-button').click(function() {

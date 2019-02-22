@@ -1,4 +1,4 @@
-var socket = io()
+var socket = require('socket.io-client')('http://localhost:3000')
 // var usage_stats = {} // PC Performance usage stats
 
 var minAngle = 45

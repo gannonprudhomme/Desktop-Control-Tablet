@@ -1,4 +1,4 @@
- var socket = io()
+ var socket = require('socket.io-client')('http://localhost:3000')
 
 function updateWidget() {
     console.log('Updating weather widget')

@@ -5,7 +5,7 @@ var lastTrackRequest = 0 // Time since we last requested for a track,
 
 // var socket = io('/spotify')
 // io.connect('/spotify')
-var socket = io()
+var socket = require('socket.io-client')('http://localhost:3000')
 
 $(document).ready(function() {
   getPlaybackInfo()

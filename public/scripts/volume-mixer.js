@@ -1,27 +1,50 @@
 // var volumes = {"master-volume":0, "spotify.exe": 0, "discord.exe": 0, "rocketleague.exe": 0, "chrome.exe": 0}
 var volumeData = {}
-var socket = io()
+var socket = require('socket.io-client')('http://localhost:3000')
 
 var settings = {}
-var currentDeviceName = ""
+var currentDeviceName = "DAC"
 var currentDeviceIndex = 0
 var audioDevices = []
 
+// If we've initialized everything or not
+var isInitialized = false
+
 $(document).ready(function() {
   // On launch, load the settings file
-  socket.emit('settings', '', function(data) {
-    settings = data;
 
-    // Once it's loaded, load the volume data
-    getVolumeData()
-    getActivePrograms()
+  // Try to retrieve the settings every second until we're successful
+  window.setInterval(function() {
+    if(Object.keys(settings).length === 0) { // If the settings data is loaded
+      console.log('Volume: Attempting to get settings, connected: ' + socket.connected)
+      socket.emit('settings', '', function(data) {
+        console.log('Volume: Retrieved settings')
 
-    window.setInterval(function() {
-      getActivePrograms()
-    
-    }, 3000)
-  })
+        settings = data
+        initialize()
+      })
+    } else {
+      // Settings data is loaded, check if we need to initialize the view
+      if(!isInitialized) {
+        initialize()
+      }
+    }
+  }, 1000)
 })
+
+function initialize() {
+  // Once it's loaded, load the volume data
+  getVolumeData()
+  getActivePrograms()
+
+  window.setInterval(function() {
+    getActivePrograms()
+  
+  }, 3000)
+
+  isInitialized = true
+  console.log('Volume: Initialized')
+}
 
 // Prevents weird/unnatural sliding of the document
 $(document.body).on("touchmove", function(event) {
@@ -44,6 +67,7 @@ $('#audio-device').click(function() {
 
 // Dynamically create(init) the sliders, connecting them to their respective HTML id's
 function createSlider(id, programName) {
+  //console.log('Creating slider ' + id + ' ' + programName)
   // Generate the jQuery UI slider, at the appropriate ID
   $('#' + id + '-slider').slider({
     value: volumeData[currentDeviceName][programName] * 100,
@@ -75,6 +99,7 @@ function setSliders() {
 
 // Change the slider values when swapping audio outputs
 function changeSliderValues() {
+  //console.log(settings)
   var volume_mixers = settings['volumeMixers']
   for(var i = 0; i < volume_mixers.length; i++) {
     var mixer = volume_mixers[i];
@@ -84,7 +109,7 @@ function changeSliderValues() {
   }
 }
 
-// Send volume data back to the server
+// Send volume data back to the server/
 function sendVolumeData(program, volume) {
   var obj = {
     program: program,
@@ -97,14 +122,16 @@ function sendVolumeData(program, volume) {
 }
 
 function getVolumeData() {
+  //console.log('Volume: Attempting to retrieve volume data')
   socket.emit('volume_data', '', function(data) {
     var i = 0
-
+    console.log('Retrieved volume data')
+    
     for(var key in data) {
       volumeData[key] = data[key];
-
+      
       audioDevices[i] = key
-
+      
       i++
     }
 
@@ -118,6 +145,7 @@ function getVolumeData() {
 }
 
 function getActivePrograms() {
+  // Attempt to retrieve the list of active programs
   socket.emit('active_programs', '', function(data) {
     for(var id in data) {
       // If the program is active

@@ -1,12 +1,11 @@
-var express = require('express')
 var request = require('request')
-var router = express.Router()
 var queryString = require('querystring')
 
-var commands = require('./commands.js')
+var commands = require('../commands.js')
 
 // Get the settings json-data from the desktop script
 var settings = require('./desktop.js').settings
+var communication = require('../communication.js')
 
 // Spotify constants
 const client_id = 'a6b183eb82c84480aa98deec6cba9b92'
@@ -16,11 +15,9 @@ var redirect_uri = 'http://' + settings['host-ip'] +  ':3000/tablet';
 // Spotify values returned from authentication
 var access_token;
 var refresh_token; // Used to request a new access token after a certain amount of time
-// var access_code;
-var stateKey = 'spotify_auth_state'
 
 // If we're using toastify shortcuts to pause/play/skip songs for Spotify
-var useToastify = settings['use_toastify']
+var useToastify = settings['use-toastify']
 
 // console.log(redirect_uri)
 
@@ -92,11 +89,11 @@ var socketHandler = function(socket) {
 
   socket.on('play', function(data) {
     var delay = (new Date()).getTime() - data
-    console.log('Play delay: ' + delay)
+    // console.log('Play delay: ' + delay)
     commands.saveDelay(delay)
 
     if(useToastify) {
-      commands.sendKeypress('ctrl+alt+up')
+      communication.sendKeypress('ctrl+alt+up')
     } else {
       sendSpotifyCommand('play')
     }
@@ -104,11 +101,11 @@ var socketHandler = function(socket) {
 
   socket.on('pause', function(data) {
     var delay = (new Date()).getTime() - data
-    console.log('Pause delay: ' + delay)
+    // console.log('Pause delay: ' + delay)
     commands.saveDelay(delay)
 
     if(useToastify) {
-      commands.sendKeypress('ctrl+alt+up')
+      communication.sendKeypress('ctrl+alt+up')
     } else {
       sendSpotifyCommand('pause')
     }
@@ -116,11 +113,11 @@ var socketHandler = function(socket) {
 
   socket.on('next', function(data) {
     var delay = (new Date()).getTime() - data
-    console.log('Next delay: ' + delay)
+    // console.log('Next delay: ' + delay)
     commands.saveDelay(delay)
 
     if(useToastify) {
-      commands.sendKeypress('ctrl+alt+right')
+      communication.sendKeypress('ctrl+alt+right')
     } else {
       sendSpotifyCommand('next')
     }
@@ -128,11 +125,11 @@ var socketHandler = function(socket) {
 
   socket.on('previous', function(data) {
     var delay = (new Date()).getTime() - data
-    console.log('Prev delay: ' + delay)
+    // console.log('Prev delay: ' + delay)
     commands.saveDelay(delay)
 
     if(useToastify) {
-      commands.sendKeypress('ctrl+alt+left')
+      communication.sendKeypress('ctrl+alt+left')
     } else {
       sendSpotifyCommand('previous')
     }
@@ -160,7 +157,6 @@ function authenticateSpotify(res) {
 
 function getAuthArguments(code, state) {
   // Request options to be sent to the spotify server
-    access_code = code;
     var authOptions = {
       url: 'https://accounts.spotify.com/api/token',
       form: {

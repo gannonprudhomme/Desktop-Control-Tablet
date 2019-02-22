@@ -6,11 +6,23 @@
   
   "save-volume-on-change": true,
 
-  "host-ip": "192.168.1.212",
+  "host-ip": "192.168.1.77",
+  "remotes": [
+    {
+      "name": "Gannon's PC",
+      "type": "win10",
+      "ip": "192.168.1.212" 
+    },
+    {
+      "name": "Gannon's Macbook Pro",
+      "type": "macos",
+      "ip": "192.168.1.81"
+    }
+  ],
   "music-service": "spotify",
   "spotify_client_id": "",
   "spotify_client_secret": "",
-  "use-toasitfy": true,
+  "use-toastify": false,
   
   "startModule": "volume-mixer",
 
