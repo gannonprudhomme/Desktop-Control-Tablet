@@ -51,7 +51,7 @@
     "systeminformation": "^3.45.9",
     "timesync": "^1.0.3",
     "tplink-lightbulb": "^1.4.2",
-    "watchify": "^3.11.0",
+    "watchify": "^3.11.1",
     "weather-js": "^2.0.0"
   },
   "devDependencies": {
@@ -61,7 +61,8 @@
     "browser-sync": "^2.26.3",
     "chai": "^4.2.0",
     "electron": "3.0.13",
-    "eslint": "^5.14.0",
+    "eslint": "^5.14.1",
+    "eslint-config-google": "^0.12.0",
     "mocha": "^5.2.0"
   }
 }

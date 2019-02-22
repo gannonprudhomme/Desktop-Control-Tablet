@@ -6,7 +6,7 @@
         "node": true,
         "jquery": true
     },
-    "extends": "eslint:recommended",
+    "extends": "google",
     "globals": {
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly"
@@ -15,6 +15,6 @@
         "ecmaVersion": 2018
     },
     "rules": {
-        "no-console": 0
+        "no-console": 0,
     }
 }
