@@ -1,9 +1,5 @@
-var fs = require('fs')
-var fileUtils = require('../fileutils.js')
-
-
-var currentAudioDevice = settingsData['audioDevices'][0]
-
+const fs = require('fs')
+const fileUtils = require('../fileutils.js')
 const Route = require('./route.js')
 
 class Desktop extends Route {
@@ -38,7 +34,7 @@ class Desktop extends Route {
 
       settingsData = JSON.parse(fs.readFileSync('./view-settings.json'), 'utf-8')
 
-      var modSettings = getModuleSettings(settingsData['currentModules'])
+      const modSettings = getModuleSettings(settingsData['currentModules'])
       
       settingsData = {...settingsData, ...modSettings}
 
@@ -50,7 +46,7 @@ class Desktop extends Route {
       console.log(settings)
 
       console.log('Updated settings with: ')
-      for(var i = 0; i < settings.length; i++) {
+      for(let i = 0; i < settings.length; i++) {
         if(settings[i] !== data[i]) {
           console.log(data[i])
         }
@@ -60,26 +56,26 @@ class Desktop extends Route {
     // Retrieve the module settings to be used in creating the HTML elements in settings
     // Returns it as a (module.id, module json settings) pair
     socket.on('module_settings', function(data, ret) {
-      var moduleSettings;
+      let moduleSettings;
 
-      var currentModules = settingsData['currentModules']
-      for(var mod in currentModules) {
-        var modData = currentModules[mod] // The module data from view-settings.json
-        var settingsFile = modData['settings'] // Get the 
-    
-        var json = JSON.parse(fs.readFileSync('./public/views/modules/' + settingsFile))
-    
-        var options = {}
-        // Set the module's id to be the key, which points to its settings data
-        options[modData['id']] = json
+      const currentModules = settingsData['currentModules']
+      for(const mod in currentModules) {
+        if(Object.prototype.hasOwnProperty.call(currentModules, mod)) {
+          const modData = currentModules[mod] // The module data from view-settings.json
+          const settingsFile = modData['settings'] // Get the 
+      
+          const json = JSON.parse(fs.readFileSync('./public/views/modules/' + settingsFile))
+      
+          const options = {}
+          // Set the module's id to be the key, which points to its settings data
+          options[modData['id']] = json
 
-        //console.log(options)
-        
-        // Concatenate the JSON objects
-        moduleSettings = {...moduleSettings, ...options}
+          // console.log(options)
+          
+          // Concatenate the JSON objects
+          moduleSettings = {...moduleSettings, ...options}
+        }
       }
-
-      //console.log(moduleSettings)
 
       ret(moduleSettings)
     })
@@ -108,26 +104,30 @@ class Desktop extends Route {
 
     // Iterate over all of the keys(programs) in the json object
     // And add them to the local map
-    for(var key in volumeData) {
-      volumes[key] = volumeData[key];
+    for(const key in volumeData) {
+      if(Object.prototype.hasOwnProperty.call(volumeData, key)) {
+        volumes[key] = volumeData[key];
+      }
     }
   }
 
   // Combine all of the settings from the module settings file
   // and return them
   getModuleSettings(currentModules) {
-    for(var mod in currentModules) {
-      var modSettings = currentModules[mod]
-      var settingsFile = modSettings['settings']
+    for(const mod in currentModules) {
+      if(Object.prototype.hasOwnProperty.call(currentModules, mod)) {
+        const modSettings = currentModules[mod]
+        const settingsFile = modSettings['settings']
 
-      // If there is a settings file
-      if(settingsFile) {
-        // Load it
-        var json = JSON.parse(fs.readFileSync('./public/views/modules/' + settingsFile))
-       
-        // Do i need this to use .this?
-        // Concatenate the JSON objects
-        this.moduleSettings = {...this.moduleSettings, ...json}
+        // If there is a settings file
+        if(settingsFile) {
+          // Load it
+          const json = JSON.parse(fs.readFileSync('./public/views/modules/' + settingsFile))
+
+          // Do i need this to use .this?
+          // Concatenate the JSON objects
+          this.moduleSettings = {...this.moduleSettings, ...json}
+        }
       }
     }
 
