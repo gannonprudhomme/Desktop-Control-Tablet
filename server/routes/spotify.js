@@ -18,24 +18,29 @@ var refresh_token; // Used to request a new access token after a certain amount 
 
 // If we're using toastify shortcuts to pause/play/skip songs for Spotify
 var useToastify = settings['use-toastify']
+const Route = require('./route.js')
 
-// console.log(redirect_uri)
+class Spotify extends Route {
+  constructor() {
+    super()
+  }
 
-var socketHandler = function(socket) {
-  // var spotify = io.of('/spotify')
-  socket.on('get_track', function(data, ret) {
-    var options = {
-      url: 'https://api.spotify.com/v1/me/player/currently-playing',
-      headers: {'Authorization': 'Bearer ' + access_token},
-      json: true
-    }
+  socketHandler(socket) {
+    
+    // var spotify = io.of('/spotify')
+    socket.on('get_track', function(data, ret) {
+      const options = {
+        url: 'https://api.spotify.com/v1/me/player/currently-playing',
+        headers: {'Authorization': 'Bearer ' + access_token},
+        json: true
+      }
 
-    var timeReceived = (new Date()).getTime()
+      const timeReceived = (new Date()).getTime()
 
-    request.get(options, function(error, response, body) {
-      if(!error && response.statusCode === 200) {
-          var sendToClient = {}
-        
+      request.get(options, function(error, response, body) {
+        if(!error && response.statusCode === 200) {
+          const sendToClient = {}
+          
           // If there isn't a track currently playing, don't attempt to send it
           if(body.item) {
             sendToClient.track = body.item.name
@@ -50,13 +55,13 @@ var socketHandler = function(socket) {
 
           sendToClient.timeSent = (new Date()).getTime()
 
-          var diff = (sendToClient.timeSent - timeReceived);
+          const diff = (sendToClient.timeSent - timeReceived);
           // console.log('Play: Spotify retrieval ' + diff + 'ms')
 
           ret(sendToClient)
         } else if(response && response.statusCode === 204) {
           // Nothing is playing, do nothing
-          //console.log('204')
+          // console.log('204')
 
         } else {
           // process.stdout.write("Playback info error: ")
@@ -74,90 +79,87 @@ var socketHandler = function(socket) {
               // Alternatively, tell the client to refresh the page (or do it for them)
             } else if(body.error.message === 'The access token expired') {
               // Refresh the access token
-              process.stdout.write("Playback info error: ")
+              process.stdout.write('Playback info error: ')
               console.log(body.error.message)
               refreshToken()
-
             } else {
-              process.stdout.write("Playback info error: ")
+              process.stdout.write('Playback info error: ')
               console.log(body.error.message)
             }
           }
         }
+      })
     })
-  })
 
-  socket.on('play', function(data) {
-    var delay = (new Date()).getTime() - data
-    // console.log('Play delay: ' + delay)
-    commands.saveDelay(delay)
+    socket.on('play', function(data) {
+      const delay = (new Date()).getTime() - data
+      // console.log('Play delay: ' + delay)
+      commands.saveDelay(delay)
 
-    if(useToastify) {
-      communication.sendKeypress('ctrl+alt+up')
-    } else {
-      sendSpotifyCommand('play')
-    }
-  })
-
-  socket.on('pause', function(data) {
-    var delay = (new Date()).getTime() - data
-    // console.log('Pause delay: ' + delay)
-    commands.saveDelay(delay)
-
-    if(useToastify) {
-      communication.sendKeypress('ctrl+alt+up')
-    } else {
-      sendSpotifyCommand('pause')
-    }
-  })
-
-  socket.on('next', function(data) {
-    var delay = (new Date()).getTime() - data
-    // console.log('Next delay: ' + delay)
-    commands.saveDelay(delay)
-
-    if(useToastify) {
-      communication.sendKeypress('ctrl+alt+right')
-    } else {
-      sendSpotifyCommand('next')
-    }
-  })
-
-  socket.on('previous', function(data) {
-    var delay = (new Date()).getTime() - data
-    // console.log('Prev delay: ' + delay)
-    commands.saveDelay(delay)
-
-    if(useToastify) {
-      communication.sendKeypress('ctrl+alt+left')
-    } else {
-      sendSpotifyCommand('previous')
-    }
-  })
-
-  // return router
-}
-
-// Redirect to the client to authetnicate with Spotify
-function authenticateSpotify(res) {
-  var state = generateRandomString(8);
-
-  //res.cookie(stateKey, state);
-  var scope = 'user-read-private user-read-playback-state user-modify-playback-state user-read-currently-playing'
-  res.redirect('https://accounts.spotify.com/authorize?' +
-    queryString.stringify({
-      response_type:'code',
-      client_id: client_id,
-      scope: scope,
-      redirect_uri: redirect_uri,
-      state: state
+      if(useToastify) {
+        communication.sendKeypress('ctrl+alt+up')
+      } else {
+        sendSpotifyCommand('play')
+      }
     })
-  )
-}
 
-function getAuthArguments(code, state) {
-  // Request options to be sent to the spotify server
-    var authOptions = {
+    socket.on('pause', function(data) {
+      const delay = (new Date()).getTime() - data
+      // console.log('Pause delay: ' + delay)
+      commands.saveDelay(delay)
+
+      if(useToastify) {
+        communication.sendKeypress('ctrl+alt+up')
+      } else {
+        sendSpotifyCommand('pause')
+      }
+    })
+
+    socket.on('next', function(data) {
+      const delay = (new Date()).getTime() - data
+      // console.log('Next delay: ' + delay)
+      commands.saveDelay(delay)
+
+      if(useToastify) {
+        communication.sendKeypress('ctrl+alt+right')
+      } else {
+        sendSpotifyCommand('next')
+      }
+    })
+
+    socket.on('previous', function(data) {
+      const delay = (new Date()).getTime() - data
+      // console.log('Prev delay: ' + delay)
+      commands.saveDelay(delay)
+
+      if(useToastify) {
+        communication.sendKeypress('ctrl+alt+left')
+      } else {
+        sendSpotifyCommand('previous')
+      }
+    })
+  }
+
+  // Redirect to the client to authetnicate with Spotify
+  authenticateSpotify(res) {
+    const state = generateRandomString(8);
+
+    // res.cookie(stateKey, state);
+    const scope = 'user-read-private user-read-playback-state user-modify-playback-state user-read-currently-playing'
+    res.redirect('https://accounts.spotify.com/authorize?' +
+      queryString.stringify({
+        response_type: 'code',
+        client_id: client_id,
+        scope: scope,
+        redirect_uri: redirect_uri,
+        state: state
+      })
+    )
+  }
+
+  getAuthArguments(code, state) {
+    // Request options to be sent to the spotify server
+    const authOptions = {
       url: 'https://accounts.spotify.com/api/token',
       form: {
         code: code,
@@ -180,75 +182,87 @@ function getAuthArguments(code, state) {
         console.log(error)
       }
     })
-}
-
-// Request an access token using the provided refresh token
-function refreshToken() {
-  console.log('Refreshing access token')
-
-  var options  = {
-    url: 'https://accounts.spotify.com/api/token',
-    headers: {
-      'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))      },
-    form: {
-      grant_type: 'refresh_token',
-      refresh_token: refresh_token
-    },
-    json: true
   }
 
-  request.post(options, function(error, response, body) {
-    if(!error) {
-      access_token = body.access_token
-      console.log('Refreshed access token successfully!')
-    } else {
-      console.log(error)
-      console.log(body)
+  // Request an access token using the provided refresh token
+  refreshToken() {
+    console.log('Refreshing access token')
+
+    const options = {
+      url: 'https://accounts.spotify.com/api/token',
+      headers: {
+        'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))      },
+      form: {
+        grant_type: 'refresh_token',
+        refresh_token: refresh_token
+      },
+      json: true
     }
-  })
-}
 
-// Used in GET /tablet initial authorization
-function setTokens(access, refresh) {
-  access_token = access;
-  refresh_token = refresh;
-}
-
-// Set the redirect uri to be reurned to after authenticating with Spotify
-function setRedirectUri(uri) {
-  redirect_uri = uri
-}
-
-function sendSpotifyCommand(command) {
-  var options = {
-    url: 'https://api.spotify.com/v1/me/player/' + command,
-    headers: {
-      'Authorization': 'Bearer ' + access_token
-    }
-  }
-
-  if(command == 'play' || command == 'pause') { // Send PUT call for pause & play
-    // Send the playback command to the Spotify server
-    request.put(options, function(error, response, body) {
-      if(!error) {
-        
-      } else {
-        console.log(error)
-        console.log(body)
-      }
-    })
-  } else { // Send POST call for next & previous songs
-    // Send the playback command to the Spotify server
     request.post(options, function(error, response, body) {
       if(!error) {
-        
+        access_token = body.access_token
+        console.log('Refreshed access token successfully!')
       } else {
         console.log(error)
         console.log(body)
       }
     })
   }
+
+  // Used in GET /tablet initial authorization
+  setTokens(access, refresh) {
+    access_token = access;
+    refresh_token = refresh;
+  }
+
+  // Set the redirect uri to be reurned to after authenticating with Spotify
+  setRedirectUri(uri) {
+    redirect_uri = uri
+  }
+
+  sendSpotifyCommand(command) {
+    const options = {
+      url: 'https://api.spotify.com/v1/me/player/' + command,
+      headers: {
+        'Authorization': 'Bearer ' + access_token
+      }
+    }
+
+    if(command == 'play' || command == 'pause') { // Send PUT call for pause & play
+      // Send the playback command to the Spotify server
+      request.put(options, function(error, response, body) {
+        if(!error) {
+
+        } else {
+          console.log(error)
+          console.log(body)
+        }
+      })
+    } else { // Send POST call for next & previous songs
+      // Send the playback command to the Spotify server
+      request.post(options, function(error, response, body) {
+        if(!error) {
+
+        } else {
+          console.log(error)
+          console.log(body)
+        }
+      })
+    }
+  }
+
+  generateRandomString(length) {
+    let text = '';
+    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+    for (let i = 0; i < length; i++) {
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
+  };
 }
+
 
 module.exports.setRedirectUri = setRedirectUri
 module.exports.socketHandler = socketHandler
@@ -260,13 +274,3 @@ module.exports.redirect_uri = redirect_uri
 
 module.exports.authenticateSpotify = authenticateSpotify
 module.exports.getAuthArguments = getAuthArguments
-
-var generateRandomString = function(length) {
-  var text = '';
-  var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-  for (var i = 0; i < length; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-  }
-  return text;
-};
