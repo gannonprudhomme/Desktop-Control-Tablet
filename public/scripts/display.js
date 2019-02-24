@@ -7,6 +7,7 @@ let moduleKeys = []
 
 let displayInitialized = false
 let connectedToServer = false
+let serverModulesHidden = false // If the server modules are hidden or not
 
 $(document).ready(function() {
   console.log('Display: Attempting to get settings, connected: ' + socket.connected)
@@ -153,19 +154,27 @@ function hideShowServerModules(hide) {
         const id = module['id']
 
         if(module['requires-server']) {
+          // Only hide the server modules if they were previously shown
           if(hide) {
-            console.log('Hiding ' + id)
+            // console.log('Hiding ' + id)
             $('#' + id).hide()
             $('#' + id + '-toggle').hide()
-
           } else {
-            $('#' + id).show()
-            $('#' + id + '-toggle').show()
+            // Only show the modules if they were previously hidden
+            if(serverModulesHidden) {
+              $('#' + id).show()
+              $('#' + id + '-toggle').show()
+            }
           }
-        } else {
-          console.log(id + ' doesnt need server')
         }
       }
+    }
+
+    // Set whether the server modules are currently hidden or not
+    if(hide) {
+      serverModulesHidden = true
+    } else {
+      serverModulesHidden = false
     }
   }
 }
