@@ -10,8 +10,8 @@ class Weather extends Route {
   }
 
   socketHandler(socket) {
-    socket.on('get_forecast', function(data, ret) {
-      getForecast().then((data) => {
+    socket.on('get_forecast', (data, ret) => {
+      this.getForecast().then((data) => {
         ret(data)
       }).catch((error) => {
         console.log(error)
@@ -22,7 +22,7 @@ class Weather extends Route {
   // Retrieve the current forecast and return it as a dictionary
   getForecast() {
     return new Promise((result, reject) => {
-      weather.find({search: weatherSettings['zipcode'], degreeType: 'F'}, function(error, d) {
+      weather.find({search: this.weatherSettings['zipcode'], degreeType: 'F'}, function(error, d) {
         if(error) { // If there was an error
           console.log(error)
           reject(error)
