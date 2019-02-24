@@ -1,38 +1,34 @@
-var request = require('request')
-var queryString = require('querystring')
+const request = require('request')
+const queryString = require('querystring')
+const commands = require('../commands.js')
+const communication = require('../communication.js')
 
-var commands = require('../commands.js')
-
-// Get the settings json-data from the desktop script
-var settings = require('./desktop.js').settings
-var communication = require('../communication.js')
-
-// Spotify constants
-const client_id = 'a6b183eb82c84480aa98deec6cba9b92'
-const client_secret = '156fa2b93faa41afb74bebf84b148ac3'
-var redirect_uri = 'http://' + settings['host-ip'] +  ':3000/tablet';
-
-// Spotify values returned from authentication
-var access_token;
-var refresh_token; // Used to request a new access token after a certain amount of time
-
-// If we're using toastify shortcuts to pause/play/skip songs for Spotify
-var useToastify = settings['use-toastify']
 const Route = require('./route.js')
 
+// The Spotify route 
 class Spotify extends Route {
-  constructor() {
+  constructor(settings) {
     super()
+
+    // Spotify constants
+    this.redirectUri = 'http://' + settings['host-ip'] + ':3000/tablet'
+    this.clientId = 'a6b183eb82c84480aa98deec6cba9b92'
+    this.clientSecret = '156fa2b93faa41afb74bebf84b148ac3'
+
+    this.useToastify = settings['use-toastify']
+
+    // Spotify values returned from authentication
+    // this.accessToken = ''
+    // this.refreshToken = ''
   }
 
   socketHandler(socket) {
-    
     // var spotify = io.of('/spotify')
     socket.on('get_track', function(data, ret) {
       const options = {
         url: 'https://api.spotify.com/v1/me/player/currently-playing',
-        headers: {'Authorization': 'Bearer ' + access_token},
-        json: true
+        headers: {'Authorization': 'Bearer ' + this.accessToken},
+        json: true,
       }
 
       const timeReceived = (new Date()).getTime()
@@ -40,7 +36,7 @@ class Spotify extends Route {
       request.get(options, function(error, response, body) {
         if(!error && response.statusCode === 200) {
           const sendToClient = {}
-          
+
           // If there isn't a track currently playing, don't attempt to send it
           if(body.item) {
             sendToClient.track = body.item.name
@@ -152,7 +148,7 @@ class Spotify extends Route {
         client_id: client_id,
         scope: scope,
         redirect_uri: redirect_uri,
-        state: state
+        state: state,
       })
     )
   }
@@ -164,12 +160,12 @@ class Spotify extends Route {
       form: {
         code: code,
         redirect_uri: redirect_uri,
-        grant_type: 'authorization_code'
+        grant_type: 'authorization_code',
       },
       headers: {
-        'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))
+        'Authorization': 'Basic ' + (new Buffer.from(this.clientId + ':' + this.clientSecret).toString('base64'))
       },
-      json: true
+      json: true,
     }
 
     // Retrieve the authorization code from Spotify and set the returned access tokens
@@ -191,12 +187,12 @@ class Spotify extends Route {
     const options = {
       url: 'https://accounts.spotify.com/api/token',
       headers: {
-        'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))      },
+        'Authorization': 'Basic ' + (new Buffer.from(this.clientId + ':' + this.clientSecret).toString('base64'))      },
       form: {
         grant_type: 'refresh_token',
-        refresh_token: refresh_token
+        refresh_token: this.refreshToken,
       },
-      json: true
+      json: true,
     }
 
     request.post(options, function(error, response, body) {
@@ -212,21 +208,21 @@ class Spotify extends Route {
 
   // Used in GET /tablet initial authorization
   setTokens(access, refresh) {
-    access_token = access;
-    refresh_token = refresh;
+    this.accessToken = access;
+    this.refreshToken = refresh;
   }
 
   // Set the redirect uri to be reurned to after authenticating with Spotify
   setRedirectUri(uri) {
-    redirect_uri = uri
+    this.redirectUri = uri
   }
 
   sendSpotifyCommand(command) {
     const options = {
       url: 'https://api.spotify.com/v1/me/player/' + command,
       headers: {
-        'Authorization': 'Bearer ' + access_token
-      }
+        'Authorization': 'Bearer ' + this.accessToken,
+      },
     }
 
     if(command == 'play' || command == 'pause') { // Send PUT call for pause & play
@@ -263,14 +259,4 @@ class Spotify extends Route {
   };
 }
 
-
-module.exports.setRedirectUri = setRedirectUri
-module.exports.socketHandler = socketHandler
-module.exports.setTokens = setTokens
-// Send out spotify constants
-module.exports.client_id = client_id
-module.exports.client_secret = client_secret
-module.exports.redirect_uri = redirect_uri
-
-module.exports.authenticateSpotify = authenticateSpotify
-module.exports.getAuthArguments = getAuthArguments
+module.exports = Spotify
