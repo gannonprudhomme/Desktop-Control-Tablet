@@ -1,20 +1,20 @@
-var socket = require('socket.io-client')('http://localhost:3000')
+const socket = require('socket.io-client')('http://localhost:3000')
 
-var module_settings = {} // Need to get the module settings
-var lights = {} // Array of all of the current lights, also include all lights data?
-var allLightsData = {}
+let module_settings = {} // Need to get the module settings
+let lights = {} // Array of all of the current lights, also include all lights data?
+let allLightsData = {}
 
 // Compared to the current time when potentially old light data would change the
 // sliders back to their previous position
-var lightsLastChange = {
-  "all-lights": {
-    "brightness": 0,
-    "color_temp": 0
+let lightsLastChange = {
+  'all-lights': {
+    'brightness': 0,
+    'color_temp': 0,
   }
 }
 
 // Set to the current time when we first receieve data about the light not responding
-var lightTimeout = 0
+let lightTimeout = 0
 
 // If we've reconnected since when we most-recently timed-out
 var reconnected = false
