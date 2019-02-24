@@ -240,8 +240,6 @@ class SmartLight extends Route {
         // Set the according light object
         this.lightsData[lightID]['object'] = light
 
-        console.log(this.lightsData)
-
         // Load its data
         this.getLifxInfo(light, lightID).then((lightData) => {
 
@@ -253,7 +251,6 @@ class SmartLight extends Route {
       }
     })
 
-    console.log('LIFX init!')
     lifx.init()
   }
 
