@@ -92,7 +92,8 @@ class Spotify extends Route {
     socket.on('play', (data) => {
       const delay = (new Date()).getTime() - data
 
-      if(this.useToastify) {
+      // Only use the toastify shortcut if the setting is enabled & we're connected to the server
+      if(this.useToastify && this.communication.connected) {
         this.communication.sendKeypress('ctrl+alt+up')
       } else {
         this.sendSpotifyCommand('play')
@@ -102,7 +103,8 @@ class Spotify extends Route {
     socket.on('pause', (data) => {
       const delay = (new Date()).getTime() - data
 
-      if(this.useToastify) {
+      // Only use the toastify shortcut if the setting is enabled & we're connected to the server
+      if(this.useToastify && this.communication.connected) {
         this.communication.sendKeypress('ctrl+alt+up')
       } else {
         this.sendSpotifyCommand('pause')
@@ -112,7 +114,8 @@ class Spotify extends Route {
     socket.on('next', (data) => {
       const delay = (new Date()).getTime() - data
 
-      if(this.useToastify) {
+      // Only use the toastify shortcut if the setting is enabled & we're connected to the server
+      if(this.useToastify && this.communication.connected) {
         this.communication.sendKeypress('ctrl+alt+right')
       } else {
         this.sendSpotifyCommand('next')
@@ -122,7 +125,8 @@ class Spotify extends Route {
     socket.on('previous', (data) => {
       const delay = (new Date()).getTime() - data
 
-      if(this.useToastify) {
+      // Only use the toastify shortcut if the setting is enabled & we're connected to the server
+      if(this.useToastify && this.communication.connected) {
         this.communication.sendKeypress('ctrl+alt+left')
       } else {
         this.sendSpotifyCommand('previous')

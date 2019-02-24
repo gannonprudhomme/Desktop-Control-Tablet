@@ -6,7 +6,7 @@
   
   "save-volume-on-change": true,
 
-  "host-ip": "192.168.1.212",
+  "host-ip": "192.168.1.77",
   "remotes": [
     {
       "name": "Gannon's PC",
@@ -22,7 +22,7 @@
   "music-service": "spotify",
   "spotify_client_id": "",
   "spotify_client_secret": "",
-  "use-toastify": false,
+  "use-toastify": true,
   
   "startModule": "volume-mixer",
 
