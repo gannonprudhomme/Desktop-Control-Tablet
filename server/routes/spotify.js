@@ -79,7 +79,7 @@ class Spotify extends Route {
               // Refresh the access token
               process.stdout.write('Playback info error: ')
               console.log(body.error.message)
-              refreshToken()
+              this.refreshToken()
             } else {
               process.stdout.write('Playback info error: ')
               console.log(body.error.message)
