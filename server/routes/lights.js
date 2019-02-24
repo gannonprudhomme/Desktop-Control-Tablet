@@ -199,7 +199,7 @@ class SmartLight extends Route {
 
           // And set it as an object in lightsData
           this.lightsData[id]['object'] = bulb
-          console.log(this.lightsData)
+
           // Get its current status
           bulb.info().then((info) => {
             const lightState = info['light_state']
