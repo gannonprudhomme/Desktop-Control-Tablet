@@ -129,7 +129,7 @@ class Desktop extends Route {
   }
 
   setCurrentAudioDevice(device) {
-    currentAudioDevice = device
+    this.currentAudioDevice = device
   }
 }
 
