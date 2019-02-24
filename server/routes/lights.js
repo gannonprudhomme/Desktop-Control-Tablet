@@ -55,7 +55,7 @@ class SmartLight extends Route {
           if(!this.lightsData[lightID]['power']) {
             // Then the light data is going to be located in data.light_state.dft_on_state
             // instead of data.light_state
-            lightState = light_state['dft_on_state']
+            lightState = lightState['dft_on_state']
           }
 
           // Update the light data dictionary
