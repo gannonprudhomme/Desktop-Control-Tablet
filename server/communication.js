@@ -1,51 +1,56 @@
 const fs = require('fs')
 const desktop = require('./routes/desktop.js')
-const socket_io = require('socket.io-client')
+const socketIO = require('socket.io-client')
+const Route = require('./routes/route.js')
 
-// The settings for the remote servers
-const remoteSettings = JSON.parse(fs.readFileSync('./view-settings.json', 'utf-8'))['remotes']
+class Communication extends Route {
+  constructor(settings) {
+    super()
 
-// Connect to the remote server, just whatever is the first one for now
-const client = socket_io('http://' + remoteSettings[0]['ip'] + ':3001')
+    // The settings for the remote servers
+    this.remoteSettings = settings['remotes']
 
-// TODO: Need to add a timeout, which will in turn notify the rest of the client that the server isn't responding
-var socketHandler = function(socket) {
+    // TODO: Make the port configurable
+    this.client = socketIO('http://' + remoteSettings[0]['ip'] + ':3001')
+  }
+
+  socketHandler(socket) {
     socket.on('active_programs', function(data, ret) {
-        client.emit('active_programs', '', function(retData) {
-            ret(retData)
-        })
+      client.emit('active_programs', '', function(retData) {
+        ret(retData)
+      })
     })
-  
-    socket.on('audio_device', function(data) {
-        client.emit('audio_device', data)
 
-        // Set the currentAudioDevice property in desktop.js to be used for various volume stuff
-        desktop.setCurrentAudioDevice(data)
+    socket.on('audio_device', function(data) {
+      client.emit('audio_device', data)
+
+      // Set the currentAudioDevice property in desktop.js to be used for various volume stuff
+      desktop.setCurrentAudioDevice(data)
     })
-  
+
     socket.on('screenshot', function(data) {
-        client.emit('screenshot', '')
+      client.emit('screenshot', '')
     })
-  
+
     socket.on('pc_stats', function(data, ret) {
-        // First need to check if the client(windows 10 server) is connected or not
-        client.emit('pc_stats', '', function(retData) {
-            ret(retData)
-        })
+      // First need to check if the client(windows 10 server) is connected or not
+      client.emit('pc_stats', '', function(retData) {
+        ret(retData)
+      })
     })
 
     socket.on('set_volume', function(data) {
-        client.emit('set_volume', data)
+      client.emit('set_volume', data)
 
-        // Set the volume in the volumes array in desktop.js and save it to the file system
-        desktop.setVolume(data.program, data.volume)
+      // Set the volume in the volumes array in desktop.js and save it to the file system
+      desktop.setVolume(data.program, data.volume)
     })
-}
+  }
 
-// Send a string of key-presses to the client(windows 10 server)
-function sendKeypress(keys) {
+  // Send a string of key-presses to the client(windows 10 server)
+  sendKeypress(keys) {
     client.emit('shortcut', keys)
+  }
 }
 
-module.exports.socketHandler = socketHandler
-module.exports.sendKeypress = sendKeypress 
+module.exports = Communication
