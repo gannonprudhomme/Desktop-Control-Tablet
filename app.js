@@ -18,6 +18,8 @@ const Communication = require('./server/communication.js')
 
 class Server {
   constructor() {
+    console.log('Server created')
+
     this.port = 3000
     this.settings = JSON.parse(fs.readFileSync('./view-settings.json', 'utf-8'))
 
@@ -39,6 +41,8 @@ class Server {
 
   // Initialize the rest of the server
   initialize() {
+    console.log('Server initialized')
+
     // Initialize the server
     this.app = express()
     this.server = http.createServer(this.app)
@@ -58,6 +62,8 @@ class Server {
 
   // Start the server
   start() {
+    console.log('Server started')
+
     // Begin the socket-io server
     this.io = socketIO.listen(this.server)
     this.app.use(this.socketHandler.returnRouter(this.io))
