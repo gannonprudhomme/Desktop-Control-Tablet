@@ -18,9 +18,9 @@
         "no-console": 0,
         "require-jsdoc": "off",
         "linebreak-style":"off",
-        "no-var":"off",
         "semi":"off",
-        "indent": ["error", 4]
+        "keyword-spacing":"off",
+        "max-len": "off"
     }
 
 }
