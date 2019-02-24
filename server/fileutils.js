@@ -1,19 +1,22 @@
-var fs = require('fs')
+const fs = require('fs')
 
-function saveVolumeData(volumeData) {
-  var now = (new Date()).getTime()
+class FileUtils {
+  constructor() {
+  }
 
-  fs.writeFile('./public/volumeData.json', JSON.stringify(volumeData), function (error) {
-    if (error)
-      console.log(error)
-  })
+  static saveVolumeData(volumeData) {
+    const now = (new Date()).getTime()
+
+    fs.writeFile('./public/volumeData.json', JSON.stringify(volumeData), (error) => {
+      if(error) {
+        console.log(error)
+      }
+    })
+  }
+
+  static loadVolumeData() {
+    return JSON.parse(fs.readFileSync('./public/volumeData.json', 'utf-8'))
+  }
 }
 
-function loadVolumeData() {
-  // Fill the volume map with all of the previous data here
-  // Doesn't need to be asynchronous
-  return JSON.parse(fs.readFileSync('./public/volumeData.json', 'utf-8'))
-}
-
-module.exports.loadVolumeData = loadVolumeData
-module.exports.saveVolumeData = saveVolumeData
+module.exports = FileUtils

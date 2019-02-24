@@ -1,107 +1,133 @@
-(function() {
-  var express = require('express')
-  var multer = require('multer') // for parsing multipart/form-data
-  var bodyParser = require('body-parser') // for parsing basic request data?
-  var path = require('path')
-  var fs = require('fs')
-  var queryString = require('querystring')
-  // var request = require('request') // Unused?
+const express = require('express')
+const bodyParser = require('body-parser') // for parsing basic request data?
+const path = require('path')
+const fs = require('fs')
+const http = require('http')
+const socketIO = require('socket.io')
 
-  const app = express()
-  const port = 3000
+// Routes
+const Spotify = require('./server/routes/spotify.js')
+const Desktop = require('./server/routes/desktop.js')
+const SocketHandler = require('./server/routes/sockets.js')
+const SmartLight = require('./server/routes/lights.js') // controlling tp-link lightbulb from f.lux
+const Weather = require('./server/routes/weather.js')
 
-  // Socket.io stuff
-  var http = require('http')
-  var server = http.createServer(app)
-  var io = require('socket.io').listen(server)
+const Communication = require('./server/communication.js')
 
-  // Routes
-  var spotify = require('./server/routes/spotify.js')
-  var desktop = require('./server/routes/desktop.js')
-  var socket = require('./server/routes/sockets.js')(io)
-  var fluxbulb = require('./server/routes/lights.js')  // controlling tp-link lightbulb from f.lux 
-  var tasks = require('./server/tasks.js')
+// const spotifyAuthenticated = false
 
-  var communication = require('./server/communication.js')
+class Server {
+  constructor() {
+    console.log('Server created')
 
-  app.set('views', path.join(__dirname + '/public/views'));
-  app.set('view engine', 'pug') // 'hbs' is connected to the app.engine('hbs', ...)
-  app.locals.baseDir = path.join(__dirname + '/public/views') // Set options.baseDir for Pug
-  app.use(socket)
-  app.use(fluxbulb.router)
+    this.port = 3000
+    this.settings = JSON.parse(fs.readFileSync('./view-settings.json', 'utf-8'))
 
-  // Set properties
-  app.use(express.static(__dirname))
-  app.use(bodyParser.json()); // For parsing application/json
-  app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
+    // console.log(settings)
+    this.desktop = new Desktop(this.settings)
+    this.smartLights = new SmartLight()
 
-  var spotifyAuthenticated = false
+    const communication = new Communication(this.settings, this.desktop)
+    this.spotify = new Spotify(this.settings, communication)
 
-  app.get('/tablet', (req, res) => {
-    if(!spotifyAuthenticated) {
-      spotify.authenticateSpotify(res)
+    const weather = new Weather()
+    const routers = [this.desktop, this.spotify, this.smartLights, communication, weather]
 
-      spotifyAuthenticated = true;
+    this.socketHandler = new SocketHandler(routers)
+    this.spotifyAuthenticated = false
 
-      console.log('Redirecting to Spotify')
-
-    } else {
-      console.log('Redirected from Spotify, initializing')
-
-      // Load in the settings file
-      var json = JSON.parse(fs.readFileSync(path.join(__dirname + '/view-settings.json'), 'utf8'))
-      var options = {
-        show_current_time: json['show-current-time'], 
-        quickIcons: json['quickIcons'],
-        modules: json['modules'],
-        currentModules: json['currentModules'],
-        volumeMixers: json['volume-mixers']
-      }
-      
-      // Load in all of the settings data for all of our current modules
-      var modSettings = desktop.getModuleSettings(json['currentModules'])
-
-      // Add the module settings to the above option settings, to be sent to Pug to be used in our page
-      options = {...options, ...modSettings}
-
-      // Render the webpage
-      res.render('index', options)
-          
-      // After authenticating, get the access and refresh tokens
-      // have a function that takes req as a parameter(or req.query)
-      var code = req.query.code || null
-      var state = req.query.code || null
-
-      // Get authentication tokens for use in Spotify
-      spotify.getAuthArguments(code, state)
-    }
-  })
-
-  
-  // Listen to this port, and handle any errors accordingly
-  server.listen(port, (err) => {
-    if(err) {
-      return console.log("something bad happened", err)
-    }
-
-    console.log(`server is listening on ${port}`)
-
-    desktop.importVolumeData()
-  })
-
-  function kill() {
-    process.exit()
+    this.initialize()
+    this.handleRoute()
   }
 
-  module.exports.kill = kill
+  // Initialize the rest of the server
+  initialize() {
+    console.log('Server initialized')
 
-  var generateRandomString = function(length) {
-    var text = '';
-    var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    // Initialize the server
+    this.app = express()
+    this.server = http.createServer(this.app)
 
-    for (var i = 0; i < length; i++) {
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-    return text;
-  }; 
-}())
+    // Set properties
+    this.app.use(express.static(__dirname))
+    this.app.use(bodyParser.json()); // For parsing application/json
+    this.app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
+
+    this.app.set('views', path.join(__dirname + '/public/views'));
+    this.app.locals.baseDir = path.join(__dirname + '/public/views') // Set options.baseDir for Pug
+    this.app.set('view engine', 'pug') // 'hbs' is connected to the app.engine('hbs', ...)
+
+    // Set up the f.lux HTTP/REST endpoint
+    this.app.use(this.smartLights.router)
+  }
+
+  // Start the server
+  start() {
+    console.log('Server started')
+
+    // Begin the socket-io server
+    this.io = socketIO.listen(this.server)
+    this.app.use(this.socketHandler.returnRouter(this.io))
+
+    // Listen to this port, and handle any errors accordingly
+    this.server.listen(this.port, (err) => {
+      if(err) {
+        return console.log('something bad happened', err)
+      }
+
+      console.log(`server is listening on ${this.port}`)
+
+      this.desktop.importVolumeData()
+    })
+  }
+
+  // Set up the main /tablet HTTP route
+  handleRoute() {
+    this.app.get('/tablet', (req, res) => {
+      if(!this.spotifyAuthenticated) {
+        this.spotify.authenticateSpotify(res)
+
+        this.spotifyAuthenticated = true;
+
+        console.log('Redirecting to Spotify')
+      } else {
+        console.log('Redirected from Spotify, initializing')
+
+        // Load in the settings file
+        const json = JSON.parse(fs.readFileSync(path.join(__dirname + '/view-settings.json'), 'utf8'))
+        let options = {
+          show_current_time: json['show-current-time'],
+          quickIcons: json['quickIcons'],
+          modules: json['modules'],
+          currentModules: json['currentModules'],
+          volumeMixers: json['volume-mixers'],
+        }
+
+        // Load in all of the settings data for all of our current modules
+        const modSettings = this.desktop.getModuleSettings(json['currentModules'])
+
+        // Add the module settings to the above option settings, to be sent to Pug to be used in our page
+        options = {...options, ...modSettings}
+
+        // Render the webpage
+        res.render('index', options)
+
+        // After authenticating, get the access and refresh tokens
+        // have a function that takes req as a parameter(or req.query)
+        const code = req.query.code || null
+        const state = req.query.code || null
+
+        // Get authentication tokens for use in Spotify
+        this.spotify.getAuthArguments(code, state)
+      }
+    })
+  }
+
+  // Kill the server
+  // Called when the Electron app is shutting down, and during testing
+  kill() {
+    process.exit()
+  }
+}
+
+module.exports = Server

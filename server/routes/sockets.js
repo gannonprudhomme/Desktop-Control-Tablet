@@ -1,24 +1,25 @@
 // Joins all of the socket connections into one
+const express = require('express')
 
-var handleDesktop = require('./desktop.js')
-var handleSpotify = require('./spotify.js')
-var handleLight = require('./lights.js')
-var handleWeather = require('./weather.js')
-var handleCommunication = require('../communication.js')
-var express = require('express')
-var router = express.Router()
+// Handles all of the socket endpoints
+class SocketHandler {
+  constructor(routers) {
+    this.routers = routers
 
-var returnRouter = function(io) {
-  io.on('connection', function(socket) {
-    console.log('connection!')
-    handleDesktop.socketHandler(socket)
-    handleSpotify.socketHandler(socket)
-    handleLight.socketHandler(socket)
-    handleWeather.socketHandler(socket)
-    handleCommunication.socketHandler(socket)
-  })
+    this.router = express.Router()
+  }
 
-  return router
+  returnRouter(io) {
+    io.on('connection', (socket) => {
+      // Call all of the routers' socketHandler functions
+      for(let i = 0; i < this.routers.length; i++) { // Iterate over all of the routers
+        // TODO: Do i need to add a vailidity check here?
+        this.routers[i].socketHandler(socket)
+      }
+    })
+
+    return this.router
+  }
 }
 
-module.exports = returnRouter
+module.exports = SocketHandler

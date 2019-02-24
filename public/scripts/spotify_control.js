@@ -1,11 +1,7 @@
-var playing = false // Retrieve the current state of playback from Spotify on launch
-var current_track = {} // Dictionary/JSON object for the currently played song. Contains track name, album name, artist, and album image link
-var lastPlaybackPress = 0 // Time since the last playback press
-var lastTrackRequest = 0 // Time since we last requested for a track,
-
-// var socket = io('/spotify')
-// io.connect('/spotify')
-var socket = require('socket.io-client')('http://localhost:3000')
+let playing = false // Retrieve the current state of playback from Spotify on launch
+let currentTrack = {} // Dictionary/JSON object for the currently played song. Contains track name, album name, artist, and album image link
+let lastPlaybackPress = 0 // Time since the last playback press
+const lastTrackRequest = 0 // Time since we last requested for a track,
 
 $(document).ready(function() {
   getPlaybackInfo()
@@ -13,16 +9,15 @@ $(document).ready(function() {
 // Check for playback changes every half second
 window.setInterval(function() {
   getPlaybackInfo()
-
 }, 500)
 
 $('#power-button').click(function() {
   desktopPut('sleep')
 })
 
-$("#play-pause").click(function() {
+$('#play-pause').click(function() {
   lastPlaybackPress = (new Date()).getTime();
-  
+
   // If it's playing when we press the button, pause it
   if(playing) {
     playing = false;
@@ -51,7 +46,7 @@ $('#next-song').click(function() {
 
 // Send a Spotify playback update to the server
 function sendPlayback(type) {
-  var now = (new Date()).getTime()
+  const now = (new Date()).getTime()
 
   switch(type) {
     case 'play':
@@ -75,22 +70,22 @@ function sendPlayback(type) {
 }
 
 function getPlaybackInfo() {
-  var now = (new Date()).getTime()
-  
+  const now = (new Date()).getTime()
+
   socket.emit('get_track', now, function(data) {
     // console.log(data)
 
-    current_track = {}
-    current_track.name = data.track
-    current_track.artist = data.artist
-    current_track.album_name = data.album_name
-    current_track.album_image = data.album_image
+    currentTrack = {}
+    currentTrack.name = data.track
+    currentTrack.artist = data.artist
+    currentTrack.album_name = data.album_name
+    currentTrack.album_image = data.album_image
 
     // Set the according data for the HTML elements
-    $('#current-track').text(current_track.name)
-    $('#current-artist').text(current_track.artist)
+    $('#current-track').text(currentTrack.name)
+    $('#current-artist').text(currentTrack.artist)
 
-    $('#album-cover').attr('src', current_track.album_image)
+    $('#album-cover').attr('src', currentTrack.album_image)
 
     // If it's been more than a second since the last time we manually paused Playback
     // Then the playback change wasn't from the client, thus update the playback icon
@@ -104,9 +99,4 @@ function getPlaybackInfo() {
       }
     }
   })
-}
-
-function sendDesktopCommand(type) {
-  var now = (new Date()).getTime()
-  socket.emit('desktop_' + type, now)
 }
