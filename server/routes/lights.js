@@ -79,7 +79,7 @@ class SmartLight extends Route {
       } else if(type == 'lifx') {
         if(this.lightsData[lightID]['object'] != null) {
           // Or iterate through all of the lights
-          getLifxInfo(this.lightsData[lightID]['object'], lightID).then((data) => {
+          this.getLifxInfo(this.lightsData[lightID]['object'], lightID).then((data) => {
             const retData = {
               'hue': data['hue'],
               'saturation': data['saturation'],
@@ -114,19 +114,22 @@ class SmartLight extends Route {
       this.lightsData[lightID]['brightness'] = brightness
 
       const lightObj = this.lightsData[lightID]['object']
-      console.log(lightObj)
 
-      // Get the type of the bulb
-      const type = this.lightsData[lightID]['type']
-      if(type == 'tp-link') {
-        lightObj.power(this.lightsData[lightID]['power'], transition, {brightness: data}).then((status) => {
-          const delay = (new Date()).getTime() - now
-          // console.log('Brightness delay: ' + delay)
-        })
-      } else if(type == 'lifx') {
-        const lifxData = this.lightsData[lightID]
+      // If the light object exists
+      if(lightObj) {
+        // Get the type of the bulb
+        const type = this.lightsData[lightID]['type']
 
-        lightObj.color(lifxData['hue'], lifxData['saturation'], brightness, lifxData['color_temp'])
+        if(type == 'tp-link') {
+          lightObj.power(this.lightsData[lightID]['power'], transition, {brightness: data}).then((status) => {
+            const delay = (new Date()).getTime() - now
+            // console.log('Brightness delay: ' + delay)
+          })
+        } else if(type == 'lifx') {
+          const lifxData = this.lightsData[lightID]
+
+          lightObj.color(lifxData['hue'], lifxData['saturation'], brightness, lifxData['color_temp'])
+        }
       }
     })
 
@@ -146,7 +149,7 @@ class SmartLight extends Route {
       } else if(type == 'lifx') {
         const lifxData = this.lightsData[lightID]
 
-        lightObj.color(lifxData['hue'], lifxData['saturation'], lifxData['brightness'], color_temp)
+        lightObj.color(lifxData['hue'], lifxData['saturation'], lifxData['brightness'], colorTemp)
       }
     })
 
@@ -155,7 +158,7 @@ class SmartLight extends Route {
 
       this.lightsData[lightID]['power'] = !this.lightData[lightID]['power']
 
-      // console.log('Changing light power to: ' + lightData['power'])
+      console.log('Changing light power to: ' + lightData['power'])
 
       // Get the according light object
       const lightObj = this.lightsData[lightID]['object']
