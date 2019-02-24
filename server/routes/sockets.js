@@ -1,23 +1,24 @@
 // Joins all of the socket connections into one
 const express = require('express')
-const router = express.Router()
 
 // Handles all of the socket endpoints
 class SocketHandler {
   constructor(routers) {
     this.routers = routers
+
+    this.router = express.Router()
   }
 
   returnRouter(io) {
     io.on('connection', (socket) => {
       // Call all of the routers' socketHandler functions
-      for(let i = 0; i < this.routers.length; i++) {
-        const route = this.routers[i]
-
+      for(let i = 0; i < this.routers.length; i++) { // Iterate over all of the routers
         // TODO: Do i need to add a vailidity check here?
-        route.socketHandler(i)
+        this.routers[i].socketHandler(socket)
       }
     })
+
+    return this.router
   }
 }
 
