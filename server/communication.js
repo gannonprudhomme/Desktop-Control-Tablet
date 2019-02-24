@@ -1,55 +1,55 @@
 const fs = require('fs')
-const desktop = require('./routes/desktop.js')
 const socketIO = require('socket.io-client')
 const Route = require('./routes/route.js')
 
 class Communication extends Route {
-  constructor(settings) {
+  constructor(settings, desktop) {
     super()
 
     // The settings for the remote servers
     this.remoteSettings = settings['remotes']
+    this.desktop = desktop
 
     // TODO: Make the port configurable
-    this.client = socketIO('http://' + remoteSettings[0]['ip'] + ':3001')
+    this.client = socketIO('http://' + this.remoteSettings[0]['ip'] + ':3001')
   }
 
   socketHandler(socket) {
-    socket.on('active_programs', function(data, ret) {
-      client.emit('active_programs', '', function(retData) {
+    socket.on('active_programs', (data, ret) => {
+      this.client.emit('active_programs', '', (retData) => {
         ret(retData)
       })
     })
 
-    socket.on('audio_device', function(data) {
-      client.emit('audio_device', data)
+    socket.on('audio_device', (data) => {
+      this.client.emit('audio_device', data)
 
       // Set the currentAudioDevice property in desktop.js to be used for various volume stuff
-      desktop.setCurrentAudioDevice(data)
+      this.desktop.setCurrentAudioDevice(data)
     })
 
-    socket.on('screenshot', function(data) {
-      client.emit('screenshot', '')
+    socket.on('screenshot', (data) => {
+      this.client.emit('screenshot', '')
     })
 
-    socket.on('pc_stats', function(data, ret) {
+    socket.on('pc_stats', (data, ret) => {
       // First need to check if the client(windows 10 server) is connected or not
-      client.emit('pc_stats', '', function(retData) {
+      this.client.emit('pc_stats', '', function(retData) {
         ret(retData)
       })
     })
 
-    socket.on('set_volume', function(data) {
-      client.emit('set_volume', data)
+    socket.on('set_volume', (data) => {
+      this.client.emit('set_volume', data)
 
       // Set the volume in the volumes array in desktop.js and save it to the file system
-      desktop.setVolume(data.program, data.volume)
+      this.desktop.setVolume(data.program, data.volume)
     })
   }
 
   // Send a string of key-presses to the client(windows 10 server)
   sendKeypress(keys) {
-    client.emit('shortcut', keys)
+    this.client.emit('shortcut', keys)
   }
 }
 
