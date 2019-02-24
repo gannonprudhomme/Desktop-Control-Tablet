@@ -9,7 +9,6 @@ const halfColor = '#ffa101' // 25% - 50%
 const threeQuarterColor = '#ff5501' // 50% - 75%
 const fullColor = '#ff0101' // 75% - 100%
 
-const i = 0
 $(document).ready(function() {
   $('.dial-arm').css('transform', 'rotate(' + minAngle + 'deg)')
 })
@@ -54,10 +53,10 @@ function getPerformanceInfo() {
 
 function rotateDial(id, percentage) {
   // Convert the percetange
-  const angle = (percentage / 100) * (maxAngle - minAngle)
+  let angle = (percentage / 100) * (maxAngle - minAngle)
   angle = angle + minAngle
 
-  const c = halfColor
+  let c = halfColor
   if(percentage <= 25) {
     c = quarterColor
   } else if(percentage > 25 && percentage <= 50) {
