@@ -1,5 +1,5 @@
 const fs = require('fs')
-const fileUtils = require('../fileutils.js')
+const FileUtils = require('../fileutils.js')
 const Route = require('./route.js')
 
 class Desktop extends Route {
@@ -35,7 +35,7 @@ class Desktop extends Route {
       settingsData = JSON.parse(fs.readFileSync('./view-settings.json'), 'utf-8')
 
       const modSettings = getModuleSettings(settingsData['currentModules'])
-      
+
       settingsData = {...settingsData, ...modSettings}
 
       ret(settingsData)
@@ -63,15 +63,15 @@ class Desktop extends Route {
         if(Object.prototype.hasOwnProperty.call(currentModules, mod)) {
           const modData = currentModules[mod] // The module data from view-settings.json
           const settingsFile = modData['settings'] // Get the 
-      
+
           const json = JSON.parse(fs.readFileSync('./public/views/modules/' + settingsFile))
-      
+
           const options = {}
           // Set the module's id to be the key, which points to its settings data
           options[modData['id']] = json
 
           // console.log(options)
-          
+
           // Concatenate the JSON objects
           moduleSettings = {...moduleSettings, ...options}
         }
@@ -100,7 +100,7 @@ class Desktop extends Route {
 
   importVolumeData() {
     // Fill the volume map with all of the previous data here
-    volumeData = fileUtils.loadVolumeData()
+    volumeData = FileUtils.loadVolumeData()
 
     // Iterate over all of the keys(programs) in the json object
     // And add them to the local map
