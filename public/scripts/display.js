@@ -1,11 +1,12 @@
-const currentView = 'volume-mixer' // ENUM here, volume-mixer, or pc-stats, or pomdo
+let currentView = 'volume-mixer' // ENUM here, volume-mixer, or pc-stats, or pomdo
+let moduleWithoutServer = '' // The first module in currentModules that doesn't require the server
 
 const socket = require('socket.io-client')('http://localhost:3000')
 
 let settings = {}
 let moduleKeys = []
 
-let displayInitialized = false
+let displayInitialized = false // What is this used for?
 let connectedToServer = false
 let serverModulesHidden = false // If the server modules are hidden or not
 
@@ -42,6 +43,21 @@ $(document).ready(function() {
       }
 
       clearInterval(timer)
+
+      // Find the modules that dont require the server
+      const currentModules = settings['currentModules']
+      for(const i in currentModules) {
+        if(Object.prototype.hasOwnProperty.call(currentModules, i)) {
+          const module = currentModules[i]
+
+          // If the module doesn't have an icon, then it's not one we can display
+          if(Object.prototype.hasOwnProperty.call(module, 'icon')) {
+            if(!module['requires-server']) {
+              moduleWithoutServer = module['id']
+            }
+          }
+        }
+      }
     }
   }, 300)
 
