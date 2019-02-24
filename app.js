@@ -25,10 +25,11 @@ class Server {
 
     // console.log(settings)
     this.desktop = new Desktop(this.settings)
-    this.spotify = new Spotify(this.settings)
     this.smartLights = new SmartLight()
 
     const communication = new Communication(this.settings, this.desktop)
+    this.spotify = new Spotify(this.settings, communication)
+
     const weather = new Weather()
     const routers = [this.desktop, this.spotify, this.smartLights, communication, weather]
 
