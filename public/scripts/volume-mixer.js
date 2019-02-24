@@ -122,7 +122,7 @@ function sendVolumeData(program, volume) {
 function getVolumeData() {
   // console.log('Volume: Attempting to retrieve volume data')
   socket.emit('volume_data', '', function(data) {
-    const i = 0
+    let i = 0
     console.log('Retrieved volume data')
 
     for(const key in data) {
