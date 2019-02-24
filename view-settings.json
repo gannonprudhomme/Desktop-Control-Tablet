@@ -22,7 +22,7 @@
   "music-service": "spotify",
   "spotify_client_id": "",
   "spotify_client_secret": "",
-  "use-toastify": false,
+  "use-toastify": true,
   
   "startModule": "volume-mixer",
 
@@ -36,7 +36,8 @@
       "icon": "levels-adjustment.png",
       "script": "volume-mixer.js",
       "css": "volume-mixer.css",
-      "settings": "volume-mixer.json"
+      "settings": "volume-mixer.json",
+      "requires-server": true
     },
     {
       "name": "Peformance Stats",
@@ -44,7 +45,8 @@
       "icon": "dial.png",
       "script": "pc-stats.js",
       "css": "pc-stats.css",
-      "settings": "pc-stats.json"
+      "settings": "pc-stats.json",
+      "requires-server": true
     },
     {
       "name": "Smart Bulb Control",
@@ -52,14 +54,16 @@
       "icon": "bulb.png",
       "script": "light-control.js",
       "css": "light-control.css",
-      "settings": "light-control.json"
+      "settings": "light-control.json",
+      "requires-server": false
     },
     {
       "name": "Weather",
       "id": "weather",
       "script": "weather-control.js",
       "css": "weather.css",
-      "settings": "weather.json"
+      "settings": "weather.json",
+      "requires-server": false
     }
   ],
   

@@ -12,12 +12,19 @@ class Communication extends Route {
 
     // TODO: Make the port configurable
     this.client = socketIO('http://' + this.remoteSettings[0]['ip'] + ':3001')
+
+    this.connected = false
   }
 
   socketHandler(socket) {
+    socket.on('connectedToServer', (data, ret) => {
+      ret(this.connected)
+    })
+
     socket.on('active_programs', (data, ret) => {
-      this.client.emit('active_programs', '', (retData) => {
-        ret(retData)
+      this.emitToServer('active_programs', '').then((data) => {
+        ret(data)
+      }).catch((error) => {
       })
     })
 
@@ -50,6 +57,43 @@ class Communication extends Route {
   // Send a string of key-presses to the client(windows 10 server)
   sendKeypress(keys) {
     this.client.emit('shortcut', keys)
+  }
+
+  emitToServer(route, data) {
+    return new Promise((resolve, reject) => {
+      let responded = false
+
+      this.client.emit(route, data, (retData) => {
+        resolve(retData)
+
+        responded = true
+      })
+
+      let tries = 5 // Check if we're connected 5 times
+      const delay = 500 // Check every 1/2 second
+      const timer = setInterval(() => {
+        if(!responded && tries <= 0) {
+          // If we were previously connected to the server
+          if(this.connected) {
+            console.log('Disconnected from the server') // Notify that we disconnected from the server
+          }
+          this.connected = false
+          reject(Error('server-timeout'))
+          clearInterval(timer)
+        } else if(responded) {
+          // If we were previously disconnected
+          if(!this.connected) {
+            console.log('Reconnected to the server!') // Notify that we reconnected from the server
+          }
+
+          this.connected = true
+          clearInterval(timer)
+        } else {
+          tries--
+          // console.log('Tries: ' + tries)
+        }
+      }, delay)
+    })
   }
 }
 

@@ -18,15 +18,18 @@ const Communication = require('./server/communication.js')
 
 class Server {
   constructor() {
+    console.log('Server created')
+
     this.port = 3000
     this.settings = JSON.parse(fs.readFileSync('./view-settings.json', 'utf-8'))
 
     // console.log(settings)
     this.desktop = new Desktop(this.settings)
-    this.spotify = new Spotify(this.settings)
     this.smartLights = new SmartLight()
 
     const communication = new Communication(this.settings, this.desktop)
+    this.spotify = new Spotify(this.settings, communication)
+
     const weather = new Weather()
     const routers = [this.desktop, this.spotify, this.smartLights, communication, weather]
 
@@ -39,6 +42,8 @@ class Server {
 
   // Initialize the rest of the server
   initialize() {
+    console.log('Server initialized')
+
     // Initialize the server
     this.app = express()
     this.server = http.createServer(this.app)
@@ -58,6 +63,8 @@ class Server {
 
   // Start the server
   start() {
+    console.log('Server started')
+
     // Begin the socket-io server
     this.io = socketIO.listen(this.server)
     this.app.use(this.socketHandler.returnRouter(this.io))

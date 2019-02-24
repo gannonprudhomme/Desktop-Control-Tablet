@@ -1,15 +1,13 @@
- var socket = require('socket.io-client')('http://localhost:3000')
-
 function updateWidget() {
-    console.log('Updating weather widget')
-    socket.emit('get_forecast', '', function(data) {
-        console.log(data)
-        var weather = data['currentWeather']
-        var temperature = data['currentTemp']
+  console.log('Updating weather widget')
+  socket.emit('get_forecast', '', function(data) {
+    console.log(data)
+    const weather = data['currentWeather']
+    const temperature = data['currentTemp']
 
-        $('#forecast').text(weather)
-        $('#temperature').text(temperature + '°F')
-    })
+    $('#forecast').text(weather)
+    $('#temperature').text(temperature + '°F')
+  })
 }
 
 updateWidget()

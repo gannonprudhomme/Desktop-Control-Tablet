@@ -55,7 +55,7 @@ class SmartLight extends Route {
           if(!this.lightsData[lightID]['power']) {
             // Then the light data is going to be located in data.light_state.dft_on_state
             // instead of data.light_state
-            lightState = light_state['dft_on_state']
+            lightState = lightState['dft_on_state']
           }
 
           // Update the light data dictionary
@@ -199,7 +199,7 @@ class SmartLight extends Route {
 
           // And set it as an object in lightsData
           this.lightsData[id]['object'] = bulb
-          console.log(this.lightsData)
+
           // Get its current status
           bulb.info().then((info) => {
             const lightState = info['light_state']
@@ -240,8 +240,6 @@ class SmartLight extends Route {
         // Set the according light object
         this.lightsData[lightID]['object'] = light
 
-        console.log(this.lightsData)
-
         // Load its data
         this.getLifxInfo(light, lightID).then((lightData) => {
 
@@ -253,7 +251,6 @@ class SmartLight extends Route {
       }
     })
 
-    console.log('LIFX init!')
     lifx.init()
   }
 
