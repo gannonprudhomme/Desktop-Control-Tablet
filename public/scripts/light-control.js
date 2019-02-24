@@ -1,44 +1,42 @@
-const socket = require('socket.io-client')('http://localhost:3000')
+// const socket = require('socket.io-client')('http://localhost:3000')
 
-let module_settings = {} // Need to get the module settings
+let moduleSettings = {} // Need to get the module settings
 let lights = {} // Array of all of the current lights, also include all lights data?
 let allLightsData = {}
 
 // Compared to the current time when potentially old light data would change the
 // sliders back to their previous position
-let lightsLastChange = {
+const lightsLastChange = {
   'all-lights': {
     'brightness': 0,
     'color_temp': 0,
-  }
+  },
 }
 
 // Set to the current time when we first receieve data about the light not responding
 let lightTimeout = 0
 
 // If we've reconnected since when we most-recently timed-out
-var reconnected = false
+let reconnected = false
 
-var currentLightID = 'all-lights'
-
-var selectedLightColor = '#00C8C8'
-var deselectedLightColor = '#fffff'
+const selectedLightColor = '#00C8C8'
+const deselectedLightColor = '#fffff'
 
 $(document).ready(function() {
   // Get the module settings from the server
   console.log('Light control: Atttempting to get module settings')
   socket.emit('get_module_settings', 'light-control', function(data) {
     console.log('Light control: Received module_settings')
-    module_settings = data
-    lights = module_settings['lights']
+    moduleSettings = data
+    lights = moduleSettings['lights']
 
     // Initialize all lights data
     allLightsData = {
-      "name": "All Lights",
-      "id": "all-lights",
-      "minColor": 2500, // largest min color
-      "maxColor": 6500, // smallest max color
-      "rgb": false
+      'name': 'All Lights',
+      'id': 'all-lights',
+      'minColor': 2500, // largest min color
+      'maxColor': 6500, // smallest max color
+      'rgb': false,
       // no ip
       // no type
     }
@@ -49,13 +47,15 @@ $(document).ready(function() {
     setLightSlider(-1) // Set the sliders for the all-lights page
 
     // Set the sliders for the rest of the lights
-    for(var i in lights) {
-      setLightSlider(i)
-      getLightInfo(i)
+    for(const i in lights) {
+      if(Object.prototype.hasOwnProperty.call(lights, i)) {
+        setLightSlider(i)
+        getLightInfo(i)
 
-      lightsLastChange[lights[i]['id']] = {
-          "brightness": 0,
-          "color": 0
+        lightsLastChange[lights[i]['id']] = {
+          'brightness': 0,
+          'color': 0,
+        }
       }
     }
 
@@ -63,7 +63,7 @@ $(document).ready(function() {
     switchToLightPage('Desk-Lamp')
 
     // Set the switch buttons' according text
-    //setLightSwitchButtons()
+    // setLightSwitchButtons()
 
     // Set power image, depending on the state of the light
     // $('#power-icon').
@@ -75,14 +75,16 @@ $(document).ready(function() {
 
 // Update light info every 2 seconds
 window.setInterval(function() {
-  for(var i in lights) {
-    getLightInfo(i)
+  for(const i in lights) {
+    if(Object.prototype.hasOwnProperty.call(lights, i)) {
+      getLightInfo(i)
+    }
   }
 }, 500)
 
 // Set Index = -1 to access all-lights
 function setLightSlider(index) {
-  var lightData = {}
+  let lightData = {}
   if(index == -1) {
     lightData = allLightsData
   } else {
@@ -94,8 +96,8 @@ function setLightSlider(index) {
     value: 100, // 100%
     min: 0, // 0%
     max: 100, // 100%
-    animate: "fast", // Animation speed, fast so it feels more responsive
-    orientation: "horizontal",
+    animate: 'fast', // Animation speed, fast so it feels more responsive
+    orientation: 'horizontal',
 
     slide: function(e, ui) {
       $('#' + lightData['id'] + '-light-brightness-label').text(ui.value + '%')
@@ -114,8 +116,8 @@ function setLightSlider(index) {
     value: lightData['maxColor'], // Set the default to the max color/far-right of the slider
     min: lightData['minColor'], // the minimum color-temperature value of the light bulb
     max: lightData['maxColor'], // ^
-    animate: "fast", // Animation speed, fast so it feels more responsive
-    orientation: "horizontal",
+    animate: 'fast', // Animation speed, fast so it feels more responsive
+    orientation: 'horizontal',
 
     slide: function(e, ui) {
       $('#' + lightData['id'] + '-light-color-label').text(ui.value + 'k')
@@ -124,7 +126,7 @@ function setLightSlider(index) {
       // Set the current to time in milliseconds
       // Compared to the current time when potentially old light data would change the
       // sliders back to their previous position
-      //lastColorChange = (new Date()).getTime()
+      // lastColorChange = (new Date()).getTime()
     },
   })
   $('#' + lightData['id'] + '-light-color-label').text('2500k') // Set default color-label text
@@ -136,14 +138,14 @@ function setLightSlider(index) {
 }
 
 // Add a click handler for all of the light-switcher-icon objects
-$(".light-switcher-icon").on('click', function(event) {
+$('.light-switcher-icon').on('click', function(event) {
   event.stopPropagation();
   event.stopImmediatePropagation();
 
   // Get the substring for the actual lightID and switch to it
-  var id = event.target.id // Get the lightID+"-switcher-icon"
-  var len = id.length;
-  var lightID = id.substring(0, len - ("-switcher-icon").length) // Get the actual lightID
+  const id = event.target.id // Get the lightID+'-switcher-icon'
+  const len = id.length;
+  const lightID = id.substring(0, len - ('-switcher-icon').length) // Get the actual lightID
   console.log(lightID + ' Click')
 
   switchToLightPage(lightID)
@@ -151,21 +153,22 @@ $(".light-switcher-icon").on('click', function(event) {
 
 // Set the switch buttons' according text
 function setLightSwitchButtons() {
-
   // Set all button
   $('#all-lights-switcher-icon').click(function() {
     switchToLightPage('all-lights')
   })
 
   // Iterate over all of the lights
-  for(var i in lights) {
-    var light = lights[i]
-    var id = light['id']
+  for(const i in lights) {
+    if(Object.prototype.hasOwnProperty.call(lights, i)) {
+      const light = lights[i]
+      const id = light['id']
 
-    console.log('Setting ' + '#' + id + '-switcher-label')
+      console.log('Setting ' + '#' + id + '-switcher-label')
 
-    // Set the text for  them, might have to iterate over them
-    $('#' + id + '-switcher-label').html(id)
+      // Set the text for  them, might have to iterate over them
+      $('#' + id + '-switcher-label').html(id)
+    }
   }
 }
 
@@ -181,14 +184,14 @@ function getLightInfo(index) {
     return
   }
 
-  var light = lights[index]
+  const light = lights[index]
 
   // Check if the light has an ID
   // If not, throw an error?
 
   // Retrieve the current information for this light
-  socket.emit('get_light_info', {"id": light['id']}, function(data) {
-    var now = (new Date()).getTime()
+  socket.emit('get_light_info', {'id': light['id']}, function(data) {
+    const now = (new Date()).getTime()
 
     // If the light is currently responding, update the connection circle
     if(data['responding']) {
@@ -210,14 +213,13 @@ function getLightInfo(index) {
         $('#timeout-container').show()
       }
 
-      var diff = now - lightTimeout
+      const diff = now - lightTimeout
 
       // The current timeout either milliseconds, seconds, or minutes
-      var timeoutText = ""
+      let timeoutText = ''
 
       if(diff < 60000) { // If its less than a minute
         timeoutText = parseInt(diff / 1000) + 'sec(s)'
-
       } else {
         timeoutText = parseInt(diff / 60000) + 'min(s)'
       }
@@ -232,10 +234,9 @@ function getLightInfo(index) {
     if(now - lightsLastChange[light['id']]['brightness'] > 2000) {
       $('#' + light['id'] + '-light-brightness-slider').slider('value', data['brightness'])
       $('#' + light['id'] + '-light-brightness-label').text(data['brightness'] + '%')
-
     } else {
       console.log('Old(?) Brightness Data Rejected: ' + data['brightness'])
-}
+    }
 
     // console.log(data)
 
@@ -248,26 +249,27 @@ function getLightInfo(index) {
 // Can swap between any of the lights, or access all of them
 function switchToLightPage(lightID) {
   // console.log('Switching light to ' + lightID)
-  if(light != 'all-lights') { // If we're trying to switch to all lights
+  if(lightID != 'all-lights') { // If we're trying to switch to all lights
     // console.log('Hiding #all-lights')
-    
+
     $('#all-lights-switcher-label').css('color', deselectedLightColor)
     $('#all-lights').hide()
   }
-  
 
-  // Hide all of the lights that aren't lightID 
-  for(var i in lights) {
-    var light = lights[i]
+  // Hide all of the lights that aren't lightID
+  for(const i in lights) {
+    if(Object.prototype.hasOwnProperty.call(lights, i)) {
+      const light = lights[i]
 
-    // If this light isn't the light page we're trying to show
-    if(light['id'] != lightID) { 
-      // console.log('Hiding ' + '#' + light['id'])
+      // If this light isn't the light page we're trying to show
+      if(light['id'] != lightID) {
+        // console.log('Hiding ' + '#' + light['id'])
 
-      $('#' + light['id'] + '-switcher-label').css('color', deselectedLightColor)
+        $('#' + light['id'] + '-switcher-label').css('color', deselectedLightColor)
 
-      // Hide it
-      $('#' + light['id']).hide()
+        // Hide it
+        $('#' + light['id']).hide()
+      }
     }
   }
 
@@ -288,12 +290,14 @@ function setBrightness(lightID, brightness) {
     // Update the rest of the lights
 
     // Iterate over all of the lights
-    for(var i in lights) {
-      // And set the brightness for them
-      socket.emit('set_light_brightness', {'id': lights[i]['id'], 'brightness': brightness})
+    for(const i in lights) {
+      if(Object.prototype.hasOwnProperty.call(lights, i)) {
+        // And set the brightness for them
+        socket.emit('set_light_brightness', {'id': lights[i]['id'], 'brightness': brightness})
+      }
     }
   } else { // Send it for an individual light
-    socket.emit('set_light_brightness', {"id":lightID, "brightness": brightness})
+    socket.emit('set_light_brightness', {'id': lightID, 'brightness': brightness})
   }
 }
 
@@ -301,13 +305,14 @@ function setBrightness(lightID, brightness) {
 function setLightColor(lightID, color) {
   if(lightID == 'all-lights') {
     // Update the rest of the lights
-    
     // Iterate over all of the lights
-    for(var i in lights) {
-      // And set the color temperature for them
-      socket.emit('set_light_color', {'id': lights[i]['id'], 'color': color})
+    for(const i in lights) {
+      if(Object.prototype.hasOwnProperty.call(lights, i)) {
+        // And set the color temperature for them
+        socket.emit('set_light_color', {'id': lights[i]['id'], 'color': color})
+      }
     }
   } else { // Send it for an individual light
-    socket.emit('set_light_color', {"id": lightID, "color": color})
+    socket.emit('set_light_color', {'id': lightID, 'color': color})
   }
 }
