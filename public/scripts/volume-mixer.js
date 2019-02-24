@@ -88,8 +88,8 @@ function createSlider(id, programName) {
 function setSliders() {
   // console.log(settings)
   const volumeMixers = settings['volumeMixers']
-  for(const i = 0; i < volumeMixers.length; i++) {
-    const mixer = volume_mixers[i];
+  for(let i = 0; i < volumeMixers.length; i++) {
+    const mixer = volumeMixers[i];
 
     createSlider(mixer['id'], mixer['programName'])
   }
