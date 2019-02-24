@@ -5,13 +5,12 @@ const fs = require('fs')
 const http = require('http')
 const socketIO = require('socket.io')
 
-// Socket.io stuff
-
 // Routes
 const Spotify = require('./server/routes/spotify.js')
 const Desktop = require('./server/routes/desktop.js')
 const SocketHandler = require('./server/routes/sockets.js')
 const SmartLight = require('./server/routes/lights.js') // controlling tp-link lightbulb from f.lux
+const Weather = require('./server/routes/weather.js')
 
 const Communication = require('./server/communication.js')
 
@@ -19,45 +18,49 @@ const Communication = require('./server/communication.js')
 
 class Server {
   constructor() {
-    this.spotifyAuthenticated = false
-    this.settings = JSON.parse(fs.readFileSync('./view-settings.json'))
+    this.port = 3000
+    this.settings = JSON.parse(fs.readFileSync('./view-settings.json', 'utf-8'))
 
-    this.desktop = new Desktop()
-    this.spotify = new Spotify(settings)
+    // console.log(settings)
+    this.desktop = new Desktop(this.settings)
+    this.spotify = new Spotify(this.settings)
     this.smartLights = new SmartLight()
 
-    const communication = new Communication()
+    const communication = new Communication(this.settings, this.desktop)
     const weather = new Weather()
     const routers = [this.desktop, this.spotify, this.smartLights, communication, weather]
 
     this.socketHandler = new SocketHandler(routers)
+    this.spotifyAuthenticated = false
+
+    this.initialize()
+    this.handleRoute()
   }
 
   // Initialize the rest of the server
   initialize() {
     // Initialize the server
-    this.server = http.createServer(app)
     this.app = express()
-    this.port = 3000
+    this.server = http.createServer(this.app)
 
     // Set properties
-    app.use(express.static(__dirname))
-    app.use(bodyParser.json()); // For parsing application/json
-    app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
+    this.app.use(express.static(__dirname))
+    this.app.use(bodyParser.json()); // For parsing application/json
+    this.app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
 
-    app.set('views', path.join(__dirname + '/public/views'));
-    app.locals.baseDir = path.join(__dirname + '/public/views') // Set options.baseDir for Pug
-    app.set('view engine', 'pug') // 'hbs' is connected to the app.engine('hbs', ...)
+    this.app.set('views', path.join(__dirname + '/public/views'));
+    this.app.locals.baseDir = path.join(__dirname + '/public/views') // Set options.baseDir for Pug
+    this.app.set('view engine', 'pug') // 'hbs' is connected to the app.engine('hbs', ...)
 
     // Set up the f.lux HTTP/REST endpoint
-    app.use(this.smartLights.router)
+    this.app.use(this.smartLights.router)
   }
 
   // Start the server
   start() {
     // Begin the socket-io server
     this.io = socketIO.listen(this.server)
-    this.app.use(this.socketHandler.returnRouter(io))
+    this.app.use(this.socketHandler.returnRouter(this.io))
 
     // Listen to this port, and handle any errors accordingly
     this.server.listen(this.port, (err) => {
@@ -65,7 +68,7 @@ class Server {
         return console.log('something bad happened', err)
       }
 
-      console.log(`server is listening on ${port}`)
+      console.log(`server is listening on ${this.port}`)
 
       this.desktop.importVolumeData()
     })
@@ -74,7 +77,7 @@ class Server {
   // Set up the main /tablet HTTP route
   handleRoute() {
     this.app.get('/tablet', (req, res) => {
-      if(!spotifyAuthenticated) {
+      if(!this.spotifyAuthenticated) {
         this.spotify.authenticateSpotify(res)
 
         this.spotifyAuthenticated = true;
@@ -85,7 +88,7 @@ class Server {
 
         // Load in the settings file
         const json = JSON.parse(fs.readFileSync(path.join(__dirname + '/view-settings.json'), 'utf8'))
-        const options = {
+        let options = {
           show_current_time: json['show-current-time'],
           quickIcons: json['quickIcons'],
           modules: json['modules'],
