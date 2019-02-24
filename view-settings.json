@@ -6,7 +6,7 @@
   
   "save-volume-on-change": true,
 
-  "host-ip": "192.168.1.77",
+  "host-ip": "192.168.1.212",
   "remotes": [
     {
       "name": "Gannon's PC",
@@ -37,7 +37,7 @@
       "script": "volume-mixer.js",
       "css": "volume-mixer.css",
       "settings": "volume-mixer.json",
-      "requires-server": false
+      "requires-server": true
     },
     {
       "name": "Peformance Stats",
@@ -46,7 +46,7 @@
       "script": "pc-stats.js",
       "css": "pc-stats.css",
       "settings": "pc-stats.json",
-      "requires-server": false
+      "requires-server": true
     },
     {
       "name": "Smart Bulb Control",
