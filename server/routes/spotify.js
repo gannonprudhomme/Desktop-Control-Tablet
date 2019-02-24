@@ -25,7 +25,6 @@ class Spotify extends Route {
   }
 
   socketHandler(socket) {
-    // var spotify = io.of('/spotify')
     socket.on('get_track', (data, ret) => {
       const options = {
         url: 'https://api.spotify.com/v1/me/player/currently-playing',
@@ -79,7 +78,7 @@ class Spotify extends Route {
               // Refresh the access token
               process.stdout.write('Playback info error: ')
               console.log(body.error.message)
-              this.refreshToken()
+              this.refreshAuthToken()
             } else {
               process.stdout.write('Playback info error: ')
               console.log(body.error.message)
@@ -179,7 +178,7 @@ class Spotify extends Route {
   }
 
   // Request an access token using the provided refresh token
-  refreshToken() {
+  refreshAuthToken() {
     console.log('Refreshing access token')
 
     const options = {
