@@ -80,8 +80,7 @@ class Communication extends Route {
         } else if(responded) {
           this.connected = true
           clearInterval(timer)
-          console.log('Connected to the server!')
-
+          // console.log('Connected to the server!')
         } else {
           tries--
           // console.log('Tries: ' + tries)
