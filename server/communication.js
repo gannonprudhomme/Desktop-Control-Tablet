@@ -73,14 +73,21 @@ class Communication extends Route {
       const delay = 500 // Check every 1/2 second
       const timer = setInterval(() => {
         if(!responded && tries <= 0) {
+          // If we were previously connected to the server
+          if(this.connected) {
+            console.log('Disconnected from the server') // Notify that we disconnected from the server
+          }
           this.connected = false
           reject(Error('server-timeout'))
-          console.log('Could not connect to the server')
           clearInterval(timer)
         } else if(responded) {
+          // If we were previously disconnected
+          if(!this.connected) {
+            console.log('Reconnected to the server!') // Notify that we reconnected from the server
+          }
+
           this.connected = true
           clearInterval(timer)
-          // console.log('Connected to the server!')
         } else {
           tries--
           // console.log('Tries: ' + tries)
