@@ -11,6 +11,7 @@ const Desktop = require('./server/routes/desktop.js')
 const SocketHandler = require('./server/routes/sockets.js')
 const SmartLight = require('./server/routes/lights.js') // controlling tp-link lightbulb from f.lux
 const Weather = require('./server/routes/weather.js')
+const ScreenSettings = require('./server/routes/screensettings')
 
 const Communication = require('./server/communication.js')
 
@@ -26,12 +27,13 @@ class Server {
     // console.log(settings)
     this.desktop = new Desktop(this.settings)
     this.smartLights = new SmartLight()
+    this.screenSettings = new ScreenSettings()
 
     const communication = new Communication(this.settings, this.desktop)
     this.spotify = new Spotify(this.settings, communication)
 
     const weather = new Weather()
-    const routers = [this.desktop, this.spotify, this.smartLights, communication, weather]
+    const routers = [this.desktop, this.spotify, this.smartLights, this.screenSettings, communication, weather]
 
     this.socketHandler = new SocketHandler(routers)
     this.spotifyAuthenticated = false
