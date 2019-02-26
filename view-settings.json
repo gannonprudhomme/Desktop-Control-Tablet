@@ -68,8 +68,9 @@
     {
       "name": "Pi Screen Settings",
       "id": "screen-settings",
+      "icon": "dial.png",
       "script": "screen-settings.js",
-      "css": "screen-settings.js",
+      "css": "screen-settings.css",
       "requires-server": false
     }
   ],
