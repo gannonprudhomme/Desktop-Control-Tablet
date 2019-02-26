@@ -29,6 +29,8 @@ function initComponents() {
     // Toggle the screen power
     screenStatus['power'] = false
 
+    console.log('screenStatus[power] ' + screenStatus['power'])
+
     // Turn the screen off
     setScreenPower(false)
   })
@@ -38,7 +40,7 @@ function initComponents() {
 function getGlobalClick() {
   document.addEventListener('click', () => {
     // If the screen is currently asleep, wake it up
-    if(screenStatus['power'] = false) {
+    if(screenStatus['power'] == false) {
       setScreenPower(true)
       screenStatus['power'] = true
     }
