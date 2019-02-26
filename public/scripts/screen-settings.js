@@ -29,8 +29,6 @@ function initComponents() {
     // Toggle the screen power
     screenStatus['power'] = false
 
-    console.log('screenStatus[power] ' + screenStatus['power'])
-
     // Turn the screen off
     setScreenPower(false)
   })
