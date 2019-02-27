@@ -6,7 +6,7 @@
   
   "save-volume-on-change": true,
 
-  "host-ip": "192.168.1.77",
+  "host-ip": "192.168.1.212",
   "remotes": [
     {
       "name": "Gannon's PC",
@@ -68,7 +68,7 @@
     {
       "name": "Pi Screen Settings",
       "id": "screen-settings",
-      "icon": "dial.png",
+      "icon": "settings.png",
       "script": "screen-settings.js",
       "css": "screen-settings.css",
       "requires-server": false
