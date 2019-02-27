@@ -1,7 +1,25 @@
 const screenStatus = {
   brightness: 0,
   power: false,
+  minBrightness: 8, // The screen isn't visible anything past 9%
   maxBrightness: 100,
+}
+
+function getScreenInfo() {
+  socket.emit('rpi_get_info', '', (retData) => {
+    screenStatus = retData
+
+    // Wouldn't screenStatus = retData be sufficient?
+    /*
+    screenStatus['brightness'] = retData['brightness']
+    screenStatus['power'] = retData['power']
+    screenStatus['minBrightness'] = retData['minBrightness']
+    screenStatus['maxBrightness'] = retData['maxBrightness']
+    */
+
+    initComponents()
+    getGlobalClick()
+  })
 }
 
 // Only intialize the components(mainly the slider) until
@@ -9,7 +27,7 @@ const screenStatus = {
 function initComponents() {
   $('#screen-brightness-slider').slider({
     value: screenStatus['brightness'],
-    min: 0,
+    min: screenStatus['minBrightness'], 
     max: screenStatus['maxBrightness'],
     animate: 'fast',
     orientation: 'horizontal',
@@ -53,5 +71,5 @@ function setScreenPower(value) {
   socket.emit('rpi_set_screen_power', value)
 }
 
-initComponents()
-getGlobalClick()
+// Initialize
+getScreenInfo()

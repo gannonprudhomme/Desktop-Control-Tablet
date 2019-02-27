@@ -2,7 +2,7 @@ const fs = require('fs')
 const Route = require('./route.js')
 
 // Need to add a check to see if the client is running on a Raspberry Pi
-const backLight = require('rpi-backlight')
+// const backLight = require('rpi-backlight')
 
 class ScreenSettings extends Route {
   constructor() {
@@ -12,9 +12,10 @@ class ScreenSettings extends Route {
   socketHandler(socket) {
     socket.on('rpi_get_info', (data, ret) => {
       const retData = {}
-      retData['max_brightness'] = backLight.getMaxBrightness()
+      retData['minBrightness'] = 9 // Anything below 9 isn't visible
+      retData['maxBrightness'] = backLight.getMaxBrightness()
       retData['brightness'] = backLight.getBrightness()
-      retData['screen_power'] = backLight.isPoweredOn()
+      retData['power'] = backLight.isPoweredOn()
     })
 
     socket.on('rpi_set_brightness', (data) => {
