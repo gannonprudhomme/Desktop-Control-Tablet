@@ -2,7 +2,7 @@ const fs = require('fs')
 const Route = require('./route.js')
 
 // Need to add a check to see if the client is running on a Raspberry Pi
-// const backLight = require('rpi-backlight')
+const backLight = require('rpi-backlight')
 
 class ScreenSettings extends Route {
   constructor() {
