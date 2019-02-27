@@ -18,18 +18,20 @@ function getScreenInfo() {
 // the screenStatus information is loaded in, should be quick
 function initComponents() {
   $('#screen-brightness-slider').slider({
-    value: screenStatus['brightness'],
-    min: screenStatus['minBrightness'],
-    max: screenStatus['maxBrightness'],
+    value: screenStatus['brightness'] / screenStatus['maxBrightness'] * 100,
+    min: screenStatus['minBrightness'] / screenStatus['maxBrightness'] * 100, // min isn't always 0
+    max: 100,
     animate: 'fast',
     orientation: 'horizontal',
 
     slide: (e, ui) => {
-      $('#screen-brightness-label').text(ui.value + '%')
+      $('#screen-brightness-label').text(Math.round(ui.value) + '%')
 
-      setScreenBrightness(ui.value)
+      setScreenBrightness(Math.round(ui.value / 100 * screenStatus['maxBrightness']))
     },
   })
+
+  $('#screen-brightness-label').text(Math.round(screenStatus['brightness'] / screenStatus['maxBrightness'] * 100) + '%')
 
   // We'll only really turn the screen off
   $('#screen-power-icon').on('click', (event) => {
