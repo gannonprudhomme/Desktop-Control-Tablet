@@ -16,6 +16,8 @@ class ScreenSettings extends Route {
       retData['maxBrightness'] = backLight.getMaxBrightness()
       retData['brightness'] = backLight.getBrightness()
       retData['power'] = backLight.isPoweredOn()
+
+      ret(retData)
     })
 
     socket.on('rpi_set_brightness', (data) => {
