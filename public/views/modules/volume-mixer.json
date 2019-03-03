@@ -49,6 +49,11 @@
           "id": "apex-legends",
           "icon": "apex-legends.png",
           "programName": "r5apex.exe"
+        },
+        {
+          "id": "metro-exodus",
+          "icon": "metro-exodus.png",
+          "programName": "MetroExodus.exe"
         }
       ]
 }
