@@ -195,7 +195,7 @@ function hideShowServerModules(hide) {
     // If we're supposed to show the server modules and they were previously hidden
     if(!hide && serverModulesHidden) {
       // Show the main server module, which prevents pc-stats from being displayed in the volume-mixer module
-      hideOtherModules(currentView)
+      hideOtherModules(settings['startModule'])
     } else if(hide && !serverModulesHidden) { // If we're hiding the modules but they're currently shown
       // Show the first module that doesn't require the server, if any
 
