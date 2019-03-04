@@ -17,11 +17,12 @@ A Desktop Companion Tablet built to control my Windows 10 home computer with a R
 1) Install node.js/npm on your Raspberry Pi.
 2) Clone the repository in the folder of your choosing. For ease of use, I'd suggest putting it in the `/home/pi/` or desktop folder.
 3) After the entering repo folder, run ```npm install``` to install all of the relevant packages.
-4) To install Electron on the Pi, run `npm install -g electron@3.0.13`
-5) Set the local IP of your Pi in the `host-ip` field of ```view-settings.json```.
-6) If you want to use the Volume Mixer and Performance Stats modules, download and install the [Windows 10 companion server](https://github.com/gannonprudhomme/Desktop-Control-Tablet-Server).
-7) Optionally, in ```view-settings.json``` swap out the included modules that you want to use by first adding/removing their id's in the `modules` array, then by adding/removing their information in `currentModules`.
-8) For ease of use, create a `.sh` file on the Pi and add this:
+4) Due to an Electron/npm permission error, you will need to change the installation location of node modules. To do this, run `npm config edit` and insert `prefx=/home/pi/.npm-global`.
+5) Install Electron by running `npm install -g electron@3.0.13`.
+6) Set the local IP of your Pi in the `host-ip` field of ```view-settings.json```.
+7) If you want to use the Volume Mixer and Performance Stats modules, download and install the [Windows 10 companion server](https://github.com/gannonprudhomme/Desktop-Control-Tablet-Server) on your host computer.
+8) Optionally, in ```view-settings.json``` swap out the included modules that you want to use by first adding/removing their id's in the `modules` array, then by adding/removing their information in `currentModules`.
+9) For ease of use, create a `.sh` file on the Pi and add this:
 
 ```bash
   cd Desktop-Control-Tablet/ # Navigate to the repository location
