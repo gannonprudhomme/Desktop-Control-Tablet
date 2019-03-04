@@ -49,6 +49,16 @@
           "id": "apex-legends",
           "icon": "apex-legends.png",
           "programName": "r5apex.exe"
+        },
+        {
+          "id": "metro-exodus",
+          "icon": "metro-exodus.png",
+          "programName": "MetroExodus.exe"
+        },
+        {
+          "id": "diablo3",
+          "icon": "diablo3.png",
+          "programName": "Diablo III64.exe"
         }
       ]
 }

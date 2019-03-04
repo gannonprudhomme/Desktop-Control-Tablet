@@ -11,7 +11,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    frame: false, // Disable the title and menu bar
+    fullscreen: true,
     webPreferences: {
       nodeIntegration: true,
     },
@@ -21,8 +21,6 @@ function createWindow() {
     mainWindow = null
     server.kill() // Kill the node server
   })
-
-  mainWindow.maximize()
 
   console.log('Created window')
 }
