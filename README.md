@@ -17,10 +17,11 @@ A Desktop Companion Tablet built to control my Windows 10 home computer with a R
 1) Install node.js/npm on your Raspberry Pi.
 2) Clone the repository in the folder of your choosing. For ease of use, I'd suggest putting it in the `/home/pi/` or desktop folder.
 3) After the entering repo folder, run ```npm install``` to install all of the relevant packages.
-4) Set the local IP of your Pi in the `host-ip` field of ```view-settings.json```.
-5) If you want to use the Volume Mixer and Performance Stats modules, download and install the [Windows 10 companion server](https://github.com/gannonprudhomme/Desktop-Control-Tablet-Server).
-6) Optionally, in ```view-settings.json``` swap out the included modules that you want to use by first adding/removing their id's in the `modules` array, then by adding/removing their information in `currentModules`.
-7) For ease of use, create a `.sh` file on the Pi and add this:
+4) To install Electron on the Pi, run `npm install -g electron@3.0.13`
+5) Set the local IP of your Pi in the `host-ip` field of ```view-settings.json```.
+6) If you want to use the Volume Mixer and Performance Stats modules, download and install the [Windows 10 companion server](https://github.com/gannonprudhomme/Desktop-Control-Tablet-Server).
+7) Optionally, in ```view-settings.json``` swap out the included modules that you want to use by first adding/removing their id's in the `modules` array, then by adding/removing their information in `currentModules`.
+8) For ease of use, create a `.sh` file on the Pi and add this:
 
 ```bash
   cd Desktop-Control-Tablet/ # Navigate to the repository location
@@ -28,7 +29,7 @@ A Desktop Companion Tablet built to control my Windows 10 home computer with a R
   xhost +SI:localuser:root # Give sudo(root) access to the display
   sudo npm start & # Start the server(as root, to give access to rpi_backlight package)
 ```
-8) On first launch, you will be redirected to authenticate with Spotify. If you do not have a Spotify account and/or want to disable Spotify integration, set `"music-service":"spotify"` to `"music-service": "nil"`.
+9) On first launch, you will be redirected to authenticate with Spotify. If you do not have a Spotify account and/or want to disable Spotify integration, set `"music-service":"spotify"` to `"music-service": "nil"`.
 
 
 ## Included Modules
