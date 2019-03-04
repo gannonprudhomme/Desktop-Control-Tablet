@@ -2,7 +2,7 @@ const fs = require('fs')
 const Route = require('./route.js')
 
 let backLight = '';
-if(isPi()) {
+if(isPi()) { // Only attempt to import the rpi-backlight module if we're on a Pi
   // Need to add a check to see if the client is running on a Raspberry Pi
   backLight = require('rpi-backlight')
 }
