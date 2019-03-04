@@ -54,6 +54,11 @@
           "id": "metro-exodus",
           "icon": "metro-exodus.png",
           "programName": "MetroExodus.exe"
+        },
+        {
+          "id": "diablo3",
+          "icon": "diablo3.png",
+          "programName": "Diablo III64.exe"
         }
       ]
 }
