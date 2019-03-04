@@ -26,7 +26,7 @@ function getPerformanceInfo() {
     // usage_stats.totalMemory = data.totalMemory
 
     // Calculate what % of the cpu and ram are being used
-    const cpuPercent = Math.floor(data.cpuUsage * 100) + 5
+    let cpuPercent = Math.floor(data.cpuUsage * 100) + 5
     const memoryPercent = Math.floor((data.usedMemory) / data.totalMemory * 100)
 
     // Divide the memory by 1000 to convert to gigabytes
