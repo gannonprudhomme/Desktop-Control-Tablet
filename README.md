@@ -25,7 +25,7 @@ A Desktop Companion Tablet built to control my Windows 10 home computer with a R
 9) For ease of use, create a `.sh` file on the Pi and add this:
 
 ```bash
-  cd Desktop-Control-Tablet/ # Navigate to the repository location
+  cd /absolute/path/Desktop-Control-Tablet/ # Navigate to the repository location, using its absolute path so we can run it on startup
   export DISPLAY=:0 # Set the current display to the touch screen
   xhost +SI:localuser:root # Give sudo(root) access to the display
   sudo npm start & # Start the server(as root, to give access to rpi_backlight package)
