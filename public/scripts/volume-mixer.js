@@ -99,7 +99,7 @@ function setSliders() {
 function changeSliderValues() {
   // console.log(settings)
   const volumeMixers = settings['volumeMixers']
-  for(const i = 0; i < volumeMixers.length; i++) {
+  for(let i = 0; i < volumeMixers.length; i++) {
     const mixer = volumeMixers[i];
 
     $('#' + mixer['id'] + '-slider').slider('value', volumeData[currentDeviceName][mixer['programName']] * 100)
