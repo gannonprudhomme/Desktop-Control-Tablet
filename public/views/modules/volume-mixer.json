@@ -59,6 +59,11 @@
           "id": "diablo3",
           "icon": "diablo3.png",
           "programName": "Diablo III64.exe"
+        },
+        {
+          "id": "riskofrain2",
+          "icon": "riskofrain.png",
+          "programName": "Risk Of Rain2.exe"
         }
       ]
 }
