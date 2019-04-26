@@ -64,6 +64,11 @@
           "id": "riskofrain2",
           "icon": "riskofrain.png",
           "programName": "Risk Of Rain2.exe"
+        },
+        {
+          "id": "payday2",
+          "icon": "payday2.png",
+          "programName": "payday2_win32_release.exe"
         }
       ]
 }
