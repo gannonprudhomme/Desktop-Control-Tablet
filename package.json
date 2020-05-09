@@ -1,69 +1,45 @@
 {
-  "name": "volumecontrol",
-  "version": "1.0.0",
+  "name": "desktop-control-tablet",
+  "version": "0.2.0",
   "description": "",
-  "main": "main.js",
-  "directories": {
-    "test": "test"
-  },
+  "author": "Gannon Prudhomme",
   "scripts": {
     "start": "electron .",
-    "build": "browserify ./public/scripts/display.js -o dist/bundle.js",
-    "test": "env IS_HOME=YES mocha --exit"
+    "dev": "webpack ./components/index.tsx --output ../static/main.js",
+    "help": "webpack -h"
   },
-  "author": "Gannon Prudhomme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gannonprudhomme/Desktop-Control-Tablet.git"
+  },
   "license": "ISC",
-  "browserify": {
-    "transform": [
-      [
-        "babelify",
-        {
-          "presets": [
-            "es2015"
-          ]
-        }
-      ]
-    ]
+  "bugs": {
+    "url": "https://github.com/gannonprudhomme/Desktop-Control-Tablet/issues"
   },
+  "homepage": "https://github.com/gannonprudhomme/Desktop-Control-Tablet#readme",
   "dependencies": {
-    "axios": "^0.18.0",
-    "body-parser": "^1.18.3",
-    "braces": "^2.3.1",
-    "browserify": "^16.2.3",
-    "cookie-parser": "^1.4.3",
-    "electron-pug": "^2.0.0",
-    "express": "^4.16.4",
-    "gulp": "^4.0.0",
-    "gulp-cli": "^2.0.1",
-    "jquery": "^3.3.1",
-    "multer": "^1.4.1",
-    "node-lifx": "^0.8.0",
-    "npm": "^6.4.1",
-    "os-utils": "0.0.14",
-    "ps-list": "^6.0.0",
-    "pug": "^2.0.3",
-    "querystring": "^0.2.0",
-    "reading-time": "^1.1.3",
-    "request": "^2.88.0",
-    "rpi-backlight": "^0.3.0",
-    "socket.io": "^2.1.1",
-    "socket.io-client": "^2.1.1",
-    "string-hash": "^1.1.3",
-    "systeminformation": "^3.45.9",
-    "timesync": "^1.0.3",
-    "tplink-lightbulb": "^1.4.2",
-    "watchify": "^3.11.1",
-    "weather-js": "^2.0.0"
+    "@types/react-redux": "^7.1.8",
+    "electron": "^8.2.5",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "redux": "^4.0.5"
   },
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-preset-es2015": "^6.24.1",
-    "babelify": "^8.0.0",
-    "browser-sync": "^2.26.3",
-    "chai": "^4.2.0",
-    "electron": "3.0.13",
-    "eslint": "^5.14.1",
-    "eslint-config-google": "^0.12.0",
-    "mocha": "^5.2.0"
+    "@types/react": "^16.9.34",
+    "@types/react-dom": "^16.9.7",
+    "@typescript-eslint/eslint-plugin": "^2.31.0",
+    "eslint": "^7.0.0",
+    "eslint-config-airbnb": "^18.1.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-react": "^7.19.0",
+    "eslint-plugin-react-hooks": "^4.0.0",
+    "html-webpack-plugin": "^4.3.0",
+    "jest": "^26.0.1",
+    "ts-jest": "^25.5.0",
+    "ts-loader": "^7.0.3",
+    "typescript": "^3.8.3",
+    "typescript-eslint": "0.0.1-alpha.0",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
   }
 }
