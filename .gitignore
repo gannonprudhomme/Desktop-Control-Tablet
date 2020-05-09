@@ -1,3 +1,6 @@
+# Project stuff
+dist/
+
 # Logs
 logs
 *.log
