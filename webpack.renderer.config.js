@@ -37,8 +37,25 @@ module.exports = merge.smart(baseConfig, {
                 loaders: ['style-loader', 'css-loader', 'sass-loader']
             },
             {
-                test: /\.css$/,
-                loaders: ['style-loader', 'css-loader']
+                test: /\.css$/i,
+                exclude: /node_modules/,
+                use: [
+                    'style-loader',
+                    {
+                        loader: '@teamsupercell/typings-for-css-modules-loader',
+                    },
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            localsConvention: 'camelCase',
+                            modules: true,
+                            /*modules: {
+                                mode: 'local',
+                                localIdentName: '[local]--[has:bas64:5]',
+                            },*/
+                        },
+                    },
+                ],
             },
             {
                 test: /\.(gif|png|jpe?g|svg)$/,
