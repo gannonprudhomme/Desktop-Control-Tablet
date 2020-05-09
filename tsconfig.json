@@ -1,10 +1,13 @@
 {
     "compilerOptions": {
-        "outDir": "./static/",
+        "outDir": "./dist/",
         "sourceMap": true,
         "noImplicitAny": true,
         "module": "CommonJS",
         "target": "es2018",
         "jsx": "react"
-    }
+    },
+    "include": [
+        "./src",
+    ]
 }

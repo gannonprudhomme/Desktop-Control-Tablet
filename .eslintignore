@@ -1,2 +1,3 @@
+*.css.d.ts
 public/
 *.config.js
