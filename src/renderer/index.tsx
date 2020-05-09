@@ -9,5 +9,5 @@ document.body.appendChild(mainElement);
 
 ReactDom.render(
   <App />,
-  mainElement
+  mainElement,
 );
