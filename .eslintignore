@@ -1,3 +1,6 @@
 *.css.d.ts
 public/
+server/
+main.js
+app.js
 *.config.js
