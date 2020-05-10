@@ -1,9 +1,23 @@
 const {app, BrowserWindow} = require('electron')
+const url = require('url');
+const path = require('path');
 
 const Server = require('./app.js') // initialize the server
 
 let mainWindow
-const server = new Server()
+const server = new Server((res) => {
+  if (process.env.NODE_ENV !== 'production') {
+    mainWindow.loadURL('http://localhost:2003');
+  } else {
+    mainWindow.loadURL(
+      url.format({
+        pathname: path.join(__dirname, './dist/index.html'),
+        protocol: 'file:',
+        slashes: true
+      })
+    )
+  }
+});
 server.start()
 
 // Create the window
@@ -11,7 +25,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    fullscreen: true,
+    fullscreen: false,
     webPreferences: {
       nodeIntegration: true,
     },
@@ -44,8 +58,6 @@ app.on('window-all-closed', function() {
 app.on('activate', function() {
   if(mainWindow == null) {
     createWindow()
-
-    mainWindow.loadURL('http://localhost:3000/tablet')
   }
 })
 
