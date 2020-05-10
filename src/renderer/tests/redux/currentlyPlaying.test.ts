@@ -7,7 +7,9 @@ describe('currentlyPlaying Redux', () => {
   test('sets the currently playing song correctly', () => {
     // arrange
     const store = createStore(dctReducer);
-    const song = new Song({ songTitle: 'title', artistName: 'name', albumArt: 'url' });
+    const song = new Song({
+      songTitle: 'title', artistName: 'name', albumArt: 'url', isPlaying: false,
+    });
 
     // act
     store.dispatch(changeCurrentlyPlaying(song));
