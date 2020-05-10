@@ -1,0 +1,10 @@
+#time {
+    display: flex;
+    justify-content: center;
+    border: 1px solid #00C8C8;
+    border-radius: 15px;
+    padding: 5px;
+    margin-top: -8px;
+    color: #00C8C8;
+    font-size: 30px;
+}
