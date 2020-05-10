@@ -18,7 +18,7 @@ const Communication = require('./server/communication.js')
 // const spotifyAuthenticated = false
 
 class Server {
-  constructor() {
+  constructor(redirectCallback) {
     console.log('Server created')
 
     this.port = 3000
@@ -39,7 +39,7 @@ class Server {
     this.spotifyAuthenticated = false
 
     this.initialize()
-    this.handleRoute()
+    this.handleRoute(redirectCallback)
   }
 
   // Initialize the rest of the server
@@ -84,7 +84,7 @@ class Server {
   }
 
   // Set up the main /tablet HTTP route
-  handleRoute() {
+  handleRoute(redirectCallback) {
     this.app.get('/tablet', (req, res) => {
       if(!this.spotifyAuthenticated) {
         this.spotify.authenticateSpotify(res)
@@ -112,7 +112,7 @@ class Server {
         options = {...options, ...modSettings}
 
         // Render the webpage
-        res.render('index', options)
+        redirectCallback();
 
         // After authenticating, get the access and refresh tokens
         // have a function that takes req as a parameter(or req.query)
