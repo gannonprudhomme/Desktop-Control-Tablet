@@ -12,7 +12,9 @@ export interface ChangeCurrentlyPlayingAction {
 }
 
 // initial state, has to be something
-const initialSong = new Song({ songTitle: 'n/a', artistName: 'n/a', albumArt: 'n/a' });
+const initialSong = new Song({
+  songTitle: 'n/a', artistName: 'n/a', albumArt: 'n/a', isPlaying: false,
+});
 
 // reducer
 export default function currentlyPlaying(state = initialSong,
