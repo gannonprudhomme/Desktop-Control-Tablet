@@ -1,0 +1,16 @@
+html {
+  overflow: hidden;
+  height: 100%;
+}
+
+body {
+  background-color: #1c2122;
+  height: 97%;
+  color: white;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-rows: 10% 74% 16%;
+  height: 100%;
+}
