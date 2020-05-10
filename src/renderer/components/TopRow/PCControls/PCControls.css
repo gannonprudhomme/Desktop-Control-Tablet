@@ -1,0 +1,12 @@
+#pc-controls {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 130%;
+    height: 100%;
+    padding-bottom: 10px;
+}
+    .pc-controls-button {
+        width: 32px;
+        height: 32px;
+    }
