@@ -1,0 +1,25 @@
+#track {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    width: 100%;
+}
+    #album-cover {
+        width: 70px;
+        height: 70px;
+        padding-top: 10px;
+    }
+
+    #track-info {
+        display: flex;
+        flex-direction: column;
+        margin-left: 5px;
+    }
+        #current-track {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        #current-artist {
+            font-size: 13px;
+        }
