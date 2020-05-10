@@ -12,9 +12,16 @@ import Song from '../types/Song';
  */
 export default class SpotifyController implements MediaController {
   socket: SocketIOClient.Socket;
+  currentlyPlaying: Song;
 
   constructor(socket: SocketIOClient.Socket) {
     this.socket = socket;
+    this.currentlyPlaying = new Song({
+      songTitle: 'N/A',
+      artistName: 'n/a',
+      albumArt: 'n/a',
+      isPlaying: false,
+    });
 
     // Make us authenticate if we haven't already
   }
@@ -23,10 +30,15 @@ export default class SpotifyController implements MediaController {
     return new Promise<Song>((res) => {
       this.socket.emit('get_track', null, (data: any) => {
         // eslint-disable-next-line @typescript-eslint/camelcase
-        const { track, artist, album_image } = data;
+        const { track, artist, album_image, is_playing } = data;
 
-        // eslint-disable-next-line @typescript-eslint/camelcase
-        res(new Song({ songTitle: track, artistName: artist, albumArt: album_image }));
+        const ret = new Song({
+          songTitle: track, artistName: artist, albumArt: album_image, isPlaying: is_playing,
+        });
+
+        this.currentlyPlaying = ret;
+
+        res(ret);
 
         // Handles the date stuff?
       });
@@ -34,7 +46,11 @@ export default class SpotifyController implements MediaController {
   }
 
   playPause(): void {
-    this.socket.emit('play');
+    if (this.currentlyPlaying.isPlaying) {
+      this.socket.emit('pause');
+    } else {
+      this.socket.emit('play');
+    }
   }
 
   nextSong(): void {
