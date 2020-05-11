@@ -1,5 +1,7 @@
 # Project stuff
 dist/
+# Don't want to track the icons that are loaded
+icons/
 
 # Logs
 logs
