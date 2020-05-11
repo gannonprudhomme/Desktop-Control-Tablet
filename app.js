@@ -123,6 +123,16 @@ class Server {
         this.spotify.getAuthArguments(code, state)
       }
     })
+
+    // Return the icons
+    this.app.get('/icons/:iconName', (req, res) => {
+      const name = req.params.iconName;
+      console.log(`Attempting to retrieve icon ${name}`)
+
+      const p = path.join(__dirname, `./server/icons/${name}.png`);
+
+      res.sendFile(p);
+    });
   }
 
   // Kill the server
