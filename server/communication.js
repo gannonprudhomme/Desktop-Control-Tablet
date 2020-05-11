@@ -1,4 +1,5 @@
 const fs = require('fs')
+const path = require('path');
 const socketIO = require('socket.io-client')
 const Route = require('./routes/route.js')
 
@@ -52,6 +53,33 @@ class Communication extends Route {
       // Set the volume in the volumes array in desktop.js and save it to the file system
       this.desktop.setVolume(data.program, data.volume)
     })
+
+    socket.on('set_volume_proc', (data) => {
+      console.log(`set_volume_proc`)
+      console.log(data);
+      this.client.emit('set_volume_proc', data);
+    });
+
+    socket.on('get_volume_processes', (_, ret) => {
+      this.client.emit('get_volumes', '', (data) => {
+        ret(data);
+
+        data.forEach((volumeProc) => {
+          const { name } = volumeProc;
+
+          this.client.emit('get_volume_icon', name, (retData) => {
+            // Save it to a file
+            const p = path.join(__dirname, `./icons/${name}.png`);
+
+            const file = fs.writeFile(p, retData, { flag: 'w', }, (err) => {
+              if (err) {
+                console.log(err);
+              }
+            });
+          });
+        });
+      });
+    });
   }
 
   // Send a string of key-presses to the client(windows 10 server)
