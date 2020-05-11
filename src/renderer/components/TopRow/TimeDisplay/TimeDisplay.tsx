@@ -28,7 +28,6 @@ const TimeDisplay: React.FC = () => {
       setTime(new Date());
     }, 1000);
 
-    // Do we need to clear the interval?
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     return () => clearInterval(interval);
   }, [time]);
