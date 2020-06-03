@@ -11,10 +11,20 @@ class Communication extends Route {
     this.remoteSettings = settings['remotes']
     this.desktop = desktop
 
+    // Whether we're connected to the desktop server or not
+    this.connected = false
+
     // TODO: Make the port configurable
     this.client = socketIO('http://' + this.remoteSettings[0]['ip'] + ':3001')
 
-    this.connected = false
+    const that = this;
+    this.client.on('connect', () => {
+      that.connected = true
+    });
+
+    this.client.on('disconnect', () => {
+      that.connected = false;
+    })
   }
 
   socketHandler(socket) {
@@ -55,8 +65,6 @@ class Communication extends Route {
     })
 
     socket.on('set_volume_proc', (data) => {
-      console.log(`set_volume_proc`)
-      console.log(data);
       this.client.emit('set_volume_proc', data);
     });
 

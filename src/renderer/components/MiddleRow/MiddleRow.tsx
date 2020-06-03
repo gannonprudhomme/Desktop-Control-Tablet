@@ -24,7 +24,7 @@ const MiddleRow: React.FC = () => {
   return (
     <div id={styles.middleRow}>
       {/* TODO: Maybe add a better no modules thing? */}
-      {currentView ?? 'No modules enabled!'}
+      {currentModule ? currentView : 'No modules enabled'}
     </div>
   );
 };

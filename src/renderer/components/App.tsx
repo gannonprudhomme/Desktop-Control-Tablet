@@ -7,9 +7,12 @@ import BottomRow from './BottomRow/BottomRow';
 import * as styles from './App.css';
 import changeCurrentlyPlaying from '../redux/actions/currentlyPlaying';
 import { spotifyController } from '../framework/SpotifyController';
-import { setModulesArray, changeCurrentModule } from '../redux/actions/modules';
+import {
+  setModulesArray, changeCurrentModule, showServerRequiredModules, hideServerRequiredModules,
+} from '../redux/actions/modules';
 
 import { defaultModule, currentModules } from '../modules/ModulesManager';
+import socket from '../framework/SocketHandler';
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
@@ -31,6 +34,23 @@ const App: React.FC = () => {
     spotifyController.getSong().then(
       (song) => dispatch(changeCurrentlyPlaying(song)),
     );
+  }, 500);
+
+  // Local store of this so we can keep track if it changed or not
+  let isConnected = false; // If we're connected to a desktop server
+  setInterval(() => {
+    // console.log('trying to send connectedToServer');
+    socket.emit('connectedToServer', '', (connected: boolean) => {
+      if (isConnected !== connected) { // If the state changed, update the displayed modules
+        if (connected) {
+          dispatch(showServerRequiredModules());
+        } else {
+          dispatch(hideServerRequiredModules());
+        }
+      }
+
+      isConnected = connected;
+    });
   }, 500);
 
   return (
