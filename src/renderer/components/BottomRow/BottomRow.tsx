@@ -13,7 +13,7 @@ const BottomRow: React.FC = () => {
     <div id={styles.bottomRow}>
       <TrackDisplay />
       <MediaControl mediaController={spotifyController} />
-      {/* <ModuleSwitcher /> */}
+      <ModuleSwitcher />
     </div>
   );
 };
