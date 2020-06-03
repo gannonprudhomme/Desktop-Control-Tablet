@@ -6,6 +6,8 @@
     align-items: center;
     justify-content: center;
     /* width: 100%; */
+    margin-left: 15px;
+    margin-right: 15px;
 }
     /* Should probably make this always be stuck at the bottom no matter what, but this will work
        since we're using a fixed screen size
