@@ -17,8 +17,11 @@ export const defaultModule = availableModules.get(moduleSettings.defaultModule);
 
 const thing = [];
 
-moduleSettings.currentModules.forEach((moduleName: string) => {
+moduleSettings.currentModules.forEach((moduleName: string, index: number) => {
   const mod = availableModules.get(moduleName);
+
+  // set the index so the icons can be sorted to maintain a consistent order
+  mod.index = index;
 
   thing.push(mod);
 });

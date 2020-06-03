@@ -20,6 +20,7 @@ describe('MiddleRow UI', () => {
         icon: null as string,
         reducer: null as Function,
         serverRequired: false,
+        index: 0,
       };
       const module2 = {
         ...module1,

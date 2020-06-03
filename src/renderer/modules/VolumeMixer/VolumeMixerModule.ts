@@ -12,6 +12,7 @@ export default class VolumeMixerModule implements ServerModule {
   socket: SocketIOClient.Socket;
   reducer: Function;
   serverRequired: boolean;
+  index: number;
 
   constructor(socket: SocketIOClient.Socket) {
     this.name = 'VolumeMixer';
