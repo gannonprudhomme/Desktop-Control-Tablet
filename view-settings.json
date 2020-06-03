@@ -6,7 +6,7 @@
   
   "save-volume-on-change": true,
 
-  "host-ip": "192.168.1.212",
+  "host-ip": "localhost",
   "remotes": [
     {
       "name": "Gannon's PC",
