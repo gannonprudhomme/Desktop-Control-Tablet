@@ -13,6 +13,7 @@ describe('modules Redux', () => {
         name: '',
         reducer: null as Function,
         serverRequired: false,
+        index: 0,
       };
 
       // act
@@ -34,6 +35,7 @@ describe('modules Redux', () => {
         name: '',
         reducer: null as Function,
         serverRequired: false,
+        index: 0,
       };
 
       // act
@@ -54,6 +56,7 @@ describe('modules Redux', () => {
         name: '',
         reducer: null as Function,
         serverRequired: false,
+        index: 0,
       };
 
 

@@ -9,6 +9,7 @@ export interface Module {
   name: string;
   reducer: Function; // Used to add the logic to the reducer
   serverRequired: boolean; // Whether this is dependent on a connection to the server or not
+  index: number; // The original index it's loaded in at to order the ModuleSwitcher correctly
   // actions?
 }
 
@@ -18,6 +19,7 @@ export interface ServerModule extends Module {
 
 interface ModuleArrayInit {
   modulesArray: Module[];
+  disabledModules: Module[];
   currentModule: Module;
 }
 
@@ -27,6 +29,7 @@ interface ModuleArrayInit {
 export default class ModuleArray {
   modulesArray: Module[];
   currentModule: Module; // The module that's currently being display in MiddleRow
+  disabledModules: Module[];
 
   constructor(init: ModuleArrayInit) {
     if (init.modulesArray == null) {
