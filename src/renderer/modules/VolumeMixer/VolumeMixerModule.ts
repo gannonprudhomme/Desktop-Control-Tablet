@@ -11,6 +11,7 @@ export default class VolumeMixerModule implements ServerModule {
   name: string;
   socket: SocketIOClient.Socket;
   reducer: Function;
+  serverRequired: boolean;
 
   constructor(socket: SocketIOClient.Socket) {
     this.name = 'VolumeMixer';
@@ -18,5 +19,6 @@ export default class VolumeMixerModule implements ServerModule {
     this.component = VolumeMixer;
     this.icon = icon.default;
     this.reducer = volumeProcesses;
+    this.serverRequired = true;
   }
 }
