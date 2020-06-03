@@ -5,7 +5,6 @@ import { Provider } from 'react-redux';
 import dctReducer from '../../redux/reducer';
 import { addModule, changeCurrentModule } from '../../redux/actions/modules';
 import MiddleRow from '../../components/MiddleRow/MiddleRow';
-import Empty from '../utils/Empty';
 
 describe('MiddleRow UI', () => {
   describe('changes the currently displaying module', () => {
