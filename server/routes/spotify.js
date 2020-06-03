@@ -76,11 +76,9 @@ class Spotify extends Route {
               // Alternatively, tell the client to refresh the page (or do it for them)
             } else if(body.error.message === 'The access token expired') {
               // Refresh the access token
-              process.stdout.write('Playback info error: ')
               console.log(body.error.message)
               this.refreshAuthToken()
             } else {
-              process.stdout.write('Playback info error: ')
               console.log(body.error.message)
             }
           }
