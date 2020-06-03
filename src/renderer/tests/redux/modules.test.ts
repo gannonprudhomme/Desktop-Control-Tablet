@@ -12,6 +12,7 @@ describe('modules Redux', () => {
         icon: '',
         name: '',
         reducer: null as Function,
+        serverRequired: false,
       };
 
       // act
@@ -32,6 +33,7 @@ describe('modules Redux', () => {
         icon: '',
         name: '',
         reducer: null as Function,
+        serverRequired: false,
       };
 
       // act
@@ -51,6 +53,7 @@ describe('modules Redux', () => {
         icon: '',
         name: '',
         reducer: null as Function,
+        serverRequired: false,
       };
 
 

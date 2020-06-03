@@ -17,6 +17,7 @@ describe('ModuleSwitcher', () => {
       component: null as React.FC,
       icon: null as string,
       reducer: null as Function,
+      serverRequired: false,
     };
     store.dispatch(addModule(module));
 
@@ -41,6 +42,7 @@ describe('ModuleSwitcher', () => {
         component: null as React.FC,
         icon: null as string,
         reducer: null as Function,
+        serverRequired: false,
       };
       const module2 = {
         ...module1,
@@ -62,6 +64,15 @@ describe('ModuleSwitcher', () => {
       // assert
       const { currentModule } = store.getState().modules;
       expect(currentModule).toEqual(module2);
+    });
+  });
+
+  // later, untrack for now
+  describe('hides the desktop-server modules', () => {
+    describe('when desktop connection is lost', () => {
+      // arrange
+      // first assert that the icon is showing when there's a connection
+      // then remove it, and check that it isn't there when the desktop connection is "lost"
     });
   });
 });

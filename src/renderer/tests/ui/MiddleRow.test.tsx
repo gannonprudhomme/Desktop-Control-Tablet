@@ -19,6 +19,7 @@ describe('MiddleRow UI', () => {
         component: module1Comp,
         icon: null as string,
         reducer: null as Function,
+        serverRequired: false,
       };
       const module2 = {
         ...module1,
@@ -44,6 +45,16 @@ describe('MiddleRow UI', () => {
       // assert
       const module2Text = await findByText('Module2');
       expect(module2Text).toBeInTheDocument();
+    });
+  });
+
+  describe('hides the desktop-server modules', () => {
+    test('when the desktop connection is lost', () => {
+      // arrange
+
+      // act
+
+      // asert
     });
   });
 });

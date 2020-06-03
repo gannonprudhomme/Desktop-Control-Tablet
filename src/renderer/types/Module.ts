@@ -8,6 +8,7 @@ export interface Module {
   icon: string; // URL to the icon? Used for ModuleSwitcher
   name: string;
   reducer: Function; // Used to add the logic to the reducer
+  serverRequired: boolean; // Whether this is dependent on a connection to the server or not
   // actions?
 }
 
