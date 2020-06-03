@@ -1,0 +1,8 @@
+#volume-mixer {
+    display: flex;
+    justify-content: space-between;
+    width: calc(100% - 20px);
+    height: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+}
