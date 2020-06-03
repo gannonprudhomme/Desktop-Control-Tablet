@@ -6,6 +6,7 @@ import Song from '../../types/Song';
 // action type strings
 export const CHANGE_CURRENTLY_PLAYING = 'CHANGE_CURRENTLY_PLAYING';
 
+// action type interface
 export interface ChangeCurrentlyPlayingAction {
   type: 'CHANGE_CURRENTLY_PLAYING';
   song: Song;

@@ -6,6 +6,7 @@ import { Socket } from 'socket.io';
 import * as SocketIOClient from 'socket.io-client';
 import MediaController from './MediaController';
 import Song from '../types/Song';
+import socket from './SocketHandler';
 
 /**
  * Handles anything related to communicating with Spotify
@@ -61,3 +62,5 @@ export default class SpotifyController implements MediaController {
     this.socket.emit('previous');
   }
 }
+
+export const spotifyController = new SpotifyController(socket);
