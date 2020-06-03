@@ -28,7 +28,7 @@ export default class SpotifyController implements MediaController {
   }
 
   getSong(): Promise<Song> {
-    return new Promise<Song>((res) => {
+    return new Promise<Song>((resolve, reject) => {
       this.socket.emit('get_track', null, (data: any) => {
         // eslint-disable-next-line @typescript-eslint/camelcase
         const { track, artist, album_image, is_playing } = data;
@@ -39,9 +39,12 @@ export default class SpotifyController implements MediaController {
 
         this.currentlyPlaying = ret;
 
-        res(ret);
+        resolve(ret);
 
         // Handles the date stuff?
+        setTimeout(() => {
+          reject(Error('desktop timeout'));
+        }, 3 * 100); // Wait 3 seconds to identify it as "disconnected"
       });
     });
   }
