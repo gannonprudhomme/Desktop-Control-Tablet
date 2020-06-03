@@ -1,6 +1,5 @@
 const request = require('request')
 const queryString = require('querystring')
-const commands = require('../commands.js')
 const communication = require('../communication.js')
 
 const Route = require('./route.js')
