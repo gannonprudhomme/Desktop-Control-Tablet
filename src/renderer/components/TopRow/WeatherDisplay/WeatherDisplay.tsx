@@ -7,10 +7,11 @@ import {
 import * as styles from './WeatherDisplay.css';
 import socket from '../../../framework/SocketHandler';
 
+const weatherIgnoreRegex = /(?:Partly\s*)|(?:Mostly\s*)/;
 const weatherIconMap = new Map<string, IconDefinition>();
 weatherIconMap.set('Clear', faSun);
-weatherIconMap.set('Sunny', faSun);
-weatherIconMap.set('Mostly Sunny', faSun);
+const sunny = 'Sunny';
+weatherIconMap.set(sunny, faSun);
 weatherIconMap.set('Thunderstorms', faBolt);
 weatherIconMap.set('Cloudy', faCloud);
 weatherIconMap.set('Rain', faCloudRain);
@@ -19,7 +20,7 @@ weatherIconMap.set('Rain', faCloudRain);
  * Displays the current weather and temperature
  */
 const WeatherDisplay: React.FC = () => {
-  const [weatherType, setWeatherType] = React.useState('Weather');
+  const [weatherType, setWeatherType] = React.useState('Sunny');
   const [temperature, setTemperature] = React.useState(0);
 
   function getForecast(): void {
@@ -30,6 +31,25 @@ const WeatherDisplay: React.FC = () => {
       setWeatherType(currentWeather);
       setTemperature(currentTemp);
     });
+  }
+
+  /**  */
+  function getWeatherIcon(weather: string): IconDefinition {
+    // Removes the modifiers from the string, such as "Partly" or "Mostly"
+    const actualWeather = weather.split(
+      weatherIgnoreRegex,
+    ).filter(
+      // Filter out falsy values since my regex doesn't do it for me
+      (val) => Boolean(val),
+    )[0]; // Get the first (and hopefully only) value
+
+    // Return a question mark if it doesn't exist on it
+    if (!(weatherIconMap.has(actualWeather))) {
+      const icon = faQuestion;
+      return icon;
+    }
+
+    return weatherIconMap.get(actualWeather);
   }
 
   // Retrieve on first render immediately
@@ -61,7 +81,7 @@ const WeatherDisplay: React.FC = () => {
       </div>
       <FontAwesomeIcon
         // Show a question mark if the type can't be found, so we know to add it
-        icon={weatherIconMap.get(weatherType) ?? faQuestion}
+        icon={getWeatherIcon(weatherType)}
         className={styles.weatherIcon}
       />
     </div>
