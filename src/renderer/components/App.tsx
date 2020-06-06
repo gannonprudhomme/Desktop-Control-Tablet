@@ -36,6 +36,9 @@ const App: React.FC = () => {
     );
   }, 500);
 
+  // On first render, hide the server modules, that way they're only shown if we have a connection
+  dispatch(hideServerRequiredModules());
+
   // Local store of this so we can keep track if it changed or not
   let isConnected = false; // If we're connected to a desktop server
   setInterval(() => {
