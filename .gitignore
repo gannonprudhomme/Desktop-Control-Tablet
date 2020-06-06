@@ -3,6 +3,9 @@ dist/
 # Don't want to track the icons that are loaded
 icons/
 
+# Ignore any settings.json file
+settings.json
+
 # Logs
 logs
 *.log
