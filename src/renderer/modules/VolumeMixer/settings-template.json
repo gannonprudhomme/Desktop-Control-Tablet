@@ -1,0 +1,18 @@
+{
+    "ignore": [
+        "wallpaper32",
+        "svchost",
+        "ShareX"
+    ],
+    "processSettings": [
+        {
+            "name": "Spotify",
+            "priority": 2 
+        },
+        {
+            "name": "Discord",
+            "priority": 1,
+            "combine": true
+        }
+    ]
+}

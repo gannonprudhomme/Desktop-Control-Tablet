@@ -18,8 +18,7 @@ export default function volumeProcesses(state: VolumeProcess[] = [],
   action: UpdateVolumeProcessesAction): VolumeProcess[] {
   switch (action.type) {
     case UPDATE_VOLUME_PROCESSES:
-      // Might want to sort the processes by their name? Just so it's not random
-      return action.processes.sort((a, b) => a.name.localeCompare(b.name));
+      return action.processes;
     default:
       return state;
   }
