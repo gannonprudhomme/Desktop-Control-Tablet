@@ -1,9 +1,19 @@
 import * as React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faCloud, faCloudRain, faSun, faCloudShowersHeavy, faBolt, faQuestion, IconDefinition,
+} from '@fortawesome/free-solid-svg-icons';
 
 import * as styles from './WeatherDisplay.css';
 import socket from '../../../framework/SocketHandler';
 
-const icon = require('../../../../../public/assets/bulb.png');
+const weatherIconMap = new Map<string, IconDefinition>();
+weatherIconMap.set('Clear', faSun);
+weatherIconMap.set('Sunny', faSun);
+weatherIconMap.set('Mostly Sunny', faSun);
+weatherIconMap.set('Thunderstorms', faBolt);
+weatherIconMap.set('Cloudy', faCloud);
+weatherIconMap.set('Rain', faCloudRain);
 
 /**
  * Displays the current weather and temperature
@@ -41,7 +51,11 @@ const WeatherDisplay: React.FC = () => {
 
   return (
     <div className={styles.weatherContainer}>
-      <img src={icon.default} className={styles.weatherIcon} alt="weather" />
+      <FontAwesomeIcon
+        // Show a question mark if the type can't be found, so we know to add it
+        icon={weatherIconMap.get(weatherType) ?? faQuestion}
+        className={styles.weatherIcon}
+      />
       <div className={styles.temperatureWeatherContainer}>
         <span id={styles.temperature}>
           {`${temperature}°F`}
