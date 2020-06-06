@@ -9,7 +9,7 @@
     "start-main-dev": "electron .",
     "start-react-dev": "webpack-dev-server --config webpack.renderer.dev.config.js",
     "start-dev": "cross-env START_HOT=1 npm run start-react-dev",
-    "start": "cross-env NODE_ENV=production electron .",
+    "start": "cross-env NODE_ENV=production electron . --no-sandbox",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx src"
   },
   "repository": {
