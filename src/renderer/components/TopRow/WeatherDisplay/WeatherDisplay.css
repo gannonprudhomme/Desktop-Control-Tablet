@@ -17,6 +17,7 @@
     .temperature-weather-container {
         display: flex;
         flex-direction: column;
+        text-align: right;
     }
         #temperature {
             font-size: 28px;

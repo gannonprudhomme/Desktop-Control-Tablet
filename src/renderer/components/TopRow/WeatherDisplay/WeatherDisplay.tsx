@@ -51,11 +51,6 @@ const WeatherDisplay: React.FC = () => {
 
   return (
     <div className={styles.weatherContainer}>
-      <FontAwesomeIcon
-        // Show a question mark if the type can't be found, so we know to add it
-        icon={weatherIconMap.get(weatherType) ?? faQuestion}
-        className={styles.weatherIcon}
-      />
       <div className={styles.temperatureWeatherContainer}>
         <span id={styles.temperature}>
           {`${temperature}°F`}
@@ -64,6 +59,11 @@ const WeatherDisplay: React.FC = () => {
           {weatherType}
         </span>
       </div>
+      <FontAwesomeIcon
+        // Show a question mark if the type can't be found, so we know to add it
+        icon={weatherIconMap.get(weatherType) ?? faQuestion}
+        className={styles.weatherIcon}
+      />
     </div>
   );
 };
