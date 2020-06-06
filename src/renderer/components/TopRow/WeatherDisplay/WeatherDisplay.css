@@ -1,0 +1,19 @@
+.weather-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    color: #00C8C8;
+    height: 100%;
+}
+    .weather-icon {
+        width: 46px;
+        height: 46px;
+    }
+
+    .temperature-weather-container {
+        display: flex;
+        flex-direction: column;
+    }
+        #temperature {
+            font-size: 28px;
+        }
