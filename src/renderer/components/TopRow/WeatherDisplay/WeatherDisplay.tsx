@@ -44,7 +44,7 @@ const WeatherDisplay: React.FC = () => {
     }, 5000);
 
     return (): void => clearInterval(interval);
-  }, [weatherType, temperature]);
+  }, []);
 
   // Have an option for fahrehenit or celcius?
   // Maybe show high and low temps for the day?
