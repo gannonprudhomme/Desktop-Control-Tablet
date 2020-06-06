@@ -48,17 +48,16 @@ module.exports = merge.smart(baseConfig, {
                         loader: 'css-loader',
                         options: {
                             localsConvention: 'camelCase',
-                            modules: true,
-                            /*modules: {
+                            modules: {
                                 mode: 'local',
-                                localIdentName: '[local]--[has:bas64:5]',
-                            },*/
+                                localIdentName: '[local]--[hash:base64:5]',
+                            },
                         },
                     },
                 ],
             },
             {
-                test: /\.(gif|png|jpe?g|svg)$/,
+                test: /\.(gif|png|jpe?g|svg)$/i,
                 use: [
                     'file-loader',
                     {
