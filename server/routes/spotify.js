@@ -26,7 +26,7 @@ class Spotify extends Route {
   socketHandler(socket) {
     socket.on('get_track', (data, ret) => {
       const options = {
-        url: 'https://api.spotify.com/v1/me/player/currently-playing',
+        url: 'https://api.spotify.com/v1/me/player/currently-playing?additional_types=episode',
         headers: {'Authorization': 'Bearer ' + this.accessToken},
         json: true,
       }
@@ -37,22 +37,27 @@ class Spotify extends Route {
         if(!error && response.statusCode === 200) {
           const sendToClient = {}
 
-          // If there isn't a track currently playing, don't attempt to send it
-          if(body.item) {
-            sendToClient.track = body.item.name
-            sendToClient.artist = body.item.album.artists[0].name
-            sendToClient.album_name = body.item.album.name
-            sendToClient.album_image = body.item.album.images[1].url
-          } else {
-            console.log('Not currently playing track, preventing error')
+          if (body.currently_playing_type === 'track') { // it's a song
+            if (body.item) {
+              const { name, album } = body.item;
+
+              sendToClient.track = name
+              sendToClient.artist = album.artists[0].name
+              sendToClient.album_name = album.name
+              sendToClient.album_image = album.images[1].url // the 300px one, not 640px
+            }
+          } else if (body.currently_playing_type === 'episode') { // it's a podcast
+            if (body.item) {
+              const { name, show } = body.item;
+
+              sendToClient.track = name;
+              sendToClient.artist = show.name;
+              sendToClient.album_name = show.name; // I guess?
+              sendToClient.album_image = show.images[1].url;
+            }
           }
 
           sendToClient.is_playing = body.is_playing
-
-          sendToClient.timeSent = (new Date()).getTime()
-
-          const diff = (sendToClient.timeSent - timeReceived);
-          // console.log('Play: Spotify retrieval ' + diff + 'ms')
 
           ret(sendToClient)
         } else if(response && response.statusCode === 204) {
