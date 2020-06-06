@@ -28,13 +28,14 @@ const TimeDisplay: React.FC = () => {
       setTime(new Date());
     }, 1000);
 
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    return () => clearInterval(interval);
+    return (): void => clearInterval(interval);
   }, [time]);
 
   return (
-    <div id={styles.time}>
-      {formatTime(time)}
+    <div id={styles.timeContainer}>
+      <div id={styles.time}>
+        {formatTime(time)}
+      </div>
     </div>
   );
 };

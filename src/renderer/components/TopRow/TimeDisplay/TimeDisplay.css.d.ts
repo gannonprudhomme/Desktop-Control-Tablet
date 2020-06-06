@@ -1,6 +1,8 @@
 declare namespace TimeDisplayCssModule {
   export interface ITimeDisplayCss {
     time: string;
+    "time-container": string;
+    timeContainer: string;
   }
 }
 
