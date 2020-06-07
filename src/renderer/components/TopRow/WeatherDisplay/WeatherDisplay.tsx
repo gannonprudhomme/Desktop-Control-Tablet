@@ -7,11 +7,11 @@ import {
 import * as styles from './WeatherDisplay.css';
 import socket from '../../../framework/SocketHandler';
 
+/** Regex for weather modifiers to ignore */
 const weatherIgnoreRegex = /(?:Partly\s*)|(?:Mostly\s*)/;
 const weatherIconMap = new Map<string, IconDefinition>();
 weatherIconMap.set('Clear', faSun);
-const sunny = 'Sunny';
-weatherIconMap.set(sunny, faSun);
+weatherIconMap.set('Sunny', faSun);
 weatherIconMap.set('Thunderstorms', faBolt);
 weatherIconMap.set('Cloudy', faCloud);
 weatherIconMap.set('Rain', faCloudRain);
@@ -33,7 +33,9 @@ const WeatherDisplay: React.FC = () => {
     });
   }
 
-  /**  */
+  /** Trims the modifiers ("Partly", "Mostly") and attempts to retrieve the according icon for the
+   *  resulting weather type. Returns a question mark if the according icon can't be found.
+  */
   function getWeatherIcon(weather: string): IconDefinition {
     // Removes the modifiers from the string, such as "Partly" or "Mostly"
     const actualWeather = weather.split(
