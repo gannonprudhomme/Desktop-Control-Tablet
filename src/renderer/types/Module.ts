@@ -1,6 +1,8 @@
 /**
- * Abstract representation of a Module
- * A module represents the
+ * A module represents extra functionality that can be brought into the program at will, namely by
+ * adding it to moduleSettings.ts
+ *
+ * `reducer` is optional
  */
 export interface Module {
   // The component to be rendered in the MiddleRow
@@ -10,7 +12,6 @@ export interface Module {
   reducer: Function; // Used to add the logic to the reducer
   serverRequired: boolean; // Whether this is dependent on a connection to the server or not
   index: number; // The original index it's loaded in at to order the ModuleSwitcher correctly
-  // actions?
 }
 
 export interface ServerModule extends Module {
