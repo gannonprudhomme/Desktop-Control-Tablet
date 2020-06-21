@@ -14,7 +14,9 @@ weatherIconMap.set('Clear', faSun);
 weatherIconMap.set('Sunny', faSun);
 weatherIconMap.set('Thunderstorms', faBolt);
 weatherIconMap.set('Cloudy', faCloud);
+// Should find a way to combine these
 weatherIconMap.set('Rain', faCloudRain);
+weatherIconMap.set('Rain Showers', faCloudShowersHeavy);
 
 /**
  * Displays the current weather and temperature
