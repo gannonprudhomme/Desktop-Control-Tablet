@@ -1,7 +1,7 @@
 import * as React from 'react';
-import CustomSlider from '../../../framework/CustomSlider';
+import CustomSlider from '../../../framework/CustomSlider/CustomSlider';
 import VolumeProcess from '../VolumeProcess';
-import * as styles from './VolumeSlider.css';
+import * as styles from '../../../framework/CustomSlider/CustomSlider.css';
 import { volumeMixerSockets } from '../VolumeMixerSockets';
 
 interface VolumeSliderProps {

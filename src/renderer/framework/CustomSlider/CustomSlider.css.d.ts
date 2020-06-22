@@ -1,7 +1,5 @@
-declare namespace VolumeSliderCssModule {
-  export interface IVolumeSliderCss {
-    "process-name-text": string;
-    processNameText: string;
+declare namespace CustomSliderCssModule {
+  export interface ICustomSliderCss {
     slider: string;
     "slider-container": string;
     "slider-icon": string;
@@ -14,9 +12,9 @@ declare namespace VolumeSliderCssModule {
   }
 }
 
-declare const VolumeSliderCssModule: VolumeSliderCssModule.IVolumeSliderCss & {
+declare const CustomSliderCssModule: CustomSliderCssModule.ICustomSliderCss & {
   /** WARNING: Only available when `css-loader` is used without `style-loader` or `mini-css-extract-plugin` */
-  locals: VolumeSliderCssModule.IVolumeSliderCss;
+  locals: CustomSliderCssModule.ICustomSliderCss;
 };
 
-export = VolumeSliderCssModule;
+export = CustomSliderCssModule;
