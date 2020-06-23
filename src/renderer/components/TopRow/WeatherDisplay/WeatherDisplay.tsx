@@ -56,12 +56,12 @@ const WeatherDisplay: React.FC = () => {
     return weatherIconMap.get(actualWeather);
   }
 
-  // Retrieve on first render immediately
-  getForecast();
-
   // Attempt to update the forecast every 5 seconds
   React.useEffect(() => {
     let interval: NodeJS.Timeout = null;
+
+    // Retrieve on first render immediately
+    getForecast();
 
     interval = setInterval(() => {
       getForecast();
