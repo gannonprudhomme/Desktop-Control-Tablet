@@ -1,0 +1,23 @@
+.smart-light-slider-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    max-width: 15rem;
+}
+    .light-name {
+        display: inline-block;
+        flex-grow: 0;
+        /* width: min-content; */
+    }
+
+    .lights-slider-container {
+        display: flex;
+        justify-content: flex-start;
+        /* height: max-content; */
+        /* height: calc(100% - 18px); */
+        flex-grow: 5;
+    }
+
+    .override-slider-container {
+        margin-right: initial;
+    }

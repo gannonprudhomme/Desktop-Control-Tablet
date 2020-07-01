@@ -7,7 +7,7 @@ const Route = require('./route.js')
 const transition = 50
 
 const TPLSmartDevice = require('tplink-lightbulb')
-const LifxClient = require('node-lifx').Client
+const LifxClient = require('lifx-lan-client').Client;
 const lifx = new LifxClient({port: '50505'})
 
 class SmartLight extends Route {
@@ -26,15 +26,74 @@ class SmartLight extends Route {
     this.initLights()
   }
 
-  socketHandler(socket) {
-    let _lightWasResponding = false // TODO Review the use/necessity of this
+  // Should be temporary
+  refreshLights() {
+    this.lightsSettings.forEach((light) => {
+      // Add tp-link later
+      if (light.type === 'lifx') {
+        this.oldGetLightInfo()
+      }
+    });
+  }
 
-    socket.on('get_light_info', (data, ret) => {
+  // Receives no actual parameters, and calls ret upon computation
+  // Want to return name, brightness, rgbCapable, and connected(responding)
+  getLightInfo() {
+    // Retrieve all lights we have for LIFX
+    const lifxLights = lifx.lights(); // I think this is O(1) & it's syncrhonous?
+    // TODO: I'm going to have to manually track the TPLink bulbs since the library doesn't do it for me
+    const tpLinkLights = [];
+
+  }
+
+  mockGetAllLights(data, ret) {
+    const returnData = [
+      {
+        name: 'Really Long Light/Lamp Name Name',
+        brightness: 100,
+        colorTemp: 3600,
+        responding: true,
+      }
+    ]
+
+    ret(returnData);
+  }
+
+  getAllLights(data, ret) {
+    // Retrieve all lights we have for LIFX
+    const lifxLights = lifx.lights(); // I think this is O(1) & it's syncrhonous?
+    // TODO: I'm going to have to manually track the TPLink bulbs since the library doesn't do it for me
+    const tpLinkLights = [];
+    let retData = [];
+
+    retData += lifxLights.map((lightData) => {
+      const { color, label } = lightData;
+      const { brightness, kelvin, hue } = color;
+
+      return { 
+        name: label,
+        color_temp: kelvin,
+        brightness,
+        hue,
+        rgbCapable: true,
+      }
+    });
+
+    ret(retData);
+  }
+
+  // returns { brightness, color_temp, responding }
+  oldGetLightInfo(data, ret) {
       // Retrieve the light info from the bulb itself
       const lightID = data['id']
       let lightResponding = false
 
       // Get the type of the bulb
+      if (!this.lightsData.hasOwnProperty(lightID)) {
+        console.error(`Unable to get light info of unavailble light: ${lightID}`)
+        return;
+      }
+
       const type = this.lightsData[lightID]['type']
 
       if(type == 'tp-link') {
@@ -68,7 +127,10 @@ class SmartLight extends Route {
           const retData = {
             'brightness': lightState['brightness'],
             'color_temp': lightState['color_temp'],
-            'responding': lightResponding,
+            'connected': lightResponding,
+            // new addition
+            type,
+            name: 'Name',
           }
 
           // Don't wanna send the light object or anything
@@ -79,13 +141,16 @@ class SmartLight extends Route {
       } else if(type == 'lifx') {
         if(this.lightsData[lightID]['object'] != null) {
           // Or iterate through all of the lights
-          this.getLifxInfo(this.lightsData[lightID]['object'], lightID).then((data) => {
+          this.getLifxInfo(this.lightsData[lightID]['object'], lightID).then((lightData) => {
             const retData = {
-              'hue': data['hue'],
-              'saturation': data['saturation'],
-              'brightness': data['brightness'],
-              'color_temp': data['color_temp'],
-              'responding': lightResponding,
+              'hue': lightData['hue'],
+              'saturation': lightData['saturation'],
+              'brightness': lightData['brightness'],
+              'colorTemp': lightData['color_temp'],
+              'connected': lightResponding,
+              // new addition
+              type,
+              name: 'Name',
             }
 
             ret(retData)
@@ -100,6 +165,17 @@ class SmartLight extends Route {
         }
       } else { // Unknown light type
       }
+  }
+
+  socketHandler(socket) {
+    let _lightWasResponding = false // TODO Review the use/necessity of this
+
+    socket.on('get_light_info', (data, ret) => {
+      this.oldGetLightInfo(data, ret);
+    })
+
+    socket.on('get_all_lights', (data, ret) => {
+      this.getAllLights(data, ret);
     })
 
     socket.on('set_light_brightness', (data) => {
@@ -111,6 +187,11 @@ class SmartLight extends Route {
       const brightness= data['brightness']
 
       // Set the new brightness in the lightsData dictionary for this object
+      if (!this.lightsData.hasOwnProperty(lightID)) {
+        console.error(`Attempted to brightness of unavailable light with ID: ${lightID}`);
+        return;
+      }
+
       this.lightsData[lightID]['brightness'] = brightness
 
       const lightObj = this.lightsData[lightID]['object']
@@ -136,6 +217,11 @@ class SmartLight extends Route {
     socket.on('set_light_color', (data) => {
       const lightID = data['id']
       const colorTemp = data['color']
+
+      if (!this.lightsData.hasOwnProperty(lightID)) {
+        console.error(`Attempted to temperature of unavailable light with ID: ${lightID}`);
+        return;
+      }
 
       // Get the according light object
       const lightObj = this.lightsData[lightID]['object']
@@ -176,13 +262,22 @@ class SmartLight extends Route {
         lightObj.on()
       }
     })
+
+    // Set the hue for the given light
+    socket.on('set_light_hue', (data) => {
+      // Do stuff
+      const { id, hue } = data;
+
+      // TODO Check if id or hue is nil, and log an error if so
+    });
   }
 
   initLights() {
     // These needs to be loaded in dynamically
     for(const i in this.lightsSettings) {
+      // I have literally no clue what this line below this does
       if(Object.prototype.hasOwnProperty.call(this.lightsSettings, i)) {
-        const light =this.lightsSettings[i]
+        const light = this.lightsSettings[i]
         const id = light['id']
 
         this.lightsData[id] = {
@@ -251,9 +346,8 @@ class SmartLight extends Route {
       }
     })
 
-    lifx.init()
+    // lifx.init()
   }
-
 
   getLifxInfo(lightObject, lightID) {
     return new Promise((resolve, reject) => {
@@ -268,13 +362,13 @@ class SmartLight extends Route {
         return
       }
 
+      // TODO: Should probably add a timeout here
       lightObject.getState((err, data) => {
         if(err) {
           // console.log(err) // This error should be handled elsewhere
           reject(err)
           return
         }
-
 
         const colorData = data['color']
 
@@ -291,45 +385,9 @@ class SmartLight extends Route {
     })
   }
 
-  // Socket route for retrieving info about the light
-  getLightInfo(data, ret) {
-  }
-
   handleRoute() {
     // Handle flux changes to update the lightbulb
     this.router.post('/flux', (req, res) => {
-      /*
-      // Parse the data from f.lux
-      var temp = parseInt(req.query['ct'], 10);
-
-      // Clamp the temperature to the range of the TPLink bulb
-      var ctmp;
-      if (temp < module_settings['minColor']) {
-          ctmp = module_settings['minColor'];
-
-      } else if (temp > module_settings['maxColor']) {
-          ctmp = module_settings['maxColor'];
-
-      } else {
-          ctmp = temp;
-      }
-
-      //console.log('Changing Light to temperature ' + ctmp + 'k')
-
-      // Iterate through all of the bulbs and update them + their respective data
-
-      // Create the bulb object
-      bulb = new TPLSmartDevice(bip);
-
-      lightData['color_temp'] = ctmp
-
-      // Transition period of 500ms
-      bulb.power(lightData['power'], 500, { color_temp: ctmp })
-          .then(status => {
-              //console.log(status)
-          })
-          .catch(err => console.error(err))
-      */
 
       // Send the response back to f.lux? Not sure if this is necessary
       res.end(JSON.stringify(req.query));
