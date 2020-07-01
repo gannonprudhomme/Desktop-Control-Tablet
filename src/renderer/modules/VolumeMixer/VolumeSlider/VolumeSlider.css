@@ -47,3 +47,10 @@
         border-radius: 15px;
         background: #4CAF50;
     }
+.process-name-text {
+    display: inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap; /* Prevents it from wrapping processes w/ spaces onto multiple lines */
+    overflow: hidden;
+    max-width: 6rem;
+}
