@@ -1,7 +1,8 @@
 import * as React from 'react';
 import CustomSlider from '../../../framework/CustomSlider/CustomSlider';
 import VolumeProcess from '../VolumeProcess';
-import * as styles from '../../../framework/CustomSlider/CustomSlider.css';
+import * as sliderStyles from '../../../framework/CustomSlider/CustomSlider.css';
+import * as styles from './VolumeSlider.css';
 import { volumeMixerSockets } from '../VolumeMixerSockets';
 
 interface VolumeSliderProps {
@@ -80,7 +81,7 @@ const VolumeSlider: React.FC<VolumeSliderProps> = ({ volumeProcess }) => {
 
   return (
     <div
-      className={styles.sliderContainer}
+      className={sliderStyles.sliderContainer}
       style={{
         marginTop: thumbSize,
       }}
@@ -98,12 +99,12 @@ const VolumeSlider: React.FC<VolumeSliderProps> = ({ volumeProcess }) => {
         data-testid={`${volumeProcess.name}-slider`}
       />
 
-      <div className={styles.sliderInfoContainer}>
-        <span className={styles.sliderLabel}>
+      <div className={sliderStyles.sliderInfoContainer}>
+        <span className={sliderStyles.sliderLabel}>
           {`${volume}% `}
         </span>
         <img
-          className={styles.sliderIcon}
+          className={sliderStyles.sliderIcon}
           // Get the icon from the Electron server
           src={icon}
           alt=""

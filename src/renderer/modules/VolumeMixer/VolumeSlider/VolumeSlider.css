@@ -1,0 +1,7 @@
+.process-name-text {
+    display: inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap; /* Prevents it from wrapping processes w/ spaces onto multiple lines */
+    overflow: hidden;
+    max-width: 6rem;
+}
