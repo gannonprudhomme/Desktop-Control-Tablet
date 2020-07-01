@@ -28,6 +28,8 @@ function createWindow() {
     fullscreen: false,
     webPreferences: {
       nodeIntegration: true,
+      // This enables us to do CORS requests. Needed for VolmueMixer icon retrieval retrying
+      webSecurity: false,
     },
   })
 

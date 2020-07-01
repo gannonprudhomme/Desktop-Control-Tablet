@@ -44,6 +44,65 @@ const VolSliderUI = withStyles({
 
 const VolumeSlider: React.FC<VolumeSliderProps> = ({ volumeProcess }) => {
   const [volume, setVolume] = React.useState(volumeProcess.volume);
+  const [icon, setIcon] = React.useState('');
+  const thumbSize = 36;
+
+  function fetchIcon(processName: string): Promise<string> {
+    const url = `http://localhost:3000/icons/${processName}`;
+
+    return new Promise((resolve, reject) => {
+      const request = new Request(url);
+
+      fetch(request).then(
+        (response) => response.blob(),
+      ).then((data: Blob): void => {
+        if (data.size <= 4) {
+          reject(Error(`Icon received was empty for ${processName}`));
+          return;
+        }
+
+        const imageUrl = URL.createObjectURL(data);
+        resolve(imageUrl);
+      });
+    });
+  }
+
+  function timeout(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  async function fetchIconRetry(retryCount = 10): Promise<string> {
+    try {
+      return await fetchIcon(volumeProcess.name);
+    } catch (err) {
+      // Only throw the error once we've retried enough times
+      if (retryCount === 1) {
+        throw err;
+      }
+
+      console.log(`Failed to when getting ${volumeProcess.name} icon. Waiting to retry...`);
+      await timeout(500); // Wait for half a second before retrying
+      console.log(`Retrying getting ${volumeProcess.name} icon`);
+
+      const newCount = retryCount - 1;
+      return fetchIconRetry(newCount);
+    }
+  }
+
+  React.useEffect(() => {
+    // Have to await in async functions for async usage in React hooks
+    async function getAndSetIcon(): Promise<void> {
+      const iconUrl = await fetchIconRetry();
+
+      setIcon(iconUrl);
+    }
+
+    getAndSetIcon();
+
+  // I'm intetionally not passing in fetchIconRetry to prevent an infinite render-cycle
+  // Could probably use React.useCallback?
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [volumeProcess.name]);
 
   React.useEffect(() => {
     setVolume(volumeProcess.volume);
@@ -76,10 +135,12 @@ const VolumeSlider: React.FC<VolumeSliderProps> = ({ volumeProcess }) => {
         <img
           className={styles.sliderIcon}
           // Get the icon from the Electron server
-          src={`http://localhost:3000/icons/${volumeProcess.name}`}
+          src={icon}
           alt=""
         />
-        {volumeProcess.name}
+        <span className={styles.processNameText}>
+          {volumeProcess.name}
+        </span>
       </div>
     </div>
   );
