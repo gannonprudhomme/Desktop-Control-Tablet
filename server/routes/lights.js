@@ -10,6 +10,119 @@ const TPLSmartDevice = require('tplink-lightbulb')
 const LifxClient = require('lifx-lan-client').Client;
 const lifx = new LifxClient({port: '50505'})
 
+const LIFX_ID = 'lifx';
+const TPLINK_ID = 'tp-link';
+
+// A SmartLight
+// When we move to typescript, we'll just use the client's implementation of this
+class AbstractLight {
+  name; // string
+  power; // boolean
+  object; // internal object
+  kelvin; // number
+
+  constructor(name) {
+    this.name = name;
+
+    this.lastHueSet = new Date().getTime();
+    this.lastTempSet = new Date().getTime();
+  }
+
+  /** Converts the object into a form the frontend can use */
+  serialize() {
+    return {
+      // name: this.name,
+      // brightness: this.brightness,
+      // connected: this.connected,
+      name, brightness, connected,
+    };
+  }
+
+  /** Returns a promise with a reference to this object */
+  refreshState() {
+  }
+
+  // Should this be setPower?
+  togglePower() { }
+
+}
+
+class RGBLight extends AbstractLight {
+  // All are numbers
+  hue;
+  saturation;
+  kelvin;
+
+  constructor(name) {
+    super(name);
+  }
+
+  serialize() {
+    const superSerial = super.serialize();
+
+    return {
+      ...superSerial,
+      rgbCapable: true,
+      colorTemp: this.kelvin,
+      hue,
+    }
+  }
+
+  setTemperature(kelvin) { }
+
+  setHue(hue) { }
+}
+
+class LifxLight extends RGBLight {
+  constructor(name, object) {
+    super(name);
+    this.object = object;
+  }
+
+  serialize() {
+    const superSerial = super.serialize();
+
+    return {
+      ...superSerial,
+      type: LIFX_ID,
+    };
+  }
+
+  refreshState() {
+    const self = this;
+    return new Promise((resolve, reject) => {
+      this.object.getState((err, data) => {
+        if(err) {
+          reject(err)
+          return
+        }
+
+        if(!data) {
+          reject(Error("Data is invalid!"));
+          return;
+        }
+
+        const color = data.color;
+        // const label = data.label;
+
+        if (!color) {
+          reject(Error("Color is invalid!"))
+          return;
+        }
+
+        const { hue, saturation, brightness, kelvin } = color;
+
+        self.hue = hue;
+        self.saturation = saturation;
+        self.brightness = brightness;
+        self.kelvin = kelvin;
+
+        resolve(self);
+      });
+    });
+  }
+}
+
 class SmartLight extends Route {
   constructor(moduleSettings) {
     super()
