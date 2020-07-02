@@ -32,8 +32,8 @@ const HueSlider: React.FC<HueSliderProps> = ({ lightHue, onChange }) => {
   const useHueSliderStyles = makeStyles<Theme, HueSliderStyleProps>(() => ({
     thumb: (props): CSSProperties => ({
       backgroundColor: `${props.thumbColor}`,
-      width: 16,
-      height: 16,
+      // width: 16,
+      // height: 16,
     }),
     track: {
       // Hide the track so that the rainbow-gradient rail is the only thing that's shown

@@ -7,6 +7,7 @@ interface SmartLightInit {
   connected: boolean; // if it's responded in the last X seconds
   colorTemp?: number;
   hue?: number;
+  saturation?: number;
   // rgbCapable: boolean; // if it's capable of rgb
   // syncWithFlux: boolean; // Dunno if we should do this or not
 }
@@ -18,6 +19,7 @@ export default class SmartLight {
   connected: boolean;
   colorTemp?: number;
   hue?: number;
+  saturation?: number;
 
   constructor(init: SmartLightInit) {
     // Should probably ignore most falsy values? maybe not all though

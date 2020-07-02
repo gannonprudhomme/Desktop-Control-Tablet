@@ -12,10 +12,22 @@ const SmartLightControl: React.FC = () => {
   const smartLights = useSelector<RootState, Map<string, SmartLight>>((state) => state.smartLights);
 
   // Map smartLights to a row (actually a column)
-  const sliders: JSX.Element[] = [];
-  smartLights.forEach((light) => {
-    sliders.push(<SmartLightSlider light={light} key={light.name} />);
-  });
+  const sliders: JSX.Element[] = React.useMemo(() => {
+    const ret: JSX.Element[] = [];
+    smartLights.forEach((light) => {
+      ret.push(
+        <SmartLightSlider
+          light={light}
+          key={light.name}
+          lightHue={light.hue}
+          lightBrightness={light.brightness}
+          lightSaturation={light.saturation}
+          lightTemperature={light.colorTemp}
+        />,
+      );
+    });
+    return ret;
+  }, [smartLights])
 
   // Initialize the sockets
   React.useEffect(() => {
@@ -27,15 +39,28 @@ const SmartLightControl: React.FC = () => {
 
   /** Iterate through all of the current light and attempt to retrieve the current info on them */
   function updateLights(): void {
-    smartLights.forEach((light) => {
+    // console.log(smartLights);
+    if (!smartLights) { 
+      console.log('smartLights is null in updateLights!');
+      return;
+    }
+
+    for (let [key, value] of smartLights) {
+      // console.log(`${key}: ${value}`)
+      const light = value;
+      if (!light) {
+        console.log(`Received falsy light for key ${key}`);
+        return;
+      }
+
       smartLightSockets.getLightInfo(light).then((updatedLight) => {
         dispatch(updateSmartLight(updatedLight));
       });
-    });
+    }
   }
 
   // Get light data every 5? seconds
-  const pollingRate = 5000;
+  const pollingRate = 2000;
   React.useEffect(() => {
     let interval: NodeJS.Timeout = null;
 

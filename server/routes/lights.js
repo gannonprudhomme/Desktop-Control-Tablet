@@ -20,42 +20,45 @@ class AbstractLight {
   power; // boolean
   object; // internal object
   kelvin; // number
+  connected; // boolean. If the light is active and responding
 
-  constructor(name) {
-    this.name = name;
+  constructor() {
+    // We can assume that if we're initializing and object, it's connected & responding
+    this.connected = true;
 
     this.lastHueSet = new Date().getTime();
     this.lastTempSet = new Date().getTime();
+    this.lastBrightnessSet = new Date().getTime();
   }
 
   /** Converts the object into a form the frontend can use */
   serialize() {
     return {
-      // name: this.name,
-      // brightness: this.brightness,
-      // connected: this.connected,
-      name, brightness, connected,
+      name: this.name,
+      brightness: this.brightness,
+      connected: this.connected,
     };
   }
 
   /** Returns a promise with a reference to this object */
   refreshState() {
   }
+  
+  /**
+   * 
+   * @param {number} brightness 
+   */
+  setBrightness(brightness) { }
 
   // Should this be setPower?
   togglePower() { }
-
 }
 
 class RGBLight extends AbstractLight {
   // All are numbers
   hue;
   saturation;
-  kelvin;
-
-  constructor(name) {
-    super(name);
-  }
+  temperature;
 
   serialize() {
     const superSerial = super.serialize();
@@ -63,8 +66,9 @@ class RGBLight extends AbstractLight {
     return {
       ...superSerial,
       rgbCapable: true,
-      colorTemp: this.kelvin,
-      hue,
+      colorTemp: this.temperature,
+      hue: this.hue,
+      saturation: this.saturation,
     }
   }
 
@@ -74,9 +78,11 @@ class RGBLight extends AbstractLight {
 }
 
 class LifxLight extends RGBLight {
-  constructor(name, object) {
-    super(name);
+  constructor(object) {
+    super();
     this.object = object;
+
+    this.overloadCutoff = 50; // Ignore requests that are 50ms between eachother
   }
 
   serialize() {
@@ -102,8 +108,7 @@ class LifxLight extends RGBLight {
           return;
         }
 
-        const color = data.color;
-        // const label = data.label;
+        const { color, label } = data;
 
         if (!color) {
           reject(Error("Color is invalid!"))
@@ -112,14 +117,91 @@ class LifxLight extends RGBLight {
 
         const { hue, saturation, brightness, kelvin } = color;
 
+        self.name = label;
         self.hue = hue;
         self.saturation = saturation;
         self.brightness = brightness;
-        self.kelvin = kelvin;
+        self.temperature = kelvin;
 
         resolve(self);
       });
     });
+  }
+
+  setBrightness(brightness) { // This could be a computer property?
+    const now = new Date().getTime();
+
+    if (now - this.lastBrightnessSet >= this.overloadCutoff) {
+      this.lastBrightnessSet = now;
+
+      console.log(`Setting brightness for light ${this.name} to ${brightness}`)
+      this.brightness = brightness;
+      this.setColor();
+    } else {
+      console.log('Skipping setting brightness')
+    }
+  }
+
+  setTemperature(temperature) {
+    const now = new Date().getTime();
+
+    if (now - this.lastTempSet >= this.overloadCutoff) {
+      this.lastTempSet = now;
+
+      // Set hue and saturation to 0 so it only pays attention to temperature
+      this.hue = 0;
+      this.saturation = 0;
+      this.temperature = temperature;
+
+      this.setColor();
+      console.log(`Setting temperature for light ${this.name} to ${temperature}`)
+    } else {
+      console.log('Skipping setting temperature');
+    }
+  }
+
+  setHue(hue) {
+    const now = new Date().getTime();
+
+    if (now - this.lastHueSet >= this.overloadCutoff) {
+      this.lastHueSet = now;
+
+      this.hue = hue;
+      this.saturation = 100;
+
+      this.setColor();
+      console.log(`Setting hue for light ${this.name} to ${hue}`)
+    } else {
+      console.log(`Skipping setting hue`)
+    }
+  }
+
+  /*
+  setColor(hue = this.hue, saturation = this.saturation, brightness = this.brightness, temperature = this.temperature) {
+    this.object.color(hue, saturation, brightness, temperature, 0, 
+                      (error) => {
+        console.log(`Set thing to ${hue} ${saturation} ${this.brightness} ${this.temperature}`);
+  */
+
+  // Private
+  setColor() {
+    this.object.color(this.hue, this.saturation, this.brightness, this.temperature, 0, 
+                      (error) => {
+        if (error) {
+          console.log(error);
+          this.connected = false; // Maybe?
+        }
+    });
+  }
+
+  togglePower() {
+    this.power = !this.power;
+
+    if (this.power) {
+      this.object.on();
+    } else {
+      this.object.off();
+    }
   }
 }
 
@@ -132,159 +214,205 @@ class SmartLight extends Route {
     this.transition = 50
     this.lightsData = {}
     this.lightsSettings = this.moduleSettings['lights']
+    this.lightsStore = new Map(); // [String, Light]
 
     this.router = express.Router()
     this.handleRoute()
 
-    this.initLights()
+    lifx.init();
+    this.lifxHandler();
   }
 
-  // Should be temporary
-  refreshLights() {
-    this.lightsSettings.forEach((light) => {
-      // Add tp-link later
-      if (light.type === 'lifx') {
-        this.oldGetLightInfo()
-      }
+  /**
+   * 
+   * @param {{ name: string }} data
+   * @param {*} ret Callback function to return the data
+   *  return the serialized AbstractLight
+   */
+  getLightInfo(data, ret) {
+    const { name } = data;
+
+    if (!name) {
+      console.log(`getLightInfo(): Received invalid name!`);
+      ret(null);
+      return;
+    }
+
+    const smartLight = this.lightsStore.get(name);
+
+    if (!smartLight) {
+      console.log(`getLightInfo(): Could not find light: ${name}`);
+      ret(null);
+      return;
+    }
+
+    smartLight.refreshState().then((refreshedLight) => {
+      // refreshLight shouldn't ever be invalid
+      ret(refreshedLight.serialize());
     });
   }
 
-  // Receives no actual parameters, and calls ret upon computation
-  // Want to return name, brightness, rgbCapable, and connected(responding)
-  getLightInfo() {
-    // Retrieve all lights we have for LIFX
-    const lifxLights = lifx.lights(); // I think this is O(1) & it's syncrhonous?
-    // TODO: I'm going to have to manually track the TPLink bulbs since the library doesn't do it for me
-    const tpLinkLights = [];
-
-  }
-
-  mockGetAllLights(data, ret) {
-    const returnData = [
-      {
-        name: 'Really Long Light/Lamp Name Name',
-        brightness: 100,
-        colorTemp: 3600,
-        responding: true,
-      }
-    ]
-
-    ret(returnData);
-  }
-
   getAllLights(data, ret) {
+    const retData = [];
+
+    this.lightsStore.forEach((light) => {
+      retData.push(light.serialize());
+    });
+
+    ret(retData);
+
+    /*
     // Retrieve all lights we have for LIFX
     const lifxLights = lifx.lights(); // I think this is O(1) & it's syncrhonous?
     // TODO: I'm going to have to manually track the TPLink bulbs since the library doesn't do it for me
     const tpLinkLights = [];
     let retData = [];
+    let count = 0;
+    const total = lifxLights.length + tpLinkLights.length;
 
-    retData += lifxLights.map((lightData) => {
-      const { color, label } = lightData;
-      const { brightness, kelvin, hue } = color;
+    await lifxLights.forEach(async (light) => {
+      console.log('attempting to get state!')
+      await light.getState((err, data) => {
+        console.log('retrieved state!');
+        if (err) {
+          console.log(err);
+        }
 
-      return { 
-        name: label,
-        color_temp: kelvin,
-        brightness,
-        hue,
-        rgbCapable: true,
-      }
+        const { color, label } = data;
+        const { brightness, kelvin, hue } = color;
+
+        const retObj = { 
+          name: label,
+          colorTemp: kelvin,
+          brightness,
+          hue,
+          rgbCapable: true,
+        }
+
+        console.log(retObj);
+
+        retData.push(retObj);
+        count += 1
+      })
     });
 
-    ret(retData);
+    function waitForAllLights(finish) {
+      const waitTime = 500;
+      if (count === total) {
+        console.log('done waiting')
+        ret(retData);
+      } else {
+        console.log('waiting');
+        setTimeout(waitForAllLights, waitTime)
+      }
+    }
+
+    waitForAllLights();
+    */
   }
 
-  // returns { brightness, color_temp, responding }
-  oldGetLightInfo(data, ret) {
-      // Retrieve the light info from the bulb itself
-      const lightID = data['id']
-      let lightResponding = false
+  /**
+   * 
+   * @param {{ name: string, brightness: number }} data 
+   */
+  setBrightness(data) {
+    const { name, brightness } = data;
 
-      // Get the type of the bulb
-      if (!this.lightsData.hasOwnProperty(lightID)) {
-        console.error(`Unable to get light info of unavailble light: ${lightID}`)
-        return;
-      }
+    if (!name) {
+      console.log(`setBrightness(): Received invalid name!`);
+      return;
+    }
 
-      const type = this.lightsData[lightID]['type']
+    if (!brightness) {
+      console.log(`setBrightness(): Received invalid brightness!`);
+      return;
+    }
 
-      if(type == 'tp-link') {
-        const bulb = this.lightsData[lightID]['object'] // Load the respective TPLSmartDevice object
+    const smartLight = this.lightsStore.get(name);
 
-        bulb.info().then((info) => {
-          if(!_lightWasResponding) {
-            // console.log('Light now responding!')
-          }
+    if (!smartLight) {
+      console.log(`setBrightness(): Could not find light: ${name}`);
+      return;
+    }
 
-          _lightWasResponding = true
-          lightResponding = true
+    smartLight.setBrightness(brightness);
+  }
 
-          let lightState = info['light_state']
-          this.lightsData[lightID]['power'] = lightState['on_off']
+  /**
+   * 
+   * @param {{ name: string, temperature: number }} data 
+   */
+  setTemperature(data) {
+    const { name, temperature } = data;
 
-          // If the light isn't on
-          if(!this.lightsData[lightID]['power']) {
-            // Then the light data is going to be located in data.light_state.dft_on_state
-            // instead of data.light_state
-            lightState = lightState['dft_on_state']
-          }
+    if (!name) {
+      console.log(`setTemperature(): Received invalid name!`);
+      return;
+    }
 
-          // Update the light data dictionary
-          this.lightsData[lightID]['brightness'] = lightState['brightness']
-          this.lightsData[lightID]['color_temp'] = lightState['color_temp']
-          this.lightsData[lightID]['responding'] = lightResponding // which will always be set to true at this point
+    if (!temperature) {
+      console.log(`setTemperature(): Received invalid temperature!`);
+      return;
+    }
 
-          // Create the dictionary to be returned the client
-          // We create this separately, as we don't need to send back the full data(like light type and its object)
-          const retData = {
-            'brightness': lightState['brightness'],
-            'color_temp': lightState['color_temp'],
-            'connected': lightResponding,
-            // new addition
-            type,
-            name: 'Name',
-          }
+    const smartLight = this.lightsStore.get(name);
 
-          // Don't wanna send the light object or anything
-          ret(retData)
-        }).catch((error) => {
-          console.log(error)
-        })
-      } else if(type == 'lifx') {
-        if(this.lightsData[lightID]['object'] != null) {
-          // Or iterate through all of the lights
-          this.getLifxInfo(this.lightsData[lightID]['object'], lightID).then((lightData) => {
-            const retData = {
-              'hue': lightData['hue'],
-              'saturation': lightData['saturation'],
-              'brightness': lightData['brightness'],
-              'colorTemp': lightData['color_temp'],
-              'connected': lightResponding,
-              // new addition
-              type,
-              name: 'Name',
-            }
+    if (!smartLight) {
+      console.log(`setTemperature(): Could not find light: ${name}`);
+      return;
+    }
 
-            ret(retData)
-          }).catch((error) => {
-            if(error.message == 'No LIFX response in time') {
-              // console.log('LIFX Bulb not responding')
-            } else {
-              console.log(error)
-            }
-          })
-        } else { // LIFX object is null for this light
-        }
-      } else { // Unknown light type
-      }
+    smartLight.setTemperature(temperature);
+  }
+
+  togglePower(data) {
+    const { name } = data;
+
+    if (!name) {
+      console.log(`togglePower(): Received invalid name!`);
+      return;
+    }
+
+    const smartLight = this.lightsStore.get(name);
+
+    if (!smartLight) {
+      console.log(`togglePower(): Could not find light: ${name}`);
+      return
+    }
+
+    smartLight.togglePower();
+  }
+
+  /**
+   * 
+   * @param {{ name: string, hue: number }} data 
+   */
+  setHue(data) {
+    const { name, hue } = data;
+
+    if (!name) {
+      console.log(`setHue(): Received invalid name!`);
+      return;
+    }
+
+    if (!hue) {
+      console.log(`setHue(): Received invalid temperature!`);
+      return;
+    }
+
+    const smartLight = this.lightsStore.get(name);
+
+    if (!smartLight) {
+      console.log(`setHue(): Could not find light: ${name}`);
+      return;
+    }
+
+    smartLight.setHue(hue);
   }
 
   socketHandler(socket) {
-    let _lightWasResponding = false // TODO Review the use/necessity of this
-
     socket.on('get_light_info', (data, ret) => {
-      this.oldGetLightInfo(data, ret);
+      this.getLightInfo(data, ret);
     })
 
     socket.on('get_all_lights', (data, ret) => {
@@ -292,215 +420,46 @@ class SmartLight extends Route {
     })
 
     socket.on('set_light_brightness', (data) => {
-      // console.log('Setting brightness to ' + data)
-
-      const now = (new Date()).getTime()
-
-      const lightID = data['id']
-      const brightness= data['brightness']
-
-      // Set the new brightness in the lightsData dictionary for this object
-      if (!this.lightsData.hasOwnProperty(lightID)) {
-        console.error(`Attempted to brightness of unavailable light with ID: ${lightID}`);
-        return;
-      }
-
-      this.lightsData[lightID]['brightness'] = brightness
-
-      const lightObj = this.lightsData[lightID]['object']
-
-      // If the light object exists
-      if(lightObj) {
-        // Get the type of the bulb
-        const type = this.lightsData[lightID]['type']
-
-        if(type == 'tp-link') {
-          lightObj.power(this.lightsData[lightID]['power'], transition, {brightness: data}).then((status) => {
-            const delay = (new Date()).getTime() - now
-            // console.log('Brightness delay: ' + delay)
-          })
-        } else if(type == 'lifx') {
-          const lifxData = this.lightsData[lightID]
-
-          lightObj.color(lifxData['hue'], lifxData['saturation'], brightness, lifxData['color_temp'])
-        }
-      }
+      this.setBrightness(data);
     })
 
+    // Set the color temperature (in kelvin)
     socket.on('set_light_color', (data) => {
-      const lightID = data['id']
-      const colorTemp = data['color']
-
-      if (!this.lightsData.hasOwnProperty(lightID)) {
-        console.error(`Attempted to temperature of unavailable light with ID: ${lightID}`);
-        return;
-      }
-
-      // Get the according light object
-      const lightObj = this.lightsData[lightID]['object']
-
-      // Get the type of the bulb
-      const type = this.lightsData[lightID]['type']
-      if(type == 'tp-link') {
-        lightObj.power(this.lightsData[lightID]['power'], transition, {colorTemp: colorTemp}).then((status) => {
-          // console.log(status)
-        })
-      } else if(type == 'lifx') {
-        const lifxData = this.lightsData[lightID]
-
-        lightObj.color(lifxData['hue'], lifxData['saturation'], lifxData['brightness'], colorTemp)
-      }
+      this.setTemperature(data);
     })
 
     socket.on('toggle_light_power', (data) => {
-      const lightID = data['id']
-
-      this.lightsData[lightID]['power'] = !this.lightData[lightID]['power']
-
-      console.log('Changing light power to: ' + lightData['power'])
-
-      // Get the according light object
-      const lightObj = this.lightsData[lightID]['object']
-      if(lightObj == null) {
-        // Error
-      }
-
-      // Get the type of this bulb
-      const type = this.lightsData[lightID]['type']
-      if(type == 'tp-link') {
-        bulb.power(this.lightsData['power']).then((status) => {
-          // console.log(status)
-        })
-      } else if(type == 'lifx') {
-        lightObj.on()
-      }
+      this.togglePower(data);
     })
 
-    // Set the hue for the given light
     socket.on('set_light_hue', (data) => {
-      // Do stuff
-      const { id, hue } = data;
-
-      // TODO Check if id or hue is nil, and log an error if so
+      this.setHue(data);
     });
   }
 
-  initLights() {
-    // These needs to be loaded in dynamically
-    for(const i in this.lightsSettings) {
-      // I have literally no clue what this line below this does
-      if(Object.prototype.hasOwnProperty.call(this.lightsSettings, i)) {
-        const light = this.lightsSettings[i]
-        const id = light['id']
+  lifxHandler() {
+    const self = this;
 
-        this.lightsData[id] = {
-          'type': light['type'], // We need the type to know how to handle a light given its ID
-          // 'ip': light['ip'], // We need the IP for matching LIFX bulbs
-          'power': false,
-          'brightness': 0,
-          'color_temp': light['minColor'],
-        }
+    lifx.on('light-new', (lightObj) => {
+      const smartLight = new LifxLight(lightObj);
 
-        if(light['type'] == 'tp-link') {
-          // Initialize the TP-Link bulb object
-          const bulb = new TPLSmartDevice(light['ip'])
-
-          // And set it as an object in lightsData
-          this.lightsData[id]['object'] = bulb
-
-          // Get its current status
-          bulb.info().then((info) => {
-            const lightState = info['light_state']
-
-            this.lightsData[id]['power'] = lightState['on_off']
-            this.lightsData[id]['brightness'] = lightState['brightness']
-            this.lightsData[id]['color_temp'] = lightState['color_temp']
-          }).catch((error) => {
-            console.log(error)
-          })
-        } else if(light['type'] == 'lifx') {
-          // Set temporary hue and saturation, we'll load its data outside of this for-loop
-          this.lightsData[id]['hue'] = 0
-          this.lightsData[id]['saturation'] = 0
-        }
-      }
-    }
-
-    // On initialization of a new light
-    lifx.on('light-new', (light) => {
-      let lightID;
-      const lightIP = light.address
-      // Check which light this is
-      for(const i in this.lightsSettings) {
-        if(Object.prototype.hasOwnProperty.call(this.lightsSettings, i)) {
-          const lightSetting = this.lightsSettings[i]
-
-          // If this light has the IP for the initialized LIFX light
-          if(lightIP == lightSetting['ip']) {
-            lightID = lightSetting['id']
-            break // End the for loop, we've found the according light
-          }
-        }
-      }
-
-      // If we found the light
-      if(lightID != null) {
-        // Set the according light object
-        this.lightsData[lightID]['object'] = light
-
-        // Load its data
-        this.getLifxInfo(light, lightID).then((lightData) => {
-
-        }).catch((error) => {
-          console.log(error)
-        })
-      } else { // Didn't find the light
-        console.log('LIGHT-CONTROL ERROR, Couldnt find LIFX light with IP: ' + lightIP)
-      }
-    })
-
-    // lifx.init()
-  }
-
-  getLifxInfo(lightObject, lightID) {
-    return new Promise((resolve, reject) => {
-      // Error checking
-      if(lightObject == null) {
-        reject(Error('lightObject is null'))
-        return
-      }
-
-      if(lightID == null) {
-        reject(Error('lightID is null'))
-        return
-      }
-
-      // TODO: Should probably add a timeout here
-      lightObject.getState((err, data) => {
-        if(err) {
-          // console.log(err) // This error should be handled elsewhere
-          reject(err)
-          return
-        }
-
-        const colorData = data['color']
-
-        this.lightsData[lightID]['hue'] = colorData['hue']
-        this.lightsData[lightID]['saturation'] = colorData['saturation']
-        this.lightsData[lightID]['brightness'] = colorData['brightness']
-        this.lightsData[lightID]['color_temp'] = colorData['kelvin']
-
-        // Set if the light is on or not
-        this.lightsData[lightID]['power'] = (data['power'] == 1)
-
-        resolve(this.lightsData[lightID])
-      })
+      smartLight.refreshState().then((refreshedLight) => {
+        self.lightsStore.set(refreshedLight.name, refreshedLight);
+      });
     })
   }
 
   handleRoute() {
     // Handle flux changes to update the lightbulb
     this.router.post('/flux', (req, res) => {
+      const temperature = parseInt(req.query['ct'], 10);
+
+      // Iterate through all of the lights that are RGB Capable
+      this.lightsStore.forEach((light) => {
+        if (light instanceof RGBLight) {
+          light.setTemperature(temperature)
+        }
+      });
 
       // Send the response back to f.lux? Not sure if this is necessary
       res.end(JSON.stringify(req.query));
