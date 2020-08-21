@@ -1,0 +1,7 @@
+.smart-light-container {
+    display: flex;
+    justify-content: flex-start;
+    height: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
