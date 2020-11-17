@@ -2,7 +2,10 @@
     "ignore": [
         "wallpaper32",
         "svchost",
-        "ShareX"
+        "ShareX",
+        "nvcontainer",
+        "steamwebhelper",
+        "NVIDIA RTX Voice"
     ],
     "processSettings": [
         {
