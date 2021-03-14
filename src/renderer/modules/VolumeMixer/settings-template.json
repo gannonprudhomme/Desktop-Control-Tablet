@@ -5,7 +5,10 @@
         "ShareX",
         "nvcontainer",
         "steamwebhelper",
-        "NVIDIA RTX Voice"
+        "NVIDIA RTX Voice",
+        "steamwebhelper",
+        "vrwebhelper",
+        "GameBar"
     ],
     "processSettings": [
         {
