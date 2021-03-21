@@ -2,15 +2,6 @@ declare namespace VolumeSliderCssModule {
   export interface IVolumeSliderCss {
     "process-name-text": string;
     processNameText: string;
-    slider: string;
-    "slider-container": string;
-    "slider-icon": string;
-    "slider-info-container": string;
-    "slider-label": string;
-    sliderContainer: string;
-    sliderIcon: string;
-    sliderInfoContainer: string;
-    sliderLabel: string;
   }
 }
 

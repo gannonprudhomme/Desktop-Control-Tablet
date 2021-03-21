@@ -33,6 +33,7 @@ export default class SpotifyController implements MediaController {
         // eslint-disable-next-line @typescript-eslint/camelcase
         const { track, artist, album_image, is_playing } = data;
 
+        // Catch null entries here
         const ret = new Song({
           songTitle: track, artistName: artist, albumArt: album_image, isPlaying: is_playing,
         });

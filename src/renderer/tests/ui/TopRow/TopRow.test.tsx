@@ -12,6 +12,8 @@ describe('TopRow', () => {
     // arrange/act
     const store = createStore(dctReducer);
 
+    // Need to mock socket.emit b/c of WeatherDisplay
+
     const container = render(
       <Provider store={store}>
         <TopRow />

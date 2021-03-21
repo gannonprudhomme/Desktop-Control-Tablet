@@ -14,7 +14,9 @@ weatherIconMap.set('Clear', faSun);
 weatherIconMap.set('Sunny', faSun);
 weatherIconMap.set('Thunderstorms', faBolt);
 weatherIconMap.set('Cloudy', faCloud);
+// Should find a way to combine these
 weatherIconMap.set('Rain', faCloudRain);
+weatherIconMap.set('Rain Showers', faCloudShowersHeavy);
 
 /**
  * Displays the current weather and temperature
@@ -54,12 +56,12 @@ const WeatherDisplay: React.FC = () => {
     return weatherIconMap.get(actualWeather);
   }
 
-  // Retrieve on first render immediately
-  getForecast();
-
   // Attempt to update the forecast every 5 seconds
   React.useEffect(() => {
     let interval: NodeJS.Timeout = null;
+
+    // Retrieve on first render immediately
+    getForecast();
 
     interval = setInterval(() => {
       getForecast();

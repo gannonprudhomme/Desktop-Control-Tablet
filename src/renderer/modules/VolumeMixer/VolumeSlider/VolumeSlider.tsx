@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Slider, withStyles } from '@material-ui/core';
+import CustomSlider from '../../../framework/CustomSlider/CustomSlider';
 import VolumeProcess from '../VolumeProcess';
+import * as sliderStyles from '../../../framework/CustomSlider/CustomSlider.css';
 import * as styles from './VolumeSlider.css';
 import { volumeMixerSockets } from '../VolumeMixerSockets';
 
@@ -12,36 +13,6 @@ interface VolumeSliderProps {
  *  - Make the thumb not go too far off the rail (maybe to its center)
  *  - Add the colors to the buttons & label for each icon
  */
-const thumbSize = 36;
-const VolSliderUI = withStyles({
-  root: {
-    color: '#999999',
-    width: '8px !important',
-  },
-  thumb: {
-    width: thumbSize,
-    height: thumbSize,
-    // Change this to use the dominant color of the program icon
-    backgroundColor: '#fff',
-    border: '2px solid currentColor',
-    // marginTop: '0px !important',
-    marginLeft: '-12px !important',
-    '&:focus, &:hover, &$active': {
-      boxShadow: 'inherit',
-    },
-  },
-  active: {},
-  // idek what this
-  track: {
-    width: '12px !important',
-    borderRadius: 4,
-  },
-  rail: {
-    width: '12px !important',
-    borderRadius: 4,
-  },
-})(Slider);
-
 const VolumeSlider: React.FC<VolumeSliderProps> = ({ volumeProcess }) => {
   const [volume, setVolume] = React.useState(volumeProcess.volume);
   const [icon, setIcon] = React.useState('');
@@ -110,12 +81,12 @@ const VolumeSlider: React.FC<VolumeSliderProps> = ({ volumeProcess }) => {
 
   return (
     <div
-      className={styles.sliderContainer}
+      className={sliderStyles.sliderContainer}
       style={{
         marginTop: thumbSize,
       }}
     >
-      <VolSliderUI
+      <CustomSlider
         orientation="vertical"
         min={0}
         max={100}
@@ -128,12 +99,12 @@ const VolumeSlider: React.FC<VolumeSliderProps> = ({ volumeProcess }) => {
         data-testid={`${volumeProcess.name}-slider`}
       />
 
-      <div className={styles.sliderInfoContainer}>
-        <span className={styles.sliderLabel}>
+      <div className={sliderStyles.sliderInfoContainer}>
+        <span className={sliderStyles.sliderLabel}>
           {`${volume}% `}
         </span>
         <img
-          className={styles.sliderIcon}
+          className={sliderStyles.sliderIcon}
           // Get the icon from the Electron server
           src={icon}
           alt=""
