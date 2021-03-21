@@ -8,7 +8,8 @@
         "NVIDIA RTX Voice",
         "steamwebhelper",
         "vrwebhelper",
-        "GameBar"
+        "GameBar",
+        "NVIDIA Broadcast"
     ],
     "processSettings": [
         {
