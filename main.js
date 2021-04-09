@@ -25,7 +25,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    fullscreen: false,
+    fullscreen: true,
     webPreferences: {
       nodeIntegration: true,
       // This enables us to do CORS requests. Needed for VolmueMixer icon retrieval retrying
