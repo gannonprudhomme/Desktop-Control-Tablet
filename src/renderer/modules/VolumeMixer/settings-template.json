@@ -9,7 +9,9 @@
         "steamwebhelper",
         "vrwebhelper",
         "GameBar",
-        "NVIDIA Broadcast"
+        "NVIDIA Broadcast",
+        "onenoteim",
+        "taskhostv"
     ],
     "processSettings": [
         {
